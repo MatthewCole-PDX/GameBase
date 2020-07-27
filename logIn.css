@@ -11,3 +11,40 @@ body {
 #title {
   color: purple;
 }
+
+#logInTitle {
+  text-align: center;
+  margin-top: 20px;
+}
+
+#formContainer {
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  max-width: 60%;
+}
+
+.form-horizontal {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+}
+
+#name,
+#password {
+}
+
+#button {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.signUpContainer {
+  margin: 0 auto;
+  margin-top: 50px;
+  padding: 10px;
+  background-color: #f2f2f2;
+  max-width: 80%;
+}
