@@ -14,6 +14,9 @@ const { Pool } = require('pg');
 
 app = express();
 
+// load all of the files
+app.use(express.static(path.join(__dirname)));
+
 app.get("/", (req, res) => {
     res.status(200);
     res.sendFile(path.join(__dirname + "/index.html"));
