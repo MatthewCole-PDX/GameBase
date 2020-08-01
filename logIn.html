@@ -70,6 +70,59 @@
         </div>
       </nav>
     </div>
+    <div class="row">
+      <div class="col-sm leftContainer">
+        <h2 id="logInTitle">Log in</h2>
+        <p id="logInTitle">
+          If you are already registered, then please log in.
+        </p>
+        <div class="formContainer" id="formContainer">
+          <form role="form" class="form-horizontal">
+            <div class="form-group row">
+              <label for="name">username</label>
+              <input
+                type="text"
+                name="name"
+                id="name"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group row">
+              <label for="password">password</label>
+              <input
+                type="password"
+                name="password"
+                id="password"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="check" />
+              <label class="form-check-label" for="exampleCheck1"
+                >Remember me</label
+              >
+            </div>
+            <button type="submit" class="btn btn-secondary" id="button">
+              Log In >>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm rightContainer">
+        <div class="signUpContainer">
+          <h3>Don't have an account?</h3>
+          <p>With a Rate Your Game account, you can:</br></br>
+          rate,review,catalog, and tag your games</br>
+          find new games and people through recommendations</br>
+          create and publish lists of your favorite things</br>
+        </p>
+        <button type="submit" class="btn btn-secondary" id="button">
+          Sign up now!
+        </div>
+      </div>
+    </div>
   </body>
   <script src="logIn.js"></script>
 </html>
