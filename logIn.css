@@ -31,11 +31,7 @@ body {
   margin: 0 auto;
 }
 
-#name,
-#password {
-}
-
-#button {
+#signupButton {
   margin-top: 20px;
   margin-bottom: 20px;
   width: 100%;
