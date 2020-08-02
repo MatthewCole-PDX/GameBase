@@ -59,7 +59,7 @@ REFERENCES releases(release_id), FOREIGN KEY(designer_id) REFERENCES designers(d
 CREATE TABLE genres(genre_id int, name varchar, PRIMARY KEY(genre_id));
 CREATE TABLE genre_rel(game_id int, genre_id int, FOREIGN KEY(game_id) REFERENCES
 games(game_id), FOREIGN KEY(genre_id) REFERENCES genres(genre_id));
-CREATE TABLE users(user_id int, name varchar, birth_date date, city varchar, country
+CREATE TABLE users(user_id int, user_name varchar, password varchar, birth_date date, city varchar, country
 nation, favorite_console int, PRIMARY KEY(user_id), FOREIGN KEY(favorite_console)
 REFERENCES consoles(console_id));
 CREATE TABLE ratings(user_id int, release_id int, user_rating int, FOREIGN KEY(user_id)
