@@ -310,18 +310,18 @@ VALUES
 (18,10)
 ;
 
-INSERT INTO users(user_id, name, birth_date, city, country, favorite_console)
+INSERT INTO users(user_id, user_name, password, email, birth_date, city, country, favorite_console)
 VALUES
-(1, 'Matt', '1982-08-21', 'Portland, Oregon', 'United States', 11),
-(2, 'Devon', '1983-07-09', 'Portland, Oregon', 'United States', 4),
-(3, 'Paul', '1984-01-01', 'Los Angeles, California', 'United States', 33),
-(4, 'Alice', '1993-08-08', 'Pittsburgh, Pennsilvania', 'United States', 5),
-(5, 'Billy', '1998-09-20', 'Las Vegas, Nevada', 'United States', 7),
-(6, 'Hans', '1979-10-12', 'Hamburg','Germany', 12),
-(7, 'Chris', '1987-11-13', 'London', 'United Kingdom', 13),
-(8, 'Kate', '1991-01-19', 'Quebec City, Quebec', 'Canada', 11),
-(9, 'Linda', '1955-07-02', 'Grants Pass, Oregon', 'United States', 1),
-(10, 'Roger', '1986-05-05', 'St. Albans, Vermont', 'United States', 20)
+(1, 'Matt', 'password', 'macole@pdx.edu', '1982-08-21', 'Portland, Oregon', 'United States', 11),
+(2, 'Devon', 'password', 'devon@mail.com', '1983-07-09', 'Portland, Oregon', 'United States', 4),
+(3, 'Epic_Gamer', 'password', 'Epic_Gamer@mail.com', '1984-01-01', 'Los Angeles, California', 'United States', 33),
+(4, 'Zoomer', 'password', 'Zoomer@mail.com', '1993-08-08', 'Pittsburgh, Pennsilvania', 'United States', 5),
+(5, 'Kenichi', 'password', 'kenichi@mail.com', '1998-09-20', 'Las Vegas, Nevada', 'United States', 7),
+(6, 'Hans', 'password', 'Hans@mail.com', '1979-10-12', 'Hamburg','Germany', 12),
+(7, 'Mario', 'password', 'Mario@mail.com', '1987-11-13', 'London', 'United Kingdom', 13),
+(8, 'Adam', 'password', 'Adam@mail.com', '1995-01-19', 'Quebec City, Quebec', 'Canada', 11),
+(9, 'Snake', 'password', 'Snake@mail.com', '1955-07-02', 'Grants Pass, Oregon', 'United States', 1),
+(10, 'Roger', 'password', 'Roger@mail.com', '1986-05-05', 'St. Albans, Vermont', 'United States', 20)
 ;
 
 INSERT INTO ratings(user_id, release_id, user_rating)
