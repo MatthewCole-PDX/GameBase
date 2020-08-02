@@ -310,7 +310,7 @@ VALUES
 (18,10)
 ;
 
-INSERT INTO users(user_id, name, birth_date, city, country, favorite_console)
+INSERT INTO users(user_id, user_name, password, email, birth_date, city, country, favorite_console)
 VALUES
 (1, 'Matt', 'password', 'macole@pdx.edu', '1982-08-21', 'Portland, Oregon', 'United States', 11),
 (2, 'Devon', 'password', 'devon@mail.com', '1983-07-09', 'Portland, Oregon', 'United States', 4),
