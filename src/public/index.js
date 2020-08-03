@@ -9,6 +9,7 @@ module.exports = router;
 
 var logIn = document.getElementById("logIn");
 var chart = document.getElementById("chart");
+var search = document.getElementById("search");
 
 //jump to logIn.html
 logIn.onclick = function () {
@@ -19,3 +20,7 @@ logIn.onclick = function () {
 chart.onclick = function () {
   window.location.assign("chart.html");
 };
+
+logIn.onclick = function() {
+  window.location.assign("search.html");
+}
