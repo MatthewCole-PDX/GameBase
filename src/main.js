@@ -10,22 +10,15 @@ const path = require("path");
 // that determines port
 const PORT = process.env.PORT || 5000;
 // pool controls connections to the postgres db
-const { Pool } = require("pg");
+const { Client } = require('pg');
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
-/*the following will create a router for implementing the database api
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var indexRouter = require('./public/index');
-var app = express();
-
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use('/', indexRouter);
-
-module.exports = app;
-/end*/
+client.connect();
 
 app = express();
 

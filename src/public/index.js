@@ -1,11 +1,25 @@
-/*for the api
-var express = require('express');
-var router = express.Router();
-router.get('/', function(req, res, next) {
-  return res.status(200).json({ message: 'Welcome to Express API template' });
+/*const express = require('express');
+const app = express();
+const path = require('path');
+var parser = require('body-parser');
+
+const { Client } = require('pg');
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
-module.exports = router;
-//end*/
+
+client.connect();
+
+app.use(
+  parser.urlencoded({
+    extended: false,
+    limit: 1024,
+  })
+);
+*/
 
 var logIn = document.getElementById("logIn");
 var chart = document.getElementById("chart");
@@ -23,4 +37,22 @@ chart.onclick = function () {
 
 search.onclick = function() {
   window.location.assign("search.html");
-}
+};
+
+/*
+app.post("/search", (req, res) => {
+  var input = document.getElementById("searchFor");
+  var category = document.getElementById("category");
+  //var result = '';
+  client.query('SELECT name FROM ' + category + 'WHERE name LIKE ' + input +';', (err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
+    client.end();
+  });
+  res.sendfile(path.join(__dirname + '/public/search.html'));
+
+});
+*/
+
