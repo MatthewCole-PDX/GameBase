@@ -15,7 +15,7 @@ const { Pool } = require("pg");
 //the following will create a router for implementing the database api
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var indexRouter = require('./bin/index');
+var indexRouter = require('./public/index');
 var app = express();
 
 app.use(logger('dev'));
@@ -30,11 +30,11 @@ module.exports = app;
 app = express();
 
 // load all of the files
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname + "public")));
 
 app.get("/", (req, res) => {
   res.status(200);
-  res.sendFile(path.join(__dirname + "/index.html"));
+  res.sendFile(path.join(__dirname + "public/index.html"));
 });
 
 app.listen(PORT, () => {

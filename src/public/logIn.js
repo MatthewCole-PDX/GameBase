@@ -5,18 +5,18 @@ var toLogin = document.getElementById("formButton");
 
 //jump to chart.html
 chart.onclick = function () {
-  window.location.assign("public/chart.html");
+  window.location.assign("chart.html");
 };
 
 //jump to index.html
 home.onclick = function () {
-  window.location.assign("public/index.html");
+  window.location.assign("index.html");
 };
 
 toSignUp.onclick = () => {
-  window.location.assign("public/form.html");
+  window.location.assign("form.html");
 };
 
 toLogin.onclick = () => {
-  window.location.assign("public/logIn.html");
+  window.location.assign("logIn.html");
 };
