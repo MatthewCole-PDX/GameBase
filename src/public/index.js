@@ -21,6 +21,6 @@ chart.onclick = function () {
   window.location.assign("chart.html");
 };
 
-logIn.onclick = function() {
+search.onclick = function() {
   window.location.assign("search.html");
 }
