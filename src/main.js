@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 // pool controls connections to the postgres db
 const { Pool } = require("pg");
 
-//the following will create a router for implementing the database api
+/*the following will create a router for implementing the database api
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var indexRouter = require('./public/index');
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use('/', indexRouter);
 
 module.exports = app;
-//end
+/end*/
 
 app = express();
 
