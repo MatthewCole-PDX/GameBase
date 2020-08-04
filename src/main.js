@@ -69,6 +69,15 @@ app.get("/newUserAdded", (req, res) => {
   res.sendFile(path.join(__dirname + "/public/newUserAdded.html"));
 });
 
+app.get("/checkCredentials", (req, res)=>{
+  res.status(200)
+  //find name in database
+  //if found
+  //loggedIn=TRUE
+  //sendfile /:user
+  //else sendfile form
+});
+
 app.post("/search", (req, res) => {
   res.status(200);
   var search = ("Searching for " + req.body.searchFor + " in " + req.body.category);
@@ -76,7 +85,7 @@ app.post("/search", (req, res) => {
   
   client.connect();
   client.query('SELECT name FROM ' + req.body.category + 'WHERE name LIKE ' + req.body.searchFor +';', (err, res) => {
-    if (err) throw err;
+    if (err) throw er;
     res.set({"Content-Type": "text/html"});
     for (let row of res.rows) {
       search += JSON.stringify(row);
