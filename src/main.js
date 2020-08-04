@@ -61,11 +61,17 @@ app.get("/login", (req, res) => {
   //not visible if logged in
 });
 
-app.get("/newUserAdded", (req, res) => {
+app.get("/createNewUser", (req, res) => {
+  res.status(200);
+  res.sendFile(path.join(__dirname + "/public/form.html"));
+});
+
+app.post("/newUserAdded", (req,res) => {
   res.status(200);
   client.connect();
   client.query('INSERT INTO users(user_name, password, email) VALUES (req.body.name, req.body.password, req.body.email);');
     if (err) throw err;
+  client.end();
   res.sendFile(path.join(__dirname + "/public/newUserAdded.html"));
 });
 
