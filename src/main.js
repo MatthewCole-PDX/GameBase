@@ -51,19 +51,17 @@ app.post("/search", (req, res) => {
   res.status(200);
   res.write("Searching for " + req.body.searchFor + " in " + req.body.category);
   //res.sendFile(path.join(__dirname + "/public/search.html"));
-  
+  /*
   client.connect();
   client.query('SELECT name FROM ' + req.body.category + 'WHERE name LIKE ' + req.body.searchFor +';', (err, res) => {
     if (err) throw err;
-    
-
     res.set({"Content-Type": "text/plain"});
     for (let row of res.rows) {
       res.write(JSON.stringify(row));
     }
     client.end();
   });
-  
+  */
   
 });
 
