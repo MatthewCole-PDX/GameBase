@@ -1,4 +1,4 @@
-/*const express = require('express');
+const express = require('express');
 const app = express();
 const path = require('path');
 var parser = require('body-parser');
@@ -11,15 +11,13 @@ const client = new Client({
   }
 });
 
-client.connect();
-
 app.use(
   parser.urlencoded({
     extended: false,
     limit: 1024,
   })
 );
-*/
+
 
 var logIn = document.getElementById("logIn");
 var chart = document.getElementById("chart");
@@ -38,21 +36,24 @@ chart.onclick = function () {
 search.onclick = function() {
   window.location.assign("search.html");
 };
-/*
+
 app.post("/search", (req, res) => {
-  var input = document.getElementById("searchFor");
-  var category = document.getElementById("category");
+  //var input = document.getElementById("searchFor");
+  //var category = document.getElementById("category");
   //var result = '';
-  client.query('SELECT name FROM ' + category + 'WHERE name LIKE ' + input +';', (err, res) => {
+  client.connect();
+  client.query('SELECT name FROM ' + req.body.category + 'WHERE name LIKE ' + req.body.searchFor +';', (err, res) => {
     if (err) throw err;
+    res.status(200);
+    res.set({"Content-Type": "text/html"});
     for (let row of res.rows) {
-      console.log(JSON.stringify(row));
+      res.write(JSON.stringify(row));
     }
     client.end();
   });
   res.sendfile(path.join(__dirname + '/public/search.html'));
 
-});*/
+});
 
 
 
