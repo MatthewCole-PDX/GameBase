@@ -10,8 +10,8 @@ const client = new Client({
     rejectUnauthorized: false
   }
 });
-*/
 
+app = express();
 
 app.use(
   parser.urlencoded({
@@ -19,7 +19,7 @@ app.use(
     limit: 1024,
   })
 );
-
+*/
 
 var logIn = document.getElementById("logIn");
 var chart = document.getElementById("chart");
@@ -36,27 +36,20 @@ chart.onclick = function () {
 };
 
 search.onclick = function() {
-  window.location.assign("search.html");
-};
-
-app.post("/search", (req, res) => {
-  //var input = document.getElementById("searchFor");
-  //var category = document.getElementById("category");
-  //var result = '';
-  
   client.query('SELECT name FROM ' + req.body.category + 'WHERE name LIKE ' + req.body.searchFor +';', (err, res) => {
     if (err) throw err;
     client.connect();
-    res.status(200);
+
     res.set({"Content-Type": "text/html"});
     for (let row of res.rows) {
       res.write(JSON.stringify(row));
     }
     client.end();
   });
-  res.sendfile(path.join(__dirname + '/public/search.html'));
-
-});
+};
+  //var input = document.getElementById("searchFor");
+  //var category = document.getElementById("category");
+  //var result = '';
 
 
 

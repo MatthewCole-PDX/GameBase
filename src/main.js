@@ -18,7 +18,7 @@ const client = new Client({
   }
 });
 
-//client.connect();
+client.connect();
 
 app = express();
 
@@ -40,6 +40,11 @@ app.get("/login", (req, res) => {
   res.status(200);
   res.sendFile(path.join(__dirname + "/public/logIn.html"));
 });
+
+app.post("/search"), (req, res) => {
+  res.status(200);
+  res.sendFile(path.join(__dirname + "/public/search.html"));
+}
 
 app.listen(PORT, () => {
   console.log(

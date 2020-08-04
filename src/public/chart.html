@@ -46,22 +46,27 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="#" id="home">home</a>
+              <a class="nav-link" href="/index" id="home">home</a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="#"
+              <a class="nav-link" href="/chart"
                 >chart<span class="sr-only">(current)</span></a
               >
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#" id="logIn">log in/sign up</a>
+              <a class="nav-link" href="/logIn" id="logIn">log in/sign up</a>
             </li>
           </ul>
-          <form class="form-inline my-2 my-lg-0">
+          <form
+            action="/search"
+            method="POST"
+            class="form-inline my-2 my-lg-0">
             <input
               class="form-control mr-sm-2"
               type="search"
               placeholder="Search"
+              name = "searchFor"
+              required
             />
             <select class="browser-default custom-select" name="category">
               <option value="games">Games</option>
