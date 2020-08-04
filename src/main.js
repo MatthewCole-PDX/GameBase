@@ -30,6 +30,17 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/public/index.html"));
 });
 
+// add possibility for manual navigation
+app.get("/chart", (req, res) => {
+  res.status(200);
+  res.sendFile(path.join(__dirname + "/public/chart.html"));
+});
+
+app.get("/login", (req, res) => {
+  res.status(200);
+  res.sendFile(path.join(__dirname + "/public/logIn.html"));
+});
+
 app.listen(PORT, () => {
   console.log(
     "Server running at https://rateyourgames.heroku.com/ using port" + PORT
