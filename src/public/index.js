@@ -23,7 +23,7 @@ app.use(
 
 var logIn = document.getElementById("logIn");
 var chart = document.getElementById("chart");
-var search = document.getElementById("search");
+var search = document.getElementById("submit");
 
 //jump to logIn.html
 logIn.onclick = function () {
@@ -38,7 +38,6 @@ chart.onclick = function () {
 search.onclick = function() {
   window.location.assign("search.html");
 };
-
 /*
 app.post("/search", (req, res) => {
   var input = document.getElementById("searchFor");
@@ -53,6 +52,7 @@ app.post("/search", (req, res) => {
   });
   res.sendfile(path.join(__dirname + '/public/search.html'));
 
-});
-*/
+});*/
+
+
 
