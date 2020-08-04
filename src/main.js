@@ -6,6 +6,7 @@
 // handle backend connections (node)
 const express = require("express");
 const path = require("path");
+var parser = require('body-parser');
 // heroku has an environment variable
 // that determines port
 const PORT = process.env.PORT || 5000;
@@ -18,9 +19,14 @@ const client = new Client({
   }
 });
 
-client.connect();
-
 app = express();
+
+app.use(
+  parser.urlencoded({
+    extended: false,
+    limit: 1024,
+  })
+);
 
 // load all of the files
 app.use(express.static(path.join(__dirname + "/public")));
@@ -41,10 +47,18 @@ app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname + "/public/logIn.html"));
 });
 
-app.post("/search"), (req, res) => {
-  res.status(200);
-  res.sendFile(path.join(__dirname + "/public/search.html"));
-}
+app.post("/search", (req, res) => {
+  client.query('SELECT name FROM ' + req.body.category + 'WHERE name LIKE ' + req.body.searchFor +';', (err, res) => {
+    if (err) throw err;
+    client.connect();
+
+    res.set({"Content-Type": "text/html"});
+    for (let row of res.rows) {
+      res.write(JSON.stringify(row));
+    }
+    client.end();
+  });
+});
 
 app.listen(PORT, () => {
   console.log(
