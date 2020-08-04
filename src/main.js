@@ -10,7 +10,7 @@ const path = require("path");
 // that determines port
 const PORT = process.env.PORT || 5000;
 // pool controls connections to the postgres db
-/*const { Client } = require('pg');
+const { Client } = require('pg');
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -18,8 +18,8 @@ const client = new Client({
   }
 });
 
-client.connect();
-*/
+//client.connect();
+
 app = express();
 
 // load all of the files

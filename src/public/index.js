@@ -1,4 +1,4 @@
-const express = require('express');
+/*const express = require('express');
 const app = express();
 const path = require('path');
 var parser = require('body-parser');
@@ -10,6 +10,8 @@ const client = new Client({
     rejectUnauthorized: false
   }
 });
+*/
+
 
 app.use(
   parser.urlencoded({
@@ -41,9 +43,10 @@ app.post("/search", (req, res) => {
   //var input = document.getElementById("searchFor");
   //var category = document.getElementById("category");
   //var result = '';
-  client.connect();
+  
   client.query('SELECT name FROM ' + req.body.category + 'WHERE name LIKE ' + req.body.searchFor +';', (err, res) => {
     if (err) throw err;
+    client.connect();
     res.status(200);
     res.set({"Content-Type": "text/html"});
     for (let row of res.rows) {
