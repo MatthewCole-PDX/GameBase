@@ -49,7 +49,7 @@ app.get("/login", (req, res) => {
 
 app.post("/search", (req, res) => {
   res.status(200);
-  res.write("Searching for " + req.body.searchFor + " in " + req.body.category);
+  res.send("Searching for " + req.body.searchFor + " in " + req.body.category);
   //res.sendFile(path.join(__dirname + "/public/search.html"));
   /*
   client.connect();
