@@ -30,7 +30,6 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/public/index.html"));
 });
 
-
 // add possibility for manual navigation
 app.get("/chart", (req, res) => {
   res.status(200);
@@ -39,7 +38,7 @@ app.get("/chart", (req, res) => {
 
 app.get("/login", (req, res) => {
   res.status(200);
-  res.sendFile(path.join(__dirname + "/public/login.html"));
+  res.sendFile(path.join(__dirname + "/public/logIn.html"));
 });
 
 app.listen(PORT, () => {
