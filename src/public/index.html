@@ -24,6 +24,7 @@
       integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
       crossorigin="anonymous"
     />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <link rel="stylesheet" href="index.css" />
     <title>RateYourGame2020</title>
   </head>
@@ -57,25 +58,22 @@
               <a class="nav-link" href="/logIn" id="logIn">log in/sign up</a>
             </li>
           </ul>
-          <form
-            action="/search"
-            method="POST"
-            class="form-inline my-2 my-lg-0">
+          <form action="/search" method="POST" class="form-inline my-2 my-lg-0">
             <input
               class="form-control mr-sm-2"
               type="search"
               placeholder="Search"
-              name = "searchFor"
+              name="searchFor"
               required
             />
             <label for="category">in:&nbsp;</label>
-              <select class="browser-default custom-select" name="category">
-                <option value="games">Games</option>
-                <option value="consoles">Consoles</option>
-                <option value="companies">Companies</option>
-                <option value="personnel">Personnel</option>
-                <option value="users">Users</option>
-              </select>
+            <select class="browser-default custom-select" name="category">
+              <option value="games">Games</option>
+              <option value="consoles">Consoles</option>
+              <option value="companies">Companies</option>
+              <option value="personnel">Personnel</option>
+              <option value="users">Users</option>
+            </select>
             <button class="btn btn-success my-2 my-sm-0" type="submit">
               Search
             </button>
@@ -88,11 +86,12 @@
       <div class="col-sm leftContainer">
         <div id="reviews">Reviews</div>
         <section class="left-grid-container">
-          <div class="grid-item item1">1</div>
+          <div class="grid-item item1" id="left1">1</div>
           <div class="grid-item item2">2</div>
           <div class="grid-item item3">3</div>
           <div class="grid-item item4">4</div>
           <div class="grid-item item5">5</div>
+        </section>
       </div>
       <div class="col-sm rightContainer">
         <div id="reviews">New Releases</div>
@@ -107,9 +106,9 @@
           <div class="grid-item item13">13</div>
           <div class="grid-item item14">14</div>
           <div class="grid-item item15">15</div>
-      </div>
+        </section>
       </div>
     </div>
   </body>
-  
+  <script src="index.js"></script>
 </html>
