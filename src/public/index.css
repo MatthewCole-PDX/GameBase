@@ -73,6 +73,8 @@ body {
 
 .item7 {
   grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
 }
 
 .item8 {
@@ -81,6 +83,8 @@ body {
 
 .item9 {
   grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
 }
 
 .item10 {
@@ -89,6 +93,8 @@ body {
 
 .item11 {
   grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
 }
 
 .item12 {
@@ -97,6 +103,8 @@ body {
 
 .item13 {
   grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
 }
 
 .item14 {
@@ -105,4 +113,6 @@ body {
 
 .item15 {
   grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
 }
