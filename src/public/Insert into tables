@@ -325,7 +325,7 @@ VALUES
 (10, 'Roger', 'password', 'Roger@mail.com', '1986-05-05', 'St. Albans, Vermont', 'United States', 20)
 ;
 
-INSERT INTO ratings(user_id, release_id, user_rating)
+INSERT INTO ratings(user_id, release_id, user_rating, user_review)
 VALUES
 (1,1,'10', "The game that started it all. I recently played it for the first time in 25 years, and it still gave me chills."),(2,1,'9'),(3,1,'8'),(4,1,'9'),(8,1,'6'),(9,1,'10'),(10,1,'9'),
 (1,2,'7'),(2,2,'9'),(3,2,'6'),(4,2,'6'),(6,2,'7'),(10,2,'6'),

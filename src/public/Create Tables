@@ -67,5 +67,5 @@ CREATE TABLE users(user_id int, user_name varchar, password varchar, email varch
 nation, favorite_console int, PRIMARY KEY(user_id), FOREIGN KEY(favorite_console)
 REFERENCES consoles(console_id));
 
-CREATE TABLE ratings(user_id int, release_id int, user_rating int, FOREIGN KEY(user_id)
+CREATE TABLE ratings(user_id int, release_id int, user_rating int, user_reviews text, FOREIGN KEY(user_id)
 REFERENCES users(user_id), FOREIGN KEY(release_id) REFERENCES releases(release_id));
