@@ -161,6 +161,32 @@ app.post("/search", async (req, res) => {
   }
 });
 
+// create a chart given a query from the chart page
+app.post('/gen', async (req, res) => {
+  try {
+    res.status(200);
+
+    // log the inputs of the form the console
+    console.log('Console: ' + req.body.Console);
+    console.log('Company: ' + req.body.Company);
+    console.log('Genre: ' + req.body.Genre);
+
+    // touch postgres DB server
+    const client = await pool.connect();
+
+    // generate query
+    // use temp query for now
+    const result = await client.query('SELECT * FROM users;');
+    const results = { results : result ? result.rows : null }; 
+    res.send(results);
+    console.log(results);
+    client.release();
+  } catch(err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
+});
+
 app.listen(PORT, () => {
   console.log(
     "Server running at https://rateyourgames.heroku.com/ using port" + PORT
