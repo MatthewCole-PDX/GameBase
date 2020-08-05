@@ -12,17 +12,27 @@ body {
   color: purple;
 }
 
+.row {
+  margin-top: 50px;
+}
+
 .left-grid-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 200px);
 }
 
+.right-grid-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(10, 100px);
+}
+
 .grid-item {
   border: 1px solid;
   border-color: white;
-  background-color: purple;
-  color: white;
+  background-color: whitesmoke;
+  color: black;
   text-align: center;
   margin-left: 10px;
   margin-right: 10px;
@@ -55,4 +65,54 @@ body {
 
 .item5 {
   grid-column: 1 / 6;
+}
+
+.item6 {
+  grid-column: 1 / 6;
+}
+
+.item7 {
+  grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
+}
+
+.item8 {
+  grid-column: 1 / 6;
+}
+
+.item9 {
+  grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
+}
+
+.item10 {
+  grid-column: 1 / 6;
+}
+
+.item11 {
+  grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
+}
+
+.item12 {
+  grid-column: 1 / 6;
+}
+
+.item13 {
+  grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
+}
+
+.item14 {
+  grid-column: 1 / 6;
+}
+
+.item15 {
+  grid-column: 1 / 6;
+  background-color: white;
+  border-color: whitesmoke;
 }
