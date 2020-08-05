@@ -20,8 +20,7 @@ const pool = new Pool({
     rejectUnauthorized: false,
   },
 });
-//var pg = require('pg');
-//var connectionString = 
+ 
 app = express();
 
 app.use(
@@ -91,7 +90,7 @@ app.post("/search", async (req, res) => {
   if(req.body.category == 'games'){
     try {
       const client = await pool.connect();
-      const result = await client.query('SELECT DISTINCT games.name AS Game'  
+      const result = await client.query('SELECT DISTINCT games.game_id AS game_id, games.name AS Game'  
       + ', consoles.name AS Console'
       + ', TO_CHAR(releases.release_date,\'MM/DD/YYYY\') AS First_Release, companies.name AS Publisher, releases.region AS Region'
       + ', string_agg(DISTINCT genres.name, \', \') AS Genres'
@@ -103,11 +102,28 @@ app.post("/search", async (req, res) => {
       + 'INNER JOIN genres ON genre_rel.genre_id = genres.genre_id '
       + 'WHERE games.name LIKE \'%' + req.body.searchFor + '%\''
       + ' AND releases.first_release = \'yes\''
-      + ' GROUP BY Game, Console, releases.release_date, Publisher, releases.region'
+      + ' GROUP BY games.game_id, Game, Console, releases.release_date, Publisher, releases.region'
       + ';');
       var results = { results: result ? result.rows : null };
       console.log(results);
-      res.send(results);
+      res.set('text/html');
+      var htmlResult = '<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"'
+         + 'integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>' +
+      '<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"' +
+      'integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>' +
+      '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"' +
+      'integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>' +
+      '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"' +
+      'integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>';
+      var i = 1;
+      for (let row of result.rows) {
+        htmlResult += ( '<div class="container p-3 my-3 bg-light">'
+                      + '<img src=\"images/game-' + row.game_id + '.jpg\" width=400px alt=\"' + path.join(__dirname + '/public/images/game-' + row.game_id + '.jpg') + '\">'
+                      + '<h2>'+ i +'. <a href= \'/game/:' + row.game_id + '\'>' + row.game + ': </a></h2>'
+                      + '&nbsp;&nbsp;' + row.genres + '&nbsp;-&nbsp;' + row.console + '&nbsp;-&nbsp;First Released:&nbsp;' + row.first_release + ' by ' + row.publisher + ' in ' + row.region + '</div>');
+        i++;
+      }
+      res.send(htmlResult);
       client.release();
     } catch (err) {
       console.error(err);
