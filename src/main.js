@@ -20,7 +20,8 @@ const pool = new Pool({
     rejectUnauthorized: false,
   },
 });
-
+//var pg = require('pg');
+//var connectionString = 
 app = express();
 
 app.use(
@@ -85,44 +86,33 @@ app.get("/checkCredentials", (req, res) => {
   //else sendfile form
 });
 
-/*app.post("/search", (req, res) => {
+app.post("/search", async (req, res) => {
   res.status(200);
-  var search =
-    "Searching for " + req.body.searchFor + " in " + req.body.category;
-  //res.sendFile(path.join(__dirname + "/public/search.html"));
-
-  client.connect();
-  client.query(
-    "SELECT name FROM " +
-      req.body.category +
-      "WHERE name LIKE " +
-      req.body.searchFor +
-      ";",
-    (err, res) => {
-      if (err) throw er;
-      res.set({ "Content-Type": "text/html" });
-      for (let row of res.rows) {
-        search += JSON.stringify(row);
-        search += "</br>";
-      }
-      client.end();
-      res.send(search);
+  if(req.body.category == 'games'){
+    try {
+      const client = await pool.connect();
+      const result = await client.query('SELECT DISTINCT games.name AS Game'  
+      + ', consoles.name AS Console'
+      + ', TO_CHAR(releases.release_date,\'MM/DD/YYYY\') AS First_Release, companies.name AS Publisher, releases.region AS Region'
+      + ', string_agg(DISTINCT genres.name, \', \') AS Genres'
+      + ' FROM games '
+      + 'JOIN releases ON games.game_id = releases.game_id '
+      + 'INNER JOIN consoles ON releases.console_id = consoles.console_id '
+      + 'INNER JOIN companies ON releases.publisher_id = companies.company_id '
+      + 'INNER JOIN genre_rel ON games.game_id = genre_rel.game_id '
+      + 'INNER JOIN genres ON genre_rel.genre_id = genres.genre_id '
+      + 'WHERE games.name LIKE \'%' + req.body.searchFor + '%\''
+      + ' AND releases.first_release = \'yes\''
+      + ' GROUP BY Game, Console, releases.release_date, Publisher, releases.region'
+      + ';');
+      var results = { results: result ? result.rows : null };
+      console.log(results);
+      res.send(results);
+      client.release();
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
     }
-  );
-});*/
-
-app.get("/db", async (req, res) => {
-  try {
-    const client = await pool.connect();
-    const result = await client.query("SELECT * FROM users");
-    const results = { results: result ? result.rows : null };
-    //res.render("pages/db", results);
-    res.send(results);
-    console.log(results);
-    client.release();
-  } catch (err) {
-    console.error(err);
-    res.send("Error " + err);
   }
 });
 

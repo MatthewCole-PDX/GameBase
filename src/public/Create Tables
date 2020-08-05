@@ -54,13 +54,18 @@ release_date date, first_release varchar, PRIMARY KEY(release_id), FOREIGN KEY(g
 CREATE TABLE developer_rel(game_id int, developer_id int, FOREIGN KEY(game_id)
 REFERENCES games(game_id), FOREIGN KEY(developer_id) REFERENCES
 companies(company_id));
+
 CREATE TABLE designer_rel(release_id int, designer_id int, FOREIGN KEY(release_id)
 REFERENCES releases(release_id), FOREIGN KEY(designer_id) REFERENCES designers(designer_id));
+
 CREATE TABLE genres(genre_id int, name varchar, PRIMARY KEY(genre_id));
+
 CREATE TABLE genre_rel(game_id int, genre_id int, FOREIGN KEY(game_id) REFERENCES
 games(game_id), FOREIGN KEY(genre_id) REFERENCES genres(genre_id));
+
 CREATE TABLE users(user_id int, user_name varchar, password varchar, email varchar, birth_date date, city varchar, country
 nation, favorite_console int, PRIMARY KEY(user_id), FOREIGN KEY(favorite_console)
 REFERENCES consoles(console_id));
+
 CREATE TABLE ratings(user_id int, release_id int, user_rating int, FOREIGN KEY(user_id)
 REFERENCES users(user_id), FOREIGN KEY(release_id) REFERENCES releases(release_id));
