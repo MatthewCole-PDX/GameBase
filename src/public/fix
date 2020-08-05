@@ -1,0 +1,10 @@
+SELECT DISTINCT games.name AS Game, consoles.name AS Console, TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release, companies.name AS Publisher, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres
+      FROM games
+      JOIN releases ON games.game_id = releases.game_id
+      INNER JOIN consoles ON releases.console_id = consoles.console_id
+      INNER JOIN companies ON releases.publisher_id = companies.company_id
+      INNER JOIN genre_rel ON games.game_id = genre_rel.game_id
+      INNER JOIN genres ON genre_rel.genre_id = genres.genre_id
+      WHERE games.name LIKE '%Robotron%'
+      AND releases.first_release = 'yes'
+      GROUP BY Game, Console, releases.release_date, Publisher, releases.region;

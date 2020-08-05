@@ -271,7 +271,7 @@ VALUES
 (16,14),
 (17,14),
 (18,1),
-(18,24),
+(18,24)
 ;
 
 INSERT INTO series(series_id, name)
