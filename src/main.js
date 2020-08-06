@@ -33,7 +33,7 @@ app.use(
 var loggedIn = false;
 
 // load all of the files
-app.use(express.static(path.join(__dirname + "/public/css")));
+app.use(express.static(path.join(__dirname + "/public")));
 app.set("views", __dirname + "/public/frontend");
 app.set("view engine", "pug");
 
