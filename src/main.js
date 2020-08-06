@@ -167,5 +167,4 @@ app.listen(PORT, () => {
   console.log(
     "Server running at https://rateyourgames.heroku.com/ using port" + PORT
   );
-  console.log(process.DATABASE_URL);
 });
