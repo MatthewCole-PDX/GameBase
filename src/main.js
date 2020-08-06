@@ -269,8 +269,14 @@ app.post("/gen", async (req, res) => {
     // generate query
     // use temp query for now
     const result = await client.query("SELECT * FROM users;");
-    const results = { results: result ? result.rows : null };
-    res.render("chart", {"Results": results});
+    // const results = { results: result ? result.rows : null };
+    console.log(result.rows);
+    var len = result.rows.length;
+    var game = [];
+    for(var i=0; i<len; i++) {
+      game.push(result.rows[i]) 
+    }
+    res.render("gen", {"Results": game});
     // console.log(results);
     client.release();
   } catch (err) {
