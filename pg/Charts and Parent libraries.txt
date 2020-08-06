@@ -1,0 +1,155 @@
+2) What is the ranking order for 'shoot em up' games according to average user
+rating?
+SELECT row_number() OVER ( ORDER BY rating.average DESC) AS rank, games.game_id,
+games.name, rating.average FROM
+(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average
+FROM ratings GROUP BY release_id) AS rating
+JOIN releases ON releases.release_id = rating.release_id
+INNER JOIN games ON releases.game_id = games.game_id
+INNER JOIN genre_rel ON genre_rel.game_id = games.game_id
+INNER JOIN genres ON genres.genre_id = genre_rel.genre_id
+WHERE genres.name = 'Shoot em up' AND releases.first_release = 'yes';
+
+ rank | game_id |      name       | average
+------+---------+-----------------+---------
+    1 |       5 | Missile Command |   10.00
+    2 |       9 | Galaga          |    9.00
+    3 |       2 | Space Invaders  |    8.70
+    4 |       3 | Asteroids       |    8.33
+    5 |       7 | Defender        |    7.95
+    6 |      10 | Stargate        |    6.38
+    7 |      11 | Liberator       |    6.29
+    8 |      15 | Blaster         |    5.43
+    9 |      18 | Robotron X      |    5.40
+(9 rows)
+
+3) What is the ranking order for all games from 1982 according to average user
+rating?
+SELECT row_number() OVER ( ORDER BY rating.average DESC) AS rank, games.game_id,
+games.name, rating.average FROM
+(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average
+FROM ratings GROUP BY release_id) AS rating
+JOIN releases ON releases.release_id = rating.release_id
+INNER JOIN games ON releases.game_id = games.game_id
+AND releases.release_date >= '1982-01-01'
+AND releases.release_date < '1983-01-01'
+AND releases.first_release = 'yes';
+
+ rank | game_id |      name       | average
+------+---------+-----------------+---------
+    1 |      13 | Robotron: 2084  |    8.20
+    2 |      12 | Ms. Pac-Man     |    7.60
+    3 |      14 | Donkey Kong Jr. |    7.10
+    4 |      11 | Liberator       |    6.29
+(4 rows)
+
+4) What are all the consoles of the 3rd generation of consoles?
+SELECT name AS third_generation_consoles
+FROM consoles
+JOIN generations ON consoles.generation_id = generations.generation_id
+WHERE generations.generation = 'Third';
+third_generation_consoles
+4
+-------------------------------
+SG-1000
+Famicon
+Nintendo Entertainment System
+Sega Master System
+Atari 7800
+(5 rows)
+
+
+7) What is the ranking order for all Arcade games according to average user
+ratings?
+SELECT row_number() OVER ( ORDER BY rating.average DESC) AS rank, games.game_id,
+games.name, rating.average FROM
+(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average
+FROM ratings GROUP BY release_id) AS rating
+JOIN releases ON releases.release_id = rating.release_id
+INNER JOIN games ON releases.game_id = games.game_id
+INNER JOIN consoles ON consoles.console_id = releases.console_id
+WHERE consoles.name = 'Arcade'
+AND releases.first_release = 'yes';
+ rank | game_id |      name       | average
+------+---------+-----------------+---------
+    1 |       5 | Missile Command |   10.00
+    2 |       9 | Galaga          |    9.00
+    3 |       1 | Pong            |    8.71
+    4 |       2 | Space Invaders  |    8.70
+    5 |       8 | Donkey Kong     |    8.60
+    6 |       3 | Asteroids       |    8.33
+    7 |       6 | Pac-Man         |    8.30
+    8 |      13 | Robotron: 2084  |    8.20
+    9 |      16 | Mario Bros      |    8.10
+   10 |       7 | Defender        |    7.95
+   11 |      12 | Ms. Pac-Man     |    7.60
+   12 |      14 | Donkey Kong Jr. |    7.10
+   13 |      10 | Stargate        |    6.38
+   14 |      11 | Liberator       |    6.29
+   15 |      15 | Blaster         |    5.43
+(15 rows)
+
+8) What is the ranking order for all Mario related games?
+SELECT row_number() OVER ( ORDER BY rating.average DESC) AS rank, games.game_id,
+games.name, rating.average FROM
+(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average
+FROM ratings GROUP BY release_id) AS rating
+JOIN releases ON releases.release_id = rating.release_id
+INNER JOIN games ON releases.game_id = games.game_id
+INNER JOIN series_rel ON series_rel.game_id = games.game_id
+INNER JOIN series ON series.series_id = series_rel.series_id
+WHERE series.name = 'Mario' AND releases.first_release = 'yes';
+
+ rank | game_id |       name       | average
+------+---------+------------------+---------
+    1 |      17 | Super Mario Bros |    9.40
+    2 |       8 | Donkey Kong      |    8.60
+    3 |      16 | Mario Bros       |    8.10
+    4 |      14 | Donkey Kong Jr.  |    7.10
+(4 rows)
+
+
+10) What are all the Robotron games in order by release date?
+SELECT games.game_id, games.name
+FROM games
+JOIN series_rel ON series_rel.game_id = games.game_id
+INNER JOIN series ON series.series_id = series_rel.series_id
+INNER JOIN
+WHERE series.name = 'Robotron';
+name
+----------------
+Robotron: 2084
+Blaster
+Robotron X
+(3 rows)
+
+13) What are all the games published by Taito in order by release date?
+SELECT games.game_id, games.name, releases.release_date
+FROM games
+JOIN releases ON releases.game_id = games.game_id
+INNER JOIN companies ON companies.company_id = releases.publisher_id
+WHERE companies.name = 'Taito' AND releases.first_release = 'yes'
+ORDER BY releases.release_date;
+
+      name      | release_date
+----------------+--------------
+ Space Invaders | 1978-06-01
+(1 row)
+
+
+20) What are all the games designed by Shigeru Miyamoto?
+SELECT games.game_id, games.name as games_designed_by_Shigeru_Miyamoto
+FROM games
+JOIN releases ON releases.game_id = games.game_id
+INNER JOIN designer_rel ON designer_rel.release_id = releases.release_id
+INNER JOIN designers ON designer_rel.designer_id =
+designers.designer_id
+WHERE designers.name = 'Shigeru Miyamoto' AND releases.first_release = 'yes';
+games_designed_by_shigeru_miyamoto
+------------------------------------
+Donkey Kong
+Donkey Kong Jr.
+Mario Bros
+Super Mario Bros
+11
+(4 rows)
