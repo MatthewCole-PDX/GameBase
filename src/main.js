@@ -81,16 +81,19 @@ app.get("/", async (req, res) => {
 // add possibility for manual navigation
 app.get("/chart", (req, res) => {
   res.status(200);
-  if (!loggedIn) {
-    res.sendFile(path.join(__dirname + "/public/chart.html"));
-  } else {
-    //send logged in version of chart.html
-  }
+  res.render("chart");
+  // if (!loggedIn) {
+  //   res.sendFile(path.join(__dirname + "/public/chart.html"));
+  // } else {
+  //   //send logged in version of chart.html
+  // }
 });
+
 
 app.get("/login", (req, res) => {
   res.status(200);
-  res.sendFile(path.join(__dirname + "/public/logIn.html"));
+  // res.sendFile(path.join(__dirname + "/public/logIn.html"));
+  res.render("login");
   //not visible if logged in
 });
 
@@ -267,8 +270,8 @@ app.post("/gen", async (req, res) => {
     // use temp query for now
     const result = await client.query("SELECT * FROM users;");
     const results = { results: result ? result.rows : null };
-    res.send(results);
-    console.log(results);
+    res.render("chart", {"Results": results});
+    // console.log(results);
     client.release();
   } catch (err) {
     console.error(err);
