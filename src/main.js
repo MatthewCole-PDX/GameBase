@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 5000;
 // pool controls connections to the postgres db
 const { Pool } = require("pg");
 const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require("constants");
+const { title } = require("process");
 const pool = new Pool({
   connectionString:
     "postgres://sajfopicqfjqpa:0207c07d082bbe7f11ebc9fe5e8dafb13796b05c0ea7a336d47ba14ecd57bef4@ec2-52-207-124-89.compute-1.amazonaws.com:5432/dc1qe778cvpm8r",
@@ -37,14 +38,44 @@ app.use(express.static(path.join(__dirname + "/public")));
 app.set("views", __dirname + "/public/frontend");
 app.set("view engine", "pug");
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
   res.status(200);
-  res.render("index", { sec1: "test" });
-  /*if (!loggedIn) {
-    res.sendFile(path.join(__dirname + "/public/index.html"));
-  } else {
-    //send logged in version of index.html
-  }*/
+  var searchResults = [];
+  try {
+    const client = await pool.connect();
+    const result = await client.query(
+      "SELECT users.user_name, games.game_id, games.name, ratings.user_rating, ratings.user_review " +
+        "FROM users " +
+        "JOIN ratings " +
+        "ON users.user_id = ratings.user_id " +
+        "INNER JOIN releases " +
+        "ON releases.release_id = ratings.release_id " +
+        "INNER JOIN games " +
+        "ON releases.game_id = games.game_id " +
+        "WHERE ratings.user_review IS NOT NULL;"
+    );
+    const results = { results: result ? result.rows : null };
+    let data = result.rows;
+    for (let i = 0; i < data.length; i++) {
+      var reviews = {
+        user_name: data[i].user_name,
+        game_id: data[i].game_id,
+        name: data[i].name,
+        user_rating: data[i].user_rating,
+        user_review: data[i].user_review,
+      };
+      searchResults.push(reviews);
+    }
+    res.render("index", {
+      title: "index",
+      reviewData: searchResults,
+    });
+    //console.log(searchResults[0].user_name);
+    client.release();
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
 });
 
 // add possibility for manual navigation

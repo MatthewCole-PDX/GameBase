@@ -17,9 +17,9 @@ body {
 }
 
 .left-grid-container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 200px);
+  background-color: whitesmoke;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .right-grid-container {
@@ -47,24 +47,23 @@ body {
   color: black;
 }
 
-.item1 {
-  grid-column: 1 / 6;
+#game {
+  color: blue;
 }
 
-.item2 {
-  grid-column: 1 / 6;
+#rating {
+  color: crimson;
 }
 
-.item3 {
-  grid-column: 1 / 6;
-}
-
-.item4 {
-  grid-column: 1 / 6;
-}
-
+.item1,
+.item2,
+.item3,
+.item4,
 .item5 {
-  grid-column: 1 / 6;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid;
+  border-color: white;
 }
 
 .item6 {

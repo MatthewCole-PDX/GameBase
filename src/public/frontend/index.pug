@@ -36,25 +36,61 @@ head
           option(value='users') Users
         button.btn.btn-success.my-2.my-sm-0(type='submit')
           | Search
+
 .row
-  .col-sm.leftContainer
+  .col-lg.leftContainer
     #reviews Reviews
     section.left-grid-container
-      .grid-item.item1 1 #{left1}
-      .grid-item.item2 2 #{left2}
-      .grid-item.item3 3 #{left3}
-      .grid-item.item4 4 #{left4}
-      .grid-item.item5 5 #{left5}
-  .col-sm.rightContainer
+      .row.item1 
+        .col-4
+          h5#game #{"Game: " + reviewData[0].name}
+          h5#rating #{"Rating: " + reviewData[0].user_rating + "/10"}
+          img.img-fluid(src='../images/game-' + reviewData[0].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[0].game_id + '.jpg')
+        .col-8
+          h5 #{"user: " + reviewData[0].user_name}
+          p #{reviewData[0].user_review}
+      .row.item2
+        .col-4
+          h5#game #{"Game: " + reviewData[1].name}
+          h5#rating #{"Rating: " + reviewData[1].user_rating + "/10"}
+          img.img-fluid(src='../images/game-' + reviewData[1].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[1].game_id + '.jpg')
+        .col-8
+          h5 #{"user: " + reviewData[1].user_name}
+          p #{reviewData[1].user_review} 
+      .row.item3
+        .col-4
+          h5#game #{"Game: " + reviewData[2].name}
+          h5#rating #{"Rating: " + reviewData[2].user_rating + "/10"}
+          img.img-fluid(src='../images/game-' + reviewData[2].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[2].game_id + '.jpg')
+        .col-8
+          h5 #{"user: " + reviewData[2].user_name}
+          p #{reviewData[2].user_review} 
+      .row.item4
+        .col-4
+          h5#game #{"Game: " + reviewData[3].name}
+          h5#rating #{"Rating: " + reviewData[3].user_rating + "/10"}
+          img.img-fluid(src='../images/game-' + reviewData[3].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[3].game_id + '.jpg')
+        .col-8
+          h5 #{"user: " + reviewData[3].user_name}
+          p #{reviewData[3].user_review}
+      .row.item5
+        .col-4
+          h5#game #{"Game: " + reviewData[4].name}
+          h5#rating #{"Rating: " + reviewData[4].user_rating + "/10"}
+          img.img-fluid(src='../images/game-' + reviewData[4].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[4].game_id + '.jpg')
+        .col-8
+          h5 #{"user: " + reviewData[4].user_name}
+          p #{reviewData[4].user_review}
+  .col-lg.rightContainer
     #reviews New Releases
     section.right-grid-container
-      .grid-item.item6 6 #{right1}
-      .grid-item.item7 7 #{right2}
-      .grid-item.item8 8 #{sec1}
-      .grid-item.item9 9 #{sec1}
-      .grid-item.item10 10 #{sec1}
-      .grid-item.item11 11 #{sec1}
-      .grid-item.item12 12 #{sec1}
-      .grid-item.item13 13 #{sec1}
-      .grid-item.item14 14 #{sec1}
-      .grid-item.item15 15 #{sec1}
+      .grid-item.item6  #{right1}
+      .grid-item.item7  #{right2}
+      .grid-item.item8  #{right3}
+      .grid-item.item9  #{sec1}
+      .grid-item.item10  #{sec1}
+      .grid-item.item11  #{sec1}
+      .grid-item.item12  #{sec1}
+      .grid-item.item13  #{sec1}
+      .grid-item.item14  #{sec1}
+      .grid-item.item15  #{sec1}
