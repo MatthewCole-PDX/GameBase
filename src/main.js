@@ -113,29 +113,109 @@ app.post("/search", async (req, res) => {
           " GROUP BY games.game_id, games.name, Console, releases.release_date, Publisher, releases.region" +
           ";"
       );
-      var results = { results: result ? result.rows : null };
-      console.log(results);
+      //var results = { results: result ? result.rows : null };
+      //console.log(results);
       //res.render("search");
       for (var i = 0; i < result.rows.length; i++) {
         var game = {
-          game_id: result.rows[i].game_id,
-          name: result.rows[i].name,
-          console: result.rows[i].console,
+          "game_id": result.rows[i].game_id,
+          "name": result.rows[i].name,
+          "console": result.rows[i].console,
           "first release": result.rows[i].first_release,
-          publisher: result.rows[i].publisher,
-          region: result.rows[i].region,
-          genres: result.rows[i].genres,
+          "publisher": result.rows[i].publisher,
+          "region": result.rows[i].region,
+          "genres": result.rows[i].genres,
         };
         searchResults.push(game);
       }
       res.render("search", {
-        games: searchResults,
+        "games": searchResults,
       });
       client.release();
     } catch (err) {
       console.error(err);
       res.send("Error " + err);
     }
+  }
+});
+
+app.get("/game/:game_id", async (req, res) => {
+  res.status(200);
+  //res.send(req.params.game_id);
+  var id = req.params.game_id;
+  try {
+    const client = await pool.connect();
+    const result = await client.query(
+      //"SELECT * FROM games;"
+      "SELECT games.game_id AS game_id, games.name AS name, consoles.console_id AS Console_id, " + 
+	        "consoles.name AS Console, TO_CHAR(releases.release_date,'MM/DD/YYYY') AS Release_date, " +
+	        "companies.company_id AS Publisher_id, companies.name AS Publisher, " +
+          "(SELECT DISTINCT string_agg(companies.name, ', ') AS Developers FROM companies " +
+                      "JOIN developer_rel ON developer_rel.developer_id = companies.company_id " +
+        		          "WHERE developer_rel.game_id = '" + id + "'), " +
+          "(SELECT DISTINCT string_agg(designers.name, ', ') AS Designers FROM designers " +
+                        "JOIN designer_rel ON designers.designer_id = designer_rel.designer_id " +
+                        "INNER JOIN releases ON releases.release_id = designer_rel.release_id " +
+                        "WHERE releases.game_id = '" + id + "'), " +
+          "(SELECT DISTINCT string_agg(genres.name, ', ') AS Genres FROM genres " +
+                        "JOIN genre_rel ON genres.genre_id = genre_rel.genre_id " +
+		                    "WHERE genre_rel.game_id = '" + id + "'), " +
+	        "releases.region AS Region, releases.first_release, releases.release_id " +
+      "FROM releases " +
+      "JOIN games ON games.game_id = releases.game_id " +
+      "INNER JOIN consoles ON releases.console_id = consoles.console_id " +
+      "INNER JOIN companies ON releases.publisher_id = companies.company_id " +
+      "WHERE releases.game_id = '" + id + "' " +
+      "GROUP BY releases.release_id, games.game_id, games.name, consoles.Console_id, " +
+            "Console, releases.release_date, companies.company_id, " +
+            "companies.name, releases.region, releases.first_release " +
+	    "ORDER BY releases.release_date;"
+    );
+    //var results = { results: result ? result.rows : null };
+    console.log(result.rows.length);
+    var secondaryReleases = [];
+    var game;
+    for (var i = 0; i < result.rows.length; i++) {
+      if(result.rows[i].first_release == 'yes'){
+        game = {
+          "game_id": result.rows[i].game_id,
+          "name": result.rows[i].name,
+          "console_id": result.rows[i].console_id,
+          "console": result.rows[i].console,
+          "release_date": result.rows[i].release_date,
+          "publisher_id": result.rows[i].publisher_id,
+          "publisher": result.rows[i].publisher,
+          "developers": result.rows[i].developers,
+          "designers": result.rows[i].designers,
+          "region": result.rows[i].region,
+          "genres": result.rows[i].genres,
+        };
+      }else{
+        var secondaryRelease = {
+          "game_id": result.rows[i].game_id,
+          "name": result.rows[i].name,
+          "console_id": result.rows[i].console_id,
+          "console": result.rows[i].console,
+          "release_date": result.rows[i].release_date,
+          "publisher_id": result.rows[i].publisher_id,
+          "publisher": result.rows[i].publisher,
+          "developers": result.rows[i].developers,
+          "designers": result.rows[i].designers,
+          "region": result.rows[i].region,
+          "genres": result.rows[i].genres,
+        }
+        secondaryReleases.push(secondaryRelease); 
+      };
+    };
+    console.log(secondaryReleases);
+    res.render("game", {
+      "game": game,
+      "secondaryReleases": secondaryReleases,
+    });
+    client.release();
+  } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
   }
 });
 
