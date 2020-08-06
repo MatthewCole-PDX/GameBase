@@ -33,7 +33,7 @@ app.use(
 var loggedIn = false;
 
 // load all of the files
-//app.use(express.static(path.join(__dirname + "/public")));
+app.use(express.static(path.join(__dirname + "/public")));
 app.set("views", __dirname + "/public/frontend");
 app.set("view engine", "pug");
 
@@ -88,13 +88,15 @@ app.get("/checkCredentials", (req, res) => {
   //else sendfile form
 });
 
-app.post("/search", async (req, res) => {
+app.post("/search", async (req, res) => {  
   res.status(200);
+  var searchResults = [];
   if (req.body.category == "games") {
     try {
       const client = await pool.connect();
       const result = await client.query(
-        "SELECT DISTINCT games.game_id AS game_id, games.name AS Game" +
+        //"SELECT * FROM games;"
+        "SELECT DISTINCT games.game_id AS game_id, games.name AS name" +
           ", consoles.name AS Console" +
           ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release, companies.name AS Publisher, releases.region AS Region" +
           ", string_agg(DISTINCT genres.name, ', ') AS Genres" +
@@ -104,55 +106,29 @@ app.post("/search", async (req, res) => {
           "INNER JOIN companies ON releases.publisher_id = companies.company_id " +
           "INNER JOIN genre_rel ON games.game_id = genre_rel.game_id " +
           "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
-          "WHERE games.name LIKE '%" +
-          req.body.searchFor +
-          "%'" +
+          "WHERE LOWER(games.name) LIKE LOWER('%" + req.body.searchFor + "%')" +
           " AND releases.first_release = 'yes'" +
-          " GROUP BY games.game_id, Game, Console, releases.release_date, Publisher, releases.region" +
+          " GROUP BY games.game_id, games.name, Console, releases.release_date, Publisher, releases.region" +
           ";"
       );
       var results = { results: result ? result.rows : null };
       console.log(results);
-      res.set("text/html");
-      var htmlResult =
-        '<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"' +
-        'integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>' +
-        '<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"' +
-        'integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>' +
-        '<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"' +
-        'integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>' +
-        '<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"' +
-        'integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"/>';
-      var i = 1;
-      for (let row of result.rows) {
-        htmlResult +=
-          '<div class="container p-3 my-3 bg-light">' +
-          '<img src="images/game-' +
-          row.game_id +
-          '.jpg" width=400px alt="' +
-          path.join(__dirname + "/public/images/game-" + row.game_id + ".jpg") +
-          '">' +
-          "<h2>" +
-          i +
-          ". <a href= '/game/:" +
-          row.game_id +
-          "'>" +
-          row.game +
-          ": </a></h2>" +
-          "&nbsp;&nbsp;" +
-          row.genres +
-          "&nbsp;-&nbsp;" +
-          row.console +
-          "&nbsp;-&nbsp;First Released:&nbsp;" +
-          row.first_release +
-          " by " +
-          row.publisher +
-          " in " +
-          row.region +
-          "</div>";
-        i++;
+      //res.render("search");
+      for(var i = 0; i < result.rows.length; i++){
+        var game = {
+          'game_id':result.rows[i].game_id,
+          'name':result.rows[i].name,
+          'console':result.rows[i].console,
+          'first release':result.rows[i].first_release,
+          'publisher':result.rows[i].publisher,
+          'region':result.rows[i].region,
+          'genres':result.rows[i].genres
+        }
+        searchResults.push(game);
       }
-      res.send(htmlResult);
+      res.render("search", { 
+        "games": searchResults 
+      });
       client.release();
     } catch (err) {
       console.error(err);
