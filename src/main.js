@@ -33,7 +33,7 @@ app.use(
 var loggedIn = false;
 
 // load all of the files
-app.use(express.static(path.join(__dirname + "/public")));
+app.use(express.static(path.join(__dirname + "/public/css")));
 app.set("views", __dirname + "/public/frontend");
 app.set("view engine", "pug");
 
@@ -88,7 +88,7 @@ app.get("/checkCredentials", (req, res) => {
   //else sendfile form
 });
 
-app.post("/search", async (req, res) => {  
+app.post("/search", async (req, res) => {
   res.status(200);
   var searchResults = [];
   if (req.body.category == "games") {
@@ -106,7 +106,9 @@ app.post("/search", async (req, res) => {
           "INNER JOIN companies ON releases.publisher_id = companies.company_id " +
           "INNER JOIN genre_rel ON games.game_id = genre_rel.game_id " +
           "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
-          "WHERE LOWER(games.name) LIKE LOWER('%" + req.body.searchFor + "%')" +
+          "WHERE LOWER(games.name) LIKE LOWER('%" +
+          req.body.searchFor +
+          "%')" +
           " AND releases.first_release = 'yes'" +
           " GROUP BY games.game_id, games.name, Console, releases.release_date, Publisher, releases.region" +
           ";"
@@ -114,20 +116,20 @@ app.post("/search", async (req, res) => {
       var results = { results: result ? result.rows : null };
       console.log(results);
       //res.render("search");
-      for(var i = 0; i < result.rows.length; i++){
+      for (var i = 0; i < result.rows.length; i++) {
         var game = {
-          'game_id':result.rows[i].game_id,
-          'name':result.rows[i].name,
-          'console':result.rows[i].console,
-          'first release':result.rows[i].first_release,
-          'publisher':result.rows[i].publisher,
-          'region':result.rows[i].region,
-          'genres':result.rows[i].genres
-        }
+          game_id: result.rows[i].game_id,
+          name: result.rows[i].name,
+          console: result.rows[i].console,
+          "first release": result.rows[i].first_release,
+          publisher: result.rows[i].publisher,
+          region: result.rows[i].region,
+          genres: result.rows[i].genres,
+        };
         searchResults.push(game);
       }
-      res.render("search", { 
-        "games": searchResults 
+      res.render("search", {
+        games: searchResults,
       });
       client.release();
     } catch (err) {
@@ -138,26 +140,26 @@ app.post("/search", async (req, res) => {
 });
 
 // create a chart given a query from the chart page
-app.post('/gen', async (req, res) => {
+app.post("/gen", async (req, res) => {
   try {
     res.status(200);
 
     // log the inputs of the form the console
-    console.log('Console: ' + req.body.Console);
-    console.log('Company: ' + req.body.Company);
-    console.log('Genre: ' + req.body.Genre);
+    console.log("Console: " + req.body.Console);
+    console.log("Company: " + req.body.Company);
+    console.log("Genre: " + req.body.Genre);
 
     // touch postgres DB server
     const client = await pool.connect();
 
     // generate query
     // use temp query for now
-    const result = await client.query('SELECT * FROM users;');
-    const results = { results : result ? result.rows : null }; 
+    const result = await client.query("SELECT * FROM users;");
+    const results = { results: result ? result.rows : null };
     res.send(results);
     console.log(results);
     client.release();
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     res.send("Error " + err);
   }
