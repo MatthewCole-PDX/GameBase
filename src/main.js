@@ -79,14 +79,55 @@ app.get("/", async (req, res) => {
 });
 
 // add possibility for manual navigation
-app.get("/chart", (req, res) => {
+app.get("/chart", async (req, res) => {
   res.status(200);
-  res.render("chart");
-  // if (!loggedIn) {
-  //   res.sendFile(path.join(__dirname + "/public/chart.html"));
-  // } else {
-  //   //send logged in version of chart.html
-  // }
+  var searchResults = [];
+  try {
+    const client = await pool.connect();
+
+    // note that the view 'top' is the query
+    // SELECT name, AVG(user_rating) AS avg
+    // FROM ratings
+    // NATURAL JOIN releases
+    // NATURAL JOIN Games
+    // GROUP BY name
+    // ORDER BY avg;
+    const result = await client.query(
+      "SELECT users.user_name, games.game_id, games.name, ratings.user_rating, ratings.user_review " +
+        "FROM users " +
+        "JOIN ratings " +
+        "ON users.user_id = ratings.user_id " +
+        "INNER JOIN releases " +
+        "ON releases.release_id = ratings.release_id " +
+        "INNER JOIN games " +
+        "ON releases.game_id = games.game_id " +
+        "WHERE ratings.user_review IS NOT NULL;"
+    );
+    const results = { results: result ? result.rows : null };
+    let data = result.rows;
+    for (let i = 0; i < data.length; i++) {
+      var reviews = {
+        user_name: data[i].user_name,
+        game_id: data[i].game_id,
+        name: data[i].name,
+        user_rating: data[i].user_rating,
+        user_review: data[i].user_review,
+      };
+      searchResults.push(reviews);
+    }
+      // if (!loggedIn) {
+      // } else {
+      //   //send logged in version of chart.html
+      // }
+    res.render("chart", {
+      reviewData: searchResults,
+    });
+    //console.log(searchResults[0].user_name);
+    client.release();
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
 });
 
 
@@ -276,6 +317,8 @@ app.post("/gen", async (req, res) => {
     for(var i=0; i<len; i++) {
       game.push(result.rows[i]) 
     }
+
+    //temporarily insert the users to test functionality
     res.render("gen", {"Results": game});
     // console.log(results);
     client.release();
