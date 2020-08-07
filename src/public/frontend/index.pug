@@ -22,9 +22,12 @@ head
             | home 
             span.sr-only (current)
         li.nav-item
-          a#chart.nav-link(href='/chart') chart
+          a#chart.nav-link(href='/chart').text-secondary chart
         li.nav-item
-          a#logIn.nav-link(href='/logIn') log in/sign up
+          if loggedIn === false
+            a#logIn.nav-link(href='/logIn').text-secondary log in/sign up
+          else
+            a.nav-link.text-secondary $user
       form.form-inline.my-2.my-lg-0(action='/search' method='POST')
         input.form-control.mr-sm-2(type='search' placeholder='Search' name='searchFor' required='')
         label(for='category') in:&nbsp;
@@ -43,43 +46,43 @@ head
     section.left-grid-container
       .row.item1 
         .col-4
-          h5#game #{"Game: " + reviewData[0].name}
-          h5#rating #{"Rating: " + reviewData[0].user_rating + "/10"}
           img.img-fluid(src='../images/game-' + reviewData[0].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[0].game_id + '.jpg')
+          h5#game #{reviewData[0].name}
+          h5#rating #{"Rating: " + reviewData[0].user_rating + "/10"}
         .col-8
-          h5 #{"user: " + reviewData[0].user_name}
+          h5 #{reviewData[0].user_name}
           p #{reviewData[0].user_review}
       .row.item2
         .col-4
-          h5#game #{"Game: " + reviewData[1].name}
-          h5#rating #{"Rating: " + reviewData[1].user_rating + "/10"}
           img.img-fluid(src='../images/game-' + reviewData[1].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[1].game_id + '.jpg')
+          h5#game #{reviewData[1].name}
+          h5#rating #{"Rating: " + reviewData[1].user_rating + "/10"}
         .col-8
-          h5 #{"user: " + reviewData[1].user_name}
+          h5 #{reviewData[1].user_name}
           p #{reviewData[1].user_review} 
       .row.item3
         .col-4
-          h5#game #{"Game: " + reviewData[2].name}
-          h5#rating #{"Rating: " + reviewData[2].user_rating + "/10"}
           img.img-fluid(src='../images/game-' + reviewData[2].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[2].game_id + '.jpg')
+          h5#game #{reviewData[2].name}
+          h5#rating #{"Rating: " + reviewData[2].user_rating + "/10"}
         .col-8
-          h5 #{"user: " + reviewData[2].user_name}
+          h5 #{reviewData[2].user_name}
           p #{reviewData[2].user_review} 
       .row.item4
         .col-4
-          h5#game #{"Game: " + reviewData[3].name}
-          h5#rating #{"Rating: " + reviewData[3].user_rating + "/10"}
           img.img-fluid(src='../images/game-' + reviewData[3].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[3].game_id + '.jpg')
+          h5#game #{reviewData[3].name}
+          h5#rating #{"Rating: " + reviewData[3].user_rating + "/10"}
         .col-8
-          h5 #{"user: " + reviewData[3].user_name}
+          h5 #{reviewData[3].user_name}
           p #{reviewData[3].user_review}
       .row.item5
         .col-4
-          h5#game #{"Game: " + reviewData[4].name}
-          h5#rating #{"Rating: " + reviewData[4].user_rating + "/10"}
           img.img-fluid(src='../images/game-' + reviewData[4].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[4].game_id + '.jpg')
+          h5#game #{reviewData[4].name}
+          h5#rating #{"Rating: " + reviewData[4].user_rating + "/10"}
         .col-8
-          h5 #{"user: " + reviewData[4].user_name}
+          h5 #{reviewData[4].user_name}
           p #{reviewData[4].user_review}
   .col-lg.rightContainer
     #reviews New Releases
