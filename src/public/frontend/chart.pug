@@ -151,13 +151,14 @@ form(action='/gen' method='POST')
       option Turn-based tactics
   .form-group
     label(for='input1') Minimum year: 
-    input#1input1.form-control(type="text")
+    input#1input1.form-control(type="text" name="MinYear")
   .form-group
     label(for='input2') Maximum year: 
-    input#1input2.form-control(type="text")
+    input#1input2.form-control(type="text" name="MaxYear")
   .form-group
     label(for="list4") Generation:
     select#1list4.form-control(name="Generation")
+      option Any
       option 1
       option 2
       option 3
@@ -168,6 +169,8 @@ form(action='/gen' method='POST')
       option 8
       option 9
   button.btn.btn-success.my-2.my-sm-0(type='submit') Create chart
+
+  
 
   .row
   .col-lg.leftContainer

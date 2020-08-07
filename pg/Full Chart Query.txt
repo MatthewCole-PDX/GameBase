@@ -1,8 +1,8 @@
 consoleParam = 'ANY(SELECT releases.console_id FROM releases)'
 genreParam = 'ANY(SELECT genres.genre_id FROM genres)'
 generationParam = 'ANY(SELECT consoles.generation_id FROM consoles) OR consoles.generation_id IS NULL'
-yearParam1 = '2999-01-01'
-yearParam2 = '1900-01-01'
+yearParam2 = '2999-01-01'
+yearParam1 = '1900-01-01'
 
 SELECT row_number() OVER ( ORDER BY rating.average DESC) AS rank, games.game_id,
 games.name, consoles.console_id, consoles.name AS Console, companies.name AS Publisher, companies.company_id AS publisher_id, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres, rating.average FROM

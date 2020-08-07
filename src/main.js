@@ -403,19 +403,83 @@ app.post("/gen", async (req, res) => {
   try {
     res.status(200);
 
-    // log the inputs of the form the console
-    console.log("Console: " + req.body.Console);
-    console.log("Company: " + req.body.Company);
-    console.log("Genre: " + req.body.Genre);
+    // construct a series of 'if' statements that will
+    // determine the contents of the query, so that it makes sense
+    // and produces the chart the user wants
+    var yearParam1;
+    var yearParam2;
+    var genreParam;
+    var consoleParam; 
+    var generationParam;
+
+    if(!req.body.MinYear) {
+      yearParam1 = "'1900-01-01'::date";
+    }
+    else {
+      yearParam1 = req.body.MinYear;
+    }
+
+    if(!req.body.MaxYear) {
+      yearParam2 = "'2999-01-01'::date";
+    }
+    else {
+      yearParam2 = req.body.MaxYear;
+    }
+
+    if(req.body.Genre = 'Any') {
+      genreParam = 'ANY(SELECT genres.genre_id FROM genres)';
+    }
+    else {
+      genreParam = req.body.Genre;
+    }
+
+    if(req.body.Console = 'Any') {
+      consoleParam = 'ANY(SELECT releases.console_id FROM releases)';
+    }
+    else {
+      consoleParam = req.body.Console;
+    }
+
+    if(req.body.Generation = 'Any') {
+      generationParam = 'ANY(SELECT consoles.generation_id FROM consoles) OR consoles.generation_id IS NULL';
+    }
+    else {
+      generationParam = req.body.Generation;
+    }
+
+    console.log(yearParam1);
+    console.log(yearParam2);
+    console.log(genreParam);
+    console.log(generationParam);
+    console.log(consoleParam);
+
+    var query = 'SELECT row_number() OVER ( ORDER BY rating.average DESC) AS rank, games.game_id, ' +
+    "games.name, consoles.console_id, consoles.name AS Console, companies.name AS Publisher, companies.company_id AS publisher_id, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres, rating.average FROM " +
+    '(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average ' +
+    'FROM ratings GROUP BY release_id) AS rating ' +
+    'JOIN releases ON releases.release_id = rating.release_id ' +
+    'INNER JOIN games ON releases.game_id = games.game_id ' +
+    'INNER JOIN consoles ON releases.console_id = consoles.console_id ' +
+    'INNER JOIN companies ON releases.publisher_id = companies.company_id ' +
+    'INNER JOIN genre_rel ON games.game_id = genre_rel.game_id ' +
+    'INNER JOIN genres ON genre_rel.genre_id = genres.genre_id ' +
+    'WHERE (releases.console_id = ' + consoleParam + ' '  +
+    'AND genres.genre_id = ' + genreParam + ' ' +
+    'AND consoles.generation_id = ' + generationParam + ' ' +
+    'AND releases.release_date >= ' + yearParam1 + ' ' +
+    'AND releases.release_date < ' + yearParam2 + ' ' +
+    "AND releases.first_release = 'yes') " +
+    'GROUP BY games.game_id, games.name, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region;';
 
     // touch postgres DB server
     const client = await pool.connect();
 
     // generate query
     // use temp query for now
-    const result = await client.query("SELECT * FROM users;");
-    // const results = { results: result ? result.rows : null };
+    const result = await client.query(query);
+    const results = { results: result ? result.rows : null };
     console.log(result.rows);
+    /*
     var len = result.rows.length;
     var game = [];
     for (var i = 0; i < len; i++) {
@@ -423,7 +487,9 @@ app.post("/gen", async (req, res) => {
     }
 
     //temporarily insert the users to test functionality
-    res.render("gen", { Results: game });
+    res.render("gen", { Results: game });*/
+
+    res.render("gen");
     // console.log(results);
     client.release();
   } catch (err) {
