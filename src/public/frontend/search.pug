@@ -16,13 +16,16 @@ head
     #navbarTogglerDemo02.collapse.navbar-collapse
       ul.navbar-nav.mr-auto.mt-2.mt-lg-0
         li.nav-item.active
-          a.nav-link(href='/')
+          a.nav-link(href='/').text-secondary
             | home 
             span.sr-only (current)
         li.nav-item
-          a#chart.nav-link(href='/chart') chart
+          a#chart.nav-link(href='/chart').text-secondary chart
         li.nav-item
-          a#logIn.nav-link(href='/logIn') log in/sign up
+          if loggedIn === false
+            a#logIn.nav-link(href='/logIn').text-secondary log in/sign up
+          else 
+            a.nav-link.text-secondary $user
       form.form-inline.my-2.my-lg-0(action='/search' method='POST')
         input.form-control.mr-sm-2(type='search' placeholder='Search' name='searchFor' required='')
         label(for='category') in:&nbsp;
