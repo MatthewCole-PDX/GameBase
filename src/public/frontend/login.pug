@@ -37,10 +37,14 @@ head
 .row
   .col-sm.leftContainer
     h2#logInTitle Log in
-    p#logInTitle
-      | If you are already registered, then please log in.
+    if !Login_Failed
+      p#logInTitle
+      |   If you are already registered, then please log in.
+    else
+      p#loginTitle
+        tr #{Login_Failed}
     #formContainer.formContainer
-      form.form-horizontal(action='/checkCrentials' role='form')
+      form.form-horizontal(action='/user/:'+ username role='form')
         .form-group.row
           label(for='name') username
           input#name.form-control(type='text' name='name' required='')

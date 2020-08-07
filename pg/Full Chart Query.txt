@@ -1,0 +1,23 @@
+consoleParam = 'ANY(SELECT releases.console_id FROM releases)'
+genreParam = 'ANY(SELECT genres.genre_id FROM genres)'
+generationParam = 'ANY(SELECT consoles.generation_id FROM consoles) OR consoles.generation_id IS NULL'
+yearParam1 = '2999-01-01'
+yearParam2 = '1900-01-01'
+
+SELECT row_number() OVER ( ORDER BY rating.average DESC) AS rank, games.game_id,
+games.name, consoles.console_id, consoles.name AS Console, companies.name AS Publisher, companies.company_id AS publisher_id, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres, rating.average FROM
+(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average
+FROM ratings GROUP BY release_id) AS rating
+JOIN releases ON releases.release_id = rating.release_id
+INNER JOIN games ON releases.game_id = games.game_id
+INNER JOIN consoles ON releases.console_id = consoles.console_id
+INNER JOIN companies ON releases.publisher_id = companies.company_id
+INNER JOIN genre_rel ON games.game_id = genre_rel.game_id
+INNER JOIN genres ON genre_rel.genre_id = genres.genre_id
+WHERE releases.console_id = consoleParam;
+AND genres.genre_id = generationParam
+AND (consoles.generation_id = )
+AND releases.release_date >= yearParam1
+AND releases.release_date < yearParam2
+AND releases.first_release = 'yes'
+GROUP BY games.game_id, games.name, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region;
