@@ -53,6 +53,7 @@ body {
 
 #rating {
   color: crimson;
+  margin-top: 10px;
 }
 
 .item1,
@@ -114,4 +115,26 @@ body {
   grid-column: 1 / 6;
   background-color: white;
   border-color: whitesmoke;
+}
+
+/*used in game.pug*/
+#inCollection {
+  margin-top: 20px;
+}
+
+#reviewForm {
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+#resetForm {
+  margin-left: 10px;
+}
+
+#review {
+  margin: 20px;
+}
+
+#ratingForm {
+  margin: 40px;
 }
