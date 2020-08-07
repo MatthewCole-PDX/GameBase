@@ -6,7 +6,9 @@ head
   script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous')
   script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js' integrity='sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI' crossorigin='anonymous')
   link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css' integrity='sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk' crossorigin='anonymous')
-  link(rel='stylesheet' href='css/logIn.css')
+  script(src='https://unpkg.com/axios/dist/axios.min.js')
+  link(rel='stylesheet' href='../css/index.css')
+  link(rel='stylesheet', href='/css/bootstrap.min.css')
   title RateYourGame2020
 .navContainer
   nav.navbar.navbar-expand-lg.navbar-light.bg-light
@@ -15,14 +17,17 @@ head
       span.navbar-toggler-icon
     #navbarTogglerDemo02.collapse.navbar-collapse
       ul.navbar-nav.mr-auto.mt-2.mt-lg-0
-        li.nav-item
-          a#home.nav-link(href='/').text-secondary home
+        li.nav-item.active
+          a.nav-link(href='/').text-secondary
+            | home 
+            span.sr-only (current)
         li.nav-item
           a#chart.nav-link(href='/chart').text-secondary chart
-        li.nav-item.active
-          a.nav-link(href='/logIn')
-            | log in/sign up
-            span.sr-only (current)
+        li.nav-item
+          if loggedIn === false
+            a#logIn.nav-link(href='/logIn').text-secondary log in/sign up
+          else
+            a.nav-link.text-secondary $user
       form.form-inline.my-2.my-lg-0(action='/search' method='POST')
         input.form-control.mr-sm-2(type='search' placeholder='Search' name='searchFor' required='')
         label(for='category') in:&nbsp;
@@ -36,39 +41,40 @@ head
           | Search
 .row
   .col-sm.leftContainer
-    h2#logInTitle Log in
-    if !Login_Failed
-      p#logInTitle
-      |   If you are already registered, then please log in.
-    else
-      p#loginTitle
-        tr #{Login_Failed}
-    #formContainer.formContainer
-      form.form-horizontal(action='/checkCredentials' method='POST'  role='form')
-        .form-group.row
-          label(for='name') username
-          input#name.form-control(type='text' name='name' required='')
-        .form-group.row
-          label(for='password') password
-          input#password.form-control(type='password' name='password' required='') 
-        button#button.btn.btn-secondary(type='submit')
-          | Log In &gt;&gt;
+    .container.p-3.my-3.bg-info
+    .container.p-3.my-3.bg-light 
+        img(src='../images/user-' + userInfo.user_id + '.jpg' width='400px' alt='images/user-' + userInfo.user_id + '.jpg')
+      
   .col-sm.rightContainer
-    .signUpContainer
-      h3 Don&apos;t have an account?
-      p
-        | With a Rate Your Game account, you can:
+    .container.p-3.my-3.bg-info
+    //-.container.p-3.my-3.bg-light
+        h3 #{userInfo.user_name}
         br
+        td Birth Date:&nbsp;  #{userInfo.birth_date}
         br
-        |           rate,review,catalog, and tag your games
+        td City:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   #{userInfo.city}
         br
-        |           find new games and people through recommendations
+        td Country:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     #{userInfo.country}
         br
-        |           create and publish lists of your favorite things
+        td Favorite Console:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                 a(href='/console_:' + console_id) #{game.console}
         br
-      button#signupButton.btn.btn-secondary(type='submit' onclick="window.location.href='/createNewUser';")
-        | Sign up now!
+        
+    //-.container.p-3.my-3.bg-info 
+        td My Ratings:
+        br
 
-        //-.form-check
-          input#check.form-check-input(type='checkbox')
-          label.form-check-label(for='exampleCheck1') Remember me
+        for userEntry in userLibrary
+            tr.odd(role='row')
+                if userEntry.user_rating != NULL
+                    .container.p-3.my-3.bg-light
+                        td #{userEntry.user_rating}/10 
+                        td
+                            a(href='/game_:' + userEntry.game_id) #{userEntry.game_name}
+                            a(href='/console_:' + userEntry.console_id) #{userEntry.console},
+                        td  by 
+                            a(href='/publisher_:' + userEntry.publisher_id) #{userEntry.publisher},
+                        td  #{userEntry.region}
+                        br
+                        if userEntry.user_review != NULL
+                            td #{userEntry.user_review}
