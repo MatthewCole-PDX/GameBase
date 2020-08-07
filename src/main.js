@@ -125,13 +125,29 @@ app.get("/chart", async (req, res) => {
 app.get("/login", (req, res) => {
   res.status(200);
   // res.sendFile(path.join(__dirname + "/public/logIn.html"));
-  res.render("login");
+  res.render("login", {"Login_Failed": undefined});
   //not visible if logged in
 });
-
-app.get("/createNewUser", (req, res) => {
+app.get("/user/:user_name", (req, res) => {
   res.status(200);
-  res.sendFile(path.join(__dirname + "/public/form.html"));
+  while(loggedIn == false){
+    try {
+      const client = await pool.connect();
+      const result = await client.query("SELECT user_id FROM users WHERE user_name = " + 
+                                          req.params.user_name + " AND password = " + req.body.password + ";"
+      );
+      if (result != NULL){
+        loggedIn = true;
+      }
+      else{
+        res.render("login", {"Login_Failed": "Login Failed, Please Try Again"
+        });
+        client.release();
+      } catch (err) {
+        console.error(err);
+        res.send("Error " + err);
+      }
+      }
 });
 
 app.post("/newUserAdded", (req, res) => {
@@ -143,15 +159,6 @@ app.post("/newUserAdded", (req, res) => {
   if (err) throw err;
   client.end();
   res.sendFile(path.join(__dirname + "/public/newUserAdded.html"));
-});
-
-app.get("/checkCredentials", (req, res) => {
-  res.status(200);
-  //find name in database
-  //if found
-  //loggedIn=TRUE
-  //sendfile /:user
-  //else sendfile form
 });
 
 app.post("/search", async (req, res) => {
@@ -246,7 +253,6 @@ app.get("/game/:game_id", async (req, res) => {
         "ORDER BY releases.release_date;"
     );
     //var results = { results: result ? result.rows : null };
-    console.log(result.rows.length);
     var secondaryReleases = [];
     var game;
     for (var i = 0; i < result.rows.length; i++) {
@@ -291,6 +297,35 @@ app.get("/game/:game_id", async (req, res) => {
     console.error(err);
     res.send("Error " + err);
   }
+});
+
+app.get("/console/:console_id", async (req, res) => {
+  res.status(200);
+  var id = req.params.game_id;
+  try {
+    const client = await pool.connect();
+    const result = await client.query(
+      //"SELECT * FROM games;"
+      "SELECT consoles.console_id AS Console_id, " + 
+          "consoles.name AS Console, " +
+          "TO_CHAR(consoles.release_date,'MM/DD/YYYY') AS Release_date, " +
+	        "companies.company_id AS Manufacturer_id, companies.name AS Manufacturer, " +
+	        "consoles.region AS Region, generation.name " +
+      "FROM consoles, companies " +
+      "WHERE consoles.console_id = '" + id + "' AND consoles.manufacturer_id = companies.company_id;"
+    );
+    var console = {
+      "console_id": result.rows[i].console_id,
+      "console": result.rows[i].console,
+      "release_date": result.rows[i].release_date,
+      "manufacturer_id": result.rows[i].publisher_id,
+      "manufacturer": result.rows[i].publisher,
+      "region": result.rows[i].region,
+    };
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+}
 });
 
 // create a chart given a query from the chart page
