@@ -92,28 +92,22 @@ app.get("/chart", async (req, res) => {
     // NATURAL JOIN Games
     // GROUP BY name
     // ORDER BY avg;
+    // 'top2' is the same but with game_id instead of name
     const result = await client.query(
-      "SELECT users.user_name, games.game_id, games.name, ratings.user_rating, ratings.user_review " +
-        "FROM users " +
-        "JOIN ratings " +
-        "ON users.user_id = ratings.user_id " +
-        "INNER JOIN releases " +
-        "ON releases.release_id = ratings.release_id " +
-        "INNER JOIN games " +
-        "ON releases.game_id = games.game_id " +
-        "WHERE ratings.user_review IS NOT NULL;"
+      'SELECT * ' + 
+      'FROM top ' +
+      'NATURAL JOIN top2 ' +
+      'ORDER BY avg;'
     );
     const results = { results: result ? result.rows : null };
     let data = result.rows;
-    for (let i = 0; i < data.length; i++) {
-      var reviews = {
-        user_name: data[i].user_name,
+    for (let i = data.length-1; i >= 0; i--) {
+      var rating = {
         game_id: data[i].game_id,
         name: data[i].name,
-        user_rating: data[i].user_rating,
-        user_review: data[i].user_review,
+        user_rating: data[i].avg,
       };
-      searchResults.push(reviews);
+      searchResults.push(rating);
     }
       // if (!loggedIn) {
       // } else {
