@@ -27,6 +27,7 @@ City', 'Venezuela', 'Vietnam', 'Yemen', 'Zambia', 'Zimbabwe', 'World-wide', 'Nor
 'Europe', 'Asia' );
 CREATE TYPE gen AS ENUM('First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh',
 'Eighth');
+
 CREATE TABLE Companies(company_id int, name varchar(40), founding_date date,
 defunct_date date, city varchar(40), country nation, history text, PRIMARY KEY(company_id));
 
@@ -43,6 +44,7 @@ companies(company_id), FOREIGN KEY(generation_id) REFERENCES
 generations(generation_id));
 
 CREATE TABLE Games(game_id int, name varchar(40), description text, PRIMARY KEY(game_id));
+
 CREATE TABLE Series(series_id int, name varchar(40), history text, PRIMARY KEY(series_id));
 
 CREATE TABLE series_rel(game_id int, series_id int, FOREIGN KEY(game_id)
