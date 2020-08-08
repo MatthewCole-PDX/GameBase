@@ -1,0 +1,46 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  meta(http-equiv='X-UA-Compatible' content='ie=edge')
+  link(rel='stylesheet' type='text/css' href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css')
+  link(rel='stylesheet' href='css/form.css')
+.navContainer
+  nav.navbar.navbar-expand-lg.navbar-light.bg-light
+    a#title.navbar-brand(href='#') Best of 2020
+    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarTogglerDemo02' aria-controls='navbarTogglerDemo02' aria-expanded='false' aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+    #navbarTogglerDemo02.collapse.navbar-collapse
+      ul.navbar-nav.mr-auto.mt-2.mt-lg-0
+        li.nav-item
+          a#home.nav-link(href='/') home
+        li.nav-item.active
+          a.nav-link(href='/chart')
+            | chart
+            span.sr-only (current)
+        li.nav-item
+          a#logIn.nav-link(href='/logIn') log in/sign up
+      form.form-inline.my-2.my-lg-0(action='/search' method='POST')
+        input.form-control.mr-sm-2(type='search' placeholder='Search' name='searchFor' required='')
+        label(for='category') in:&nbsp;
+        select.browser-default.custom-select(name='category')
+          option(value='games') Games
+          option(value='consoles') Consoles
+          option(value='companies') Companies
+          option(value='personnel') Personnel
+          option(value='users') Users
+        button.btn.btn-success.my-2.my-sm-0(type='submit')
+          | Search
+form#form.container.bg-light.border.rounded.w-50.mx-auto.mt-5.p-3(action='/newUserAdded' method='POST')
+  h2#contact.mt-2.mb-4 Create Your Account
+  .form-group.row
+    label(for='name') Name 
+    input#name.form-control(type='text' required='')
+  .form-group.row
+    label(for='password') Password 
+    input#password.form-control(type='password' required='')
+  .form-group.row
+    label(for='email') Email 
+    input#email.form-control(type='email' required='')
+  button#formButton.btn.btn-info(type='submit')
+    | Create Account &gt;&gt;
