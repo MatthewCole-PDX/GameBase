@@ -560,7 +560,7 @@ app.post("/gen", async (req, res) => {
     console.log(consoleParam);
 
     var query =
-      "SELECT games.game_id, " +
+      "SELECT row_number() OVER ( ORDER BY rating.average DESC) AS rank, games.game_id, " +
       "games.name, consoles.console_id, consoles.name AS Console, companies.name AS Publisher, companies.company_id AS publisher_id, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres, rating.average FROM " +
       "(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average " +
       "FROM ratings GROUP BY release_id) AS rating " +
@@ -587,7 +587,8 @@ app.post("/gen", async (req, res) => {
       " " +
       "AND releases.first_release = 'yes') " +
       "GROUP BY games.game_id, games.name, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region " +
-      "ORDER BY rating;";
+      // "ORDER BY rating;";
+      ";";
 
     // touch postgres DB server
     const client = await pool.connect();
