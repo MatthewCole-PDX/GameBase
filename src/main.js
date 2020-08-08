@@ -650,6 +650,11 @@ app.get("/add", async (req, res) => {
 
     res.render("add", {
       "user_name": user_name,
+      series: series,
+      genres: genres,
+      consoles: consoles,
+      companies: companies,
+      countries: countries,
     });
 
     client.release();
