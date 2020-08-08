@@ -26,6 +26,7 @@ head
             a#logIn.nav-link(href='/logIn').text-secondary log in/sign up
           else
             a.nav-link.text-secondary $user
+            button.btn.btn-success.my-2.my-sm-1(type='logout') logout
       form.form-inline.my-2.my-lg-0(action='/search' method='POST')
         input.form-control.mr-sm-2(type='search' placeholder='Search' name='searchFor' required='')
         label(for='category') in:&nbsp;
