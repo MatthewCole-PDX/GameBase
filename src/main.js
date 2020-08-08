@@ -575,7 +575,13 @@ app.get("/add", async (req, res) => {
       regions.push(clone[i].region);
     }
 
-    res.render("add", {});
+    res.render("add", {
+      series: series,
+      genres: genres,
+      consoles: consoles,
+      companies: companies,
+      countries: countries,
+    });
 
     client.release();
   } catch (err) {
