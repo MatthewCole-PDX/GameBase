@@ -416,34 +416,36 @@ app.post("/gen", async (req, res) => {
       yearParam1 = "'1900-01-01'::date";
     }
     else {
-      yearParam1 = req.body.MinYear;
+      yearParam1 = "'" + req.body.MinYear + "-01-01" + "'::date";
     }
 
     if(!req.body.MaxYear) {
       yearParam2 = "'2999-01-01'::date";
     }
     else {
-      yearParam2 = req.body.MaxYear;
+      yearParam2 =  "'" + req.body.MaxYear + "-01-01" + "'::date";
     }
 
-    if(req.body.Genre = 'Any') {
+    if(req.body.Genre == 'Any') {
       genreParam = 'ANY(SELECT genres.genre_id FROM genres)';
     }
     else {
-      genreParam = req.body.Genre;
+      genreParam = 'ANY(SELECT genre_id FROM genres WHERE name = ' + "'" + req.body.Genre + "')";
     }
 
-    if(req.body.Console = 'Any') {
+    if(req.body.Console == 'Any') {
       consoleParam = 'ANY(SELECT releases.console_id FROM releases)';
     }
     else {
-      consoleParam = req.body.Console;
+      // consoleParam = req.body.Console.toString();
+      consoleParam = 'ANY(SELECT console_id FROM consoles WHERE name = ' + "'" + req.body.Console + "')";
     }
 
-    if(req.body.Generation = 'Any') {
+    if(req.body.Generation == 'Any') {
       generationParam = 'ANY(SELECT consoles.generation_id FROM consoles) OR consoles.generation_id IS NULL';
     }
     else {
+      // generationParam = "SELECT generation_id FROM consoles WHERE generation_id = " + req.body.Generation;
       generationParam = req.body.Generation;
     }
 
@@ -479,18 +481,8 @@ app.post("/gen", async (req, res) => {
     const result = await client.query(query);
     const results = { results: result ? result.rows : null };
     console.log(result.rows);
-    /*
-    var len = result.rows.length;
-    var game = [];
-    for (var i = 0; i < len; i++) {
-      game.push(result.rows[i]);
-    }
-
-    //temporarily insert the users to test functionality
-    res.render("gen", { Results: game });*/
 
     res.render("gen");
-    // console.log(results);
     client.release();
   } catch (err) {
     console.error(err);
