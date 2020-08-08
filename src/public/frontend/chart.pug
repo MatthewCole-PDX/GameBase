@@ -22,10 +22,13 @@ head
             | chart
             span.sr-only (current)
         li.nav-item
-          if loggedIn === false
+         if loggedIn === false
             a#logIn.nav-link(href='/logIn').text-secondary log in/sign up
-          else
-            a.nav-link.text-secondary $user
+         else
+            a.nav-link.text-secondary #{user_name}
+            li.nav-item
+              a#logIn.nav-link(href='/logOut').text-secondary log out
+            //button.btn.btn-success.my-2.my-sm-1(type='logout') logout
       form.form-inline.my-2.my-lg-0(action='/search' method='POST')
         input.form-control.mr-sm-2(type='search' placeholder='Search' name='searchFor' required='')
         label(for='category') in:&nbsp;
@@ -39,183 +42,94 @@ head
           | Search
 // Create the form that will submit a database query (and make a chart)
 form(action='/gen' method='POST')
-  .form-group
-    label(for='list1') Console:
-    select#list1.form-control(name='Console')
-      option Any
-      option Odyssey
-      option C-100 (Pong)
-      option Telstar Classic
-      option Color TV Game
-      option Atari 2600
-      option Intellivision
-      option Colecovision
-      option SG-1000
-      option Famicon
-      option Nintendo Entertainment System
-      option Sega Master System
-      option Atari 7800
-      option Turbo GrafX-16
-      option Sega Genesis
-      option Super NES
-      option Neo Geo
-      option 3DO
-      option Atari Jaguar
-      option Sega Saturn
-      option Playstation
-      option Nintendo 64
-      option Dreamcast
-      option Playstation 2
-      option Gamecube
-      option Xbox
-      option Xbox 360
-      option Playstation 3
-      option Wii
-      option Wii U
-      option Playstation 4
-      option Xbox One
-      option Nintendo Switch
-      option Arcade
-      option Mobile
-      option PC
-      option GameBoy
-      option Lynx
-      option Game Gear
-      option Nintendo DS
-      option PLaystation Portable
-      option Nintendo 3DS
-      option Playstation Vita
-  .form-group
-    label(for='list2') Company:
-    select#list2.form-control(name='Company')
-      option Any
-      option MagnaVox
-      option Atari
-      option Coleco
-      option Nintendo
-      option Mattel
-      option Sega
-      option NEC
-      option SNK
-      option 3DO
-      option Sony
-      option Microsoft
-      option Taito
-      option Midway
-      option Namco
-      option Williams Electronics
-      option Bandai
-      option Tengen
-      option HAL
-      option Hudson Soft
-      option GT Interactive
-      option General Computer Corporation
-      option Vid Kidz
-  .form-group
-    label(for='list3') Genre:
-    select#list2.form-control(name='Genre')
-      option Any
-      option Action
-      option Action role-playing
-      option Action-adventure
-      option Adventure
-      option Beat em up
-      option City-building
-      option Fighting
-      option First-person shooter
-      option Kart racing
-      option Life simulation
-      option Maze
-      option MMORPG
-      option Moba
-      option Platform
-      option Puzzle
-      option Puzzle-platformer
-      option Racing
-      option Real-time strategy
-      option Real-time tactics
-      option Rythm
-      option Roleplaying
-      option Run and gun
-      option Sandbox
-      option Shoot em up
-      option Space flight simulator
-      option Sports
-      option Stealth
-      option Strategy
-      option Survival horror
-      option Tactical roleplaying
-      option Third-person shooter
-      option Top-down shooter
-      option Turn-based strategy
-      option Turn-based tactics
-  .form-group
-    label(for='input1') Minimum year: 
-    input#1input1.form-control(type="text" name="MinYear")
-  .form-group
-    label(for='input2') Maximum year: 
-    input#1input2.form-control(type="text" name="MaxYear")
-  .form-group
-    label(for="list4") Generation:
-    select#1list4.form-control(name="Generation")
-      option Any
-      option 1
-      option 2
-      option 3
-      option 4
-      option 5
-      option 6
-      option 7
-      option 8
-      option 9
-  button.btn.btn-success.my-2.my-sm-0(type='submit') Create chart
-
-  
-
   .row
+    .col-sm.leftContainer
+      .container.p-3.my-3.bg-info
+        .container.p-3.my-3.bg-light
+            .form-group
+              label(for='list1') Console:
+              select#list1.browser-default.custom-select(name='Console')
+                option ANY
+                  for console in consoles
+                    tr.odd(role='row')
+                      option #{console.name}
+        .container.p-3.my-3.bg-light    
+          .form-group
+            label(for='list2') Publisher:
+            select#list2.browser-default.custom-select(name='Publisher')
+              option ANY
+                for publisher in publishers
+                  tr.odd(role='row')
+                    option #{publisher.name}
+        .container.p-3.my-3.bg-light
+          .form-group
+            label(for='list3') Genre:
+            select#list2.browser-default.custom-select(name='Genre')
+              option ANY
+                for genre in genres
+                  tr.odd(role='row')
+                    option #{genre.name}
+        button.btn.btn-success.my-2.my-sm-0(type='submit') Create chart
+
+    .col-sm.rightContainer
+      .container.p-3.my-3.bg-info
+        .container.p-3.my-3.bg-light    
+          .form-group
+            label(for='input1') Minimum year: 
+            input#1input1.browser-default.custom-select(type="text" name="MinYear")
+        .container.p-3.my-3.bg-light  
+          .form-group
+            label(for='input2') Maximum year: 
+            input#1input2.browser-default.custom-select(type="text" name="MaxYear")
+        .container.p-3.my-3.bg-light  
+          .form-group
+            label(for="list4") Generation:
+            select#1list4.browser-default.custom-select(name="Generation")
+              option Any
+                - var n = 0;
+                ul
+                  while n < 9
+                    option= ++n
+        
+
   .col-lg.leftContainer
     //- #reviews Reviews
 
     section.left-grid-container
-      .row.item1.bg-light  
-        .col-4
-          img.img-fluid(src='../images/game-' + reviewData[0].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[0].game_id + '.jpg')
-          h5#game #{"Game: " + reviewData[0].name}
-          h5#rating #{"Average Rating: " + reviewData[0].user_rating + "/10"}
-        .col-8
-          //- h5 #{"user: " + reviewData[0].user_name}
-          //- p #{reviewData[0].user_review}
-      .row.item2
-        .col-4
-          img.img-fluid(src='../images/game-' + reviewData[1].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[1].game_id + '.jpg')
-          h5#game #{"Game: " + reviewData[1].name}
-          h5#rating #{"Average Rating: " + reviewData[1].user_rating + "/10"}
-        .col-8
-          //- h5 #{"user: " + reviewData[1].user_name}
-          //- p #{reviewData[1].user_review} 
-      .row.item3.bg-light
-        .col-4
-          img.img-fluid(src='../images/game-' + reviewData[2].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[2].game_id + '.jpg')
-          h5#game #{"Game: " + reviewData[2].name}
-          h5#rating #{"Average Rating: " + reviewData[2].user_rating + "/10"}
-        .col-8
-          //- h5 #{"user: " + reviewData[2].user_name}
-          //- p #{reviewData[2].user_review} 
-      .row.item4
-        .col-4
-          img.img-fluid(src='../images/game-' + reviewData[3].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[3].game_id + '.jpg')
-          h5#game #{"Game: " + reviewData[3].name}
-          h5#rating #{"Average Rating: " + reviewData[3].user_rating + "/10"}
-        .col-8
-          //- h5 #{"user: " + reviewData[3].user_name}
-          //- p #{reviewData[3].user_review}
-      .row.item5.bg-light
-        .col-4
-          img.img-fluid(src='../images/game-' + reviewData[4].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[4].game_id + '.jpg')
-          h5#game #{"Game: " + reviewData[4].name}
-          h5#rating #{"Average Rating: " + reviewData[4].user_rating + "/10"}
-        .col-8
-          //- h5 #{"user: " + reviewData[4].user_name}
-          //- p #{reviewData[4].user_review}
+      - var n = 0;
+      ol
+        for game in reviewData
+          tr.odd(role='row')
+            if(++n % 2 == 0)
+              .row.bg-light
+                .col-4
+                  img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
+                  li#game 
+                    a(href='/game/' + game.game_id ) #{game.name}
+                  h5
+                    td #{game.genres} Avg: #{game.rating}/10
+                  h6
+                    td
+                      a(href='/console/' + game.colsole_id ) #{game.console}
+                    td  by 
+                        a(href='/console/' + game.publisher_id ) #{game.publisher},
+                    td  on #{game.release_date} 
+            else
+              .row  
+                .col-4
+                  img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
+                  li#game 
+                    a(href='/game/' + game.game_id ) #{game.name}
+                  h5
+                    td #{game.genres} Avg: #{game.rating}/10
+                  h6
+                    td
+                      a(href='/console/' + game.colsole_id ) #{game.console}
+                    td  by 
+                        a(href='/console/' + game.publisher_id ) #{game.publisher},
+                    td  on #{game.release_date}
+              
+          
+          
 
 // <script src="chartDB.js"></script>
