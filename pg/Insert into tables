@@ -317,7 +317,7 @@ VALUES
 (2, 'Devon', 'password', 'devon@mail.com', '1983-07-09', 'Portland, Oregon', 'United States', 4),
 (3, 'Epic_Gamer', 'password', 'Epic_Gamer@mail.com', '1984-01-01', 'Los Angeles, California', 'United States', 33),
 (4, 'Zoomer', 'password', 'Zoomer@mail.com', '1993-08-08', 'Pittsburgh, Pennsilvania', 'United States', 5),
-(5, 'Kenichi', 'password', 'kenichi@mail.com', '1998-09-20', 'Las Vegas, Nevada', 'United States', 7),
+(5, 'Kenichi', 'password', 'kenichi@mail.com', '1998-09-20', 'Fukushima', 'Japan', 7),
 (6, 'Hans', 'password', 'Hans@mail.com', '1979-10-12', 'Hamburg','Germany', 12),
 (7, 'Mario', 'password', 'Mario@mail.com', '1987-11-13', 'London', 'United Kingdom', 13),
 (8, 'Adam', 'password', 'Adam@mail.com', '1995-01-19', 'Quebec City, Quebec', 'Canada', 11),
@@ -325,7 +325,7 @@ VALUES
 (10, 'Roger', 'password', 'Roger@mail.com', '1986-05-05', 'St. Albans, Vermont', 'United States', 20)
 ;
 
-INSERT INTO ratings(user_id, release_id, user_rating, user_review, 'Not Catalogued')
+INSERT INTO ratings(user_id, release_id, user_rating, user_review, catalog)
 VALUES
 (1,1,'10', 'The game that started it all. I recently played it for the first time in 25 years, and it still gave me chills.', 'Not Catalogued'),(2,1,'9',NULL, 'Not Catalogued'),(3,1,'8',NULL, 'Not Catalogued'),(4,1,'9',NULL, 'Not Catalogued'),(8,1,'6',NULL, 'Not Catalogued'),(9,1,'10',NULL, 'Not Catalogued'),(10,1,'9',NULL, 'Not Catalogued'),
 (1,2,'7',NULL, 'In Collection'),(2,2,'9',NULL, 'In Collection'),(3,2,'6',NULL, 'In Collection'),(4,2,'6',NULL, 'In Collection'),(6,2,'7',NULL, 'In Collection'),(10,2,'6',NULL, 'In Collection'),
