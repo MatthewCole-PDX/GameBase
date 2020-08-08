@@ -32,7 +32,7 @@ app.use(
 );
 
 var loggedIn = false;
-var username = undefined;
+var user_name = undefined;
 var user_id = undefined
 
 // load all of the files
@@ -133,7 +133,7 @@ app.get("/login", (req, res) => {
 app.post("/checkCredentials", async (req, res) => {
   res.status(200);
   console.log(req.body.name, req.body.password);
-  if(loggedIn == false){
+  if(!user_id){
     try {
       const client = await pool.connect();
       var result = await client.query("SELECT user_id FROM users WHERE LOWER(user_name) = " + 
@@ -144,10 +144,10 @@ app.post("/checkCredentials", async (req, res) => {
         user_name = req.body.name;
         loggedIn = true;
         console.log('Logged In! user-' + user_id);
-        res.render("loginSuccessful", {"user_name": user_name});
+        res.redirect("user/" + user_name);
       }
       else{
-        res.render("login", {"Login_Failed": " Login Failed, Please Try Again"
+        res.render("login", {"Login_Failed": " Incorrect User/Password, Please Try Again"
         });
         client.release();
       }
@@ -156,19 +156,34 @@ app.post("/checkCredentials", async (req, res) => {
         res.send("Error " + err);
     }
   }
+  else{
+    res.redirect("user/" + user_name); 
+  }
 });
 
-app.get("/user/:username", async(req, res) => {
+app.get("/user/:user_name", async(req, res) => {
   res.status(200);  
   console.log('hello world');
-  if(req.params.username){
+  console.log(req.params.user_name)
+  console.log(user_id);
+  if(req.params.user_name){
     try{
       const client = await pool.connect();
-      const result2 = await client.query("SELECT user_name, user_id, email, " +
-                                        "birth_date, users.city AS city, users.country AS country, console_id, name " +
-                                        "FROM users JOIN consoles ON consoles.console_id = users.favorite_console WHERE users.user_id = '" + user_id + "';");
-      const result3 = await client.query("SELECT DISTINCT games.game_id AS game_id, games.name AS name, consoles.console_id AS console_id" +
-      ", consoles.name AS Console, ratings.user_rating AS user_rating, ratings.user_review AS user_review" + 
+      const result1 = await client.query("SELECT user_name, user_id, email, " +
+                                        "TO_CHAR(birth_date,'MM/DD/YYYY') AS birth_date, users.city AS city, users.country AS country, console_id, name " +
+                                        "FROM users JOIN consoles ON consoles.console_id = users.favorite_console WHERE LOWER(users.user_name) = LOWER('" + req.params.user_name + "');");
+
+      var userInfo = {
+        user_id: result1.rows[0].user_id,
+        user_name: result1.rows[0].user_name,
+        console_id: result1.rows[0].console_id,
+        console: result1.rows[0].name,
+        birth_date: result1.rows[0].birth_date,
+        city: result1.rows[0].city,
+        country: result1.rows[0].country,
+    };
+      const result2 = await client.query("SELECT DISTINCT games.game_id AS game_id, games.name AS name, consoles.console_id AS console_id" +
+      ", consoles.name AS Console, ratings.user_rating AS user_rating, ratings.user_review AS user_review, ratings.catalog AS catalog" +
       ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release, companies.company_id AS company_id, companies.name AS publisher, releases.region AS Region" +
       ", string_agg(DISTINCT genres.name, ', ') AS Genres" +
       " FROM games " +
@@ -178,40 +193,32 @@ app.get("/user/:username", async(req, res) => {
       "INNER JOIN genre_rel ON games.game_id = genre_rel.game_id " +
       "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
       "INNER JOIN ratings ON ratings.release_id = releases.release_id" + 
-      " WHERE releases.first_release = 'yes' AND ratings.user_id = '" + user_id + "'" +
-      " GROUP BY games.game_id, games.name, consoles.console_id, Console, releases.release_date, companies.company_id, companies.name, releases.region" +
+      " WHERE releases.first_release = 'yes' AND ratings.user_id = '" + userInfo.user_id + "'" +
+      " GROUP BY games.game_id, games.name, consoles.console_id, Console, releases.release_date, ratings.catalog, ratings.user_rating, ratings.user_review, companies.company_id, companies.name, releases.release_date, releases.region" +
       ";");
       var userLibrary = [];
-      for (var i = 0; i < userRatings.rows.length; i++) {
-        var userEntry = {
-          game_id: result3.rows[i].game_id,
-          game_name: result3.rows[i].name,
-          user_rating: result3.rows[i].user_rating,
-          user_review: result3.rows[i].user_review,
-          console_id: result3.rows[i].console_id,
-          console: result3.rows[i].console,
-          release_date: result3.rows[i].release_date,
-          publisher_id: result3.rows[i].publisher_id,
-          publisher: result3.rows[i].publisher,
-          region: result3.rows[i].region,
-          genres: result3.rows[i].genres
-        };
-        userLibrary.push(userEntry);
+      for (var i = 0; i < result2.rows.length; i++) {
+          var userEntry = {
+            game_id: result2.rows[i].game_id,
+            game_name: result2.rows[i].name,
+            user_rating: result2.rows[i].user_rating,
+            user_review: result2.rows[i].user_review,
+            catalog: result2.rows[i].catalog,
+            console_id: result2.rows[i].console_id,
+            console: result2.rows[i].console,
+            release_date: result2.rows[i].release_date,
+            publisher_id: result2.rows[i].publisher_id,
+            publisher: result2.rows[i].publisher,
+            region: result2.rows[i].region,
+            genres: result2.rows[i].genres
+          };
+          userLibrary.push(userEntry);
       }
-      var userInfo = {
-          user_id: result2.rows[0].user_id,
-          user_name: result2.rows[0].user_name,
-          console_id: result2.rows[0].console_id,
-          console: result2.rows[0].name,
-          birth_date: result2.rows[0].birth_date,
-          city: result2.rows[0].city,
-          country: result2.rows[0].country,
-      };
-      console.log(userInfo);
-      console.log(userLibrary);
       res.render("user", {
         "userLibrary": userLibrary,
         "userInfo": userInfo,
+        "loggedIn": loggedIn,
+        "user_name": user_name,
       });
     }catch (err) {
       console.error(err);

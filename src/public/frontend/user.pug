@@ -27,7 +27,7 @@ head
           if loggedIn === false
             a#logIn.nav-link(href='/logIn').text-secondary log in/sign up
           else
-            a.nav-link.text-secondary $user
+            a.nav-link.text-secondary #{user_name}
       form.form-inline.my-2.my-lg-0(action='/search' method='POST')
         input.form-control.mr-sm-2(type='search' placeholder='Search' name='searchFor' required='')
         label(for='category') in:&nbsp;
@@ -43,11 +43,53 @@ head
   .col-sm.leftContainer
     .container.p-3.my-3.bg-info
     .container.p-3.my-3.bg-light 
-        img(src='../images/user-' + userInfo.user_id + '.jpg' width='400px' alt='images/user-' + userInfo.user_id + '.jpg')
-      
+        img.img-fluid(src='../images/user-' + userInfo.user_id + '.jpg' width='400px' alt='images/user-' + userInfo.user_id + '.jpg')  
+    .container.p-3.my-3.bg-info
+      td Collection:
+        br
+      for userEntry in userLibrary
+            tr.odd(role='row')
+                if userEntry.catalog == "In Collection"
+                    .container.p-3.my-3.bg-light 
+                        td 
+                            img.img-fluid(src='../images/game-' + userEntry.game_id + '.jpg' width='50px' alt='images/game-' + userEntry.game_id + '.jpg')   
+                        td  &nbsp;                            
+                            a(href='/game_:' + userEntry.game_id) #{userEntry.game_name},
+                        td   first released on 
+                             a(href='/console_:' + userEntry.console_id) #{userEntry.console}
+                        td   by 
+                             a(href='/publisher_:' + userEntry.publisher_id) #{userEntry.publisher},
+                        td   #{userEntry.region}
+                        br
+                        if userEntry.user_review != NULL
+                            td #{userEntry.user_review}
+                            .container.p-3.my-3.bg-info
+    .container.p-3.my-3.bg-info
+      td Wishlist:
+        br
+      for userEntry in userLibrary
+            tr.odd(role='row')
+                if userEntry.catalog == "On Wishlist"
+                    .container.p-3.my-3.bg-light 
+                        td 
+                            img.img-fluid(src='../images/game-' + userEntry.game_id + '.jpg' width='50px' alt='images/game-' + userEntry.game_id + '.jpg')   
+                        td  &nbsp;
+                            a(href='/game_:' + userEntry.game_id) #{userEntry.game_name},
+                        td   first released on 
+                             a(href='/console_:' + userEntry.console_id) #{userEntry.console}
+                        td   by 
+                             a(href='/publisher_:' + userEntry.publisher_id) #{userEntry.publisher},
+                        td   #{userEntry.region}
+                        br
+                        if userEntry.user_review != NULL
+                            td #{userEntry.user_review}
+  
+  
+  
+  
   .col-sm.rightContainer
     .container.p-3.my-3.bg-info
-    //-.container.p-3.my-3.bg-light
+    .container.p-3.my-3.bg-light
         h3 #{userInfo.user_name}
         br
         td Birth Date:&nbsp;  #{userInfo.birth_date}
@@ -57,24 +99,27 @@ head
         td Country:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     #{userInfo.country}
         br
         td Favorite Console:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                 a(href='/console_:' + console_id) #{game.console}
+                 a(href='/console_:' + console_id) #{userInfo.console}
         br
         
-    //-.container.p-3.my-3.bg-info 
+    .container.p-3.my-3.bg-info 
         td My Ratings:
         br
 
         for userEntry in userLibrary
             tr.odd(role='row')
                 if userEntry.user_rating != NULL
-                    .container.p-3.my-3.bg-light
-                        td #{userEntry.user_rating}/10 
+                    .container.p-3.my-3.bg-light 
+                        td 
+                            img.img-fluid(src='../images/game-' + userEntry.game_id + '.jpg' width='50px' alt='images/game-' + userEntry.game_id + '.jpg')  
+                        td   [#{userEntry.user_rating}/10]  
                         td
-                            a(href='/game_:' + userEntry.game_id) #{userEntry.game_name}
-                            a(href='/console_:' + userEntry.console_id) #{userEntry.console},
+                            a(href='/game_:' + userEntry.game_id) #{userEntry.game_name},
+                        td   first released on 
+                             a(href='/console_:' + userEntry.console_id) #{userEntry.console},
                         td  by 
-                            a(href='/publisher_:' + userEntry.publisher_id) #{userEntry.publisher},
-                        td  #{userEntry.region}
+                             a(href='/publisher_:' + userEntry.publisher_id) #{userEntry.publisher},
+                        td   #{userEntry.region}
                         br
                         if userEntry.user_review != NULL
                             td #{userEntry.user_review}
