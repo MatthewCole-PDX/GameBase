@@ -403,7 +403,6 @@ app.post("/newUserAdded", async (req, res) => {
               '1);';
 
     var result = await client.query(query);
-    loggedIn = true;
     user_name = req.body.name;
     user_id = idNum;
     client.end();
