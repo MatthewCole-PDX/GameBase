@@ -89,7 +89,7 @@ head
                   button#resetForm.btn.btn-info(type='reset')
                     | clear
       else  
-        btn.btn-info(href='/logIn' role='button' aria-expanded='false' aria-controls='review') Log In to Rate/Catalog
+        a#reviewForm.btn.btn-info(href='/login' role='button' aria-expanded='false' aria-controls='review' type='submit') Log In to Rate/Catalog
       
   .col-sm.rightContainer
     .container.p-3.my-3.bg-info

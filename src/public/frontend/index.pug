@@ -49,31 +49,46 @@ head
       .row.item1 
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[0].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[0].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[0].user_rating + "/10"}
+          h5#rating 
+            tr 
+              a(href='/game/' + reviewData[0].game_id) #{reviewData[0].name} 
+            tr #{reviewData[0].user_rating + "/10"}
         .col-8
           p #{reviewData[0].user_review}
       .row.item2
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[1].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[1].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[1].user_rating + "/10"}
+          h5#rating 
+            tr 
+              a(href='/game/' + reviewData[1].game_id) #{reviewData[1].name} 
+            tr #{reviewData[1].user_rating + "/10"}
         .col-8
           p #{reviewData[1].user_review} 
       .row.item3
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[2].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[2].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[2].user_rating + "/10"}
+          h5#rating 
+            tr 
+              a(href='/game/' + reviewData[2].game_id) #{reviewData[2].name} 
+            tr #{reviewData[2].user_rating + "/10"}
         .col-8
           p #{reviewData[2].user_review} 
       .row.item4
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[3].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[3].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[3].user_rating + "/10"}
+          h5#rating  
+            tr 
+              a(href='/game/' + reviewData[3].game_id) #{reviewData[3].name} 
+            tr #{reviewData[3].user_rating + "/10"}
         .col-8
           p #{reviewData[3].user_review}
       .row.item5
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[4].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[4].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[4].user_rating + "/10"}
+          h5#rating  
+            tr 
+              a(href='/game/' + reviewData[4].game_id) #{reviewData[4].name} 
+            tr #{reviewData[4].user_rating + "/10"}
         .col-8
           p #{reviewData[4].user_review}
   .col-lg.rightContainer
