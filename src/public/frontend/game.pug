@@ -83,7 +83,7 @@ head
                       option(value ='rating') 10
                   .form-group
                     label(for='comments') Review
-                    textarea#comments.form-control(rows='7')
+                    textarea#comments.form-control(rows='7' placeholder= userReview.user_review)
                   button#formButton.btn.btn-info(type='submit')
                     | submit
                   button#resetForm.btn.btn-info(type='reset')
