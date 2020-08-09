@@ -49,43 +49,85 @@ head
       .row.item1 
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[0].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[0].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[0].user_rating + "/10"}
+          h5#rating 
+            tr 
+              a(href='/game/' + reviewData[0].game_id) #{reviewData[0].name} 
+            tr #{reviewData[0].user_rating + "/10"}
         .col-8
+          tr
+            img.img-fluid(src='../images/user-' + reviewData[0].user_id + '.jpg' width='50px' alt= 'images/user-' + reviewData[0].user_id)  
+          tr   
+             a(href = '/user/' + reviewData[0].user_name) #{reviewData[0].user_name}
           p #{reviewData[0].user_review}
       .row.item2
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[1].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[1].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[1].user_rating + "/10"}
+          h5#rating 
+            tr 
+              a(href='/game/' + reviewData[1].game_id) #{reviewData[1].name} 
+            tr #{reviewData[1].user_rating + "/10"}
         .col-8
-          p #{reviewData[1].user_review} 
+          tr
+            img.img-fluid(src='../images/user-' + reviewData[1].user_id + '.jpg' width='50px' alt= 'images/user-' + reviewData[1].user_id)  
+          tr   
+             a(href = '/user/' + reviewData[1].user_name) #{reviewData[1].user_name}
+          p #{reviewData[1].user_review}
       .row.item3
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[2].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[2].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[2].user_rating + "/10"}
+          h5#rating 
+            tr 
+              a(href='/game/' + reviewData[2].game_id) #{reviewData[2].name} 
+            tr #{reviewData[2].user_rating + "/10"}
         .col-8
-          p #{reviewData[2].user_review} 
+          tr
+            img.img-fluid(src='../images/user-' + reviewData[2].user_id + '.jpg' width='50px' alt= 'images/user-' + reviewData[2].user_id)  
+          tr   
+             a(href = '/user/' + reviewData[2].user_name) #{reviewData[2].user_name}
+          p #{reviewData[2].user_review}
       .row.item4
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[3].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[3].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[3].user_rating + "/10"}
+          h5#rating  
+            tr 
+              a(href='/game/' + reviewData[3].game_id) #{reviewData[3].name} 
+            tr #{reviewData[3].user_rating + "/10"} 
         .col-8
+          tr
+            img.img-fluid(src='../images/user-' + reviewData[3].user_id + '.jpg' width='50px' alt= 'images/user-' + reviewData[3].user_id)    
+          tr   
+             a(href = '/user/' + reviewData[3].user_name) #{reviewData[3].user_name}
           p #{reviewData[3].user_review}
       .row.item5
         .col-4
           img.img-fluid(src='../images/game-' + reviewData[4].game_id + '.jpg' width='200px' alt='images/game-' + reviewData[4].game_id + '.jpg')
-          h5#rating #{"Rating: " + reviewData[4].user_rating + "/10"}
+          h5#rating  
+            tr 
+              a(href='/game/' + reviewData[4].game_id) #{reviewData[4].name} 
+            tr #{reviewData[4].user_rating + "/10"}
         .col-8
+          tr
+            img.img-fluid(src='../images/user-' + reviewData[4].user_id + '.jpg' width='50px' alt= 'images/user-' + reviewData[4].user_id)   
+          tr    
+             a(href = '/user/' + reviewData[4].user_name) #{reviewData[4].user_name}
           p #{reviewData[4].user_review}
   .col-lg.rightContainer
-    #reviews New Releases
-    section.right-grid-container
-      .grid-item.item6  #{right1}
-      .grid-item.item7  #{right2}
-      .grid-item.item8  #{right3}
-      .grid-item.item9  #{sec1}
-      .grid-item.item10  #{sec1}
-      .grid-item.item11  #{sec1}
-      .grid-item.item12  #{sec1}
-      .grid-item.item13  #{sec1}
-      .grid-item.item14  #{sec1}
-      .grid-item.item15  #{sec1}
+    .col-lg.rightTopContainer
+      #reviews Latest Ratings
+      section.right-grid-top-container
+        .grid-item.item6  #{right1}
+        .grid-item.item7  #{right2}
+        .grid-item.item8  #{right3}
+    .col-lg.rightBottomContainer
+      #reviews New Releases
+      section.right-grid-container
+        .grid-item.item6  #{right1}
+        .grid-item.item7  #{right2}
+        .grid-item.item8  #{right3}
+        .grid-item.item9  #{sec1}
+        .grid-item.item10  #{sec1}
+        .grid-item.item11  #{sec1}
+        .grid-item.item12  #{sec1}
+        .grid-item.item13  #{sec1}
+        .grid-item.item14  #{sec1}
+        .grid-item.item15  #{sec1}

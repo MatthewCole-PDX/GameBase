@@ -39,14 +39,12 @@ head
           option(value='users') Users
         button.btn.btn-success.my-2.my-sm-0(type='submit')
           | Search
-.row
-  .col-sm.leftContainer.bg-info
-    
-    h3
-      .text-white Search Results:
-  .col-sm.rightContainer.bg-light
+.col-sm.Container
+  h3#searchResults Search Results
+  .w-100
+  .text-center
     form(action='/add' method = 'GET')
-      button.btn.btn-success.my-2.my-sm-0(type='submit') Add a Game
+      button#addGameButton.btn.btn-danger.my-2.my-sm-0(type='submit') Add a Game
 
 
 .col-sm.leftContainer

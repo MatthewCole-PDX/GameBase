@@ -83,13 +83,13 @@ head
                       option(value ='rating') 10
                   .form-group
                     label(for='comments') Review
-                    textarea#comments.form-control(rows='7')
+                    textarea#comments.form-control(rows='7' placeholder= userReview.user_review)
                   button#formButton.btn.btn-info(type='submit')
                     | submit
                   button#resetForm.btn.btn-info(type='reset')
                     | clear
       else  
-        btn.btn-info(href='/logIn' role='button' aria-expanded='false' aria-controls='review') Log In to Rate/Catalog
+        a#reviewForm.btn.btn-info(href='/login' role='button' aria-expanded='false' aria-controls='review' type='submit') Log In to Rate/Catalog
       
   .col-sm.rightContainer
     .container.p-3.my-3.bg-info
@@ -99,10 +99,10 @@ head
         td Release Date:&nbsp;  #{game.release_date}
         br
         td Console:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-                 a(href='/console_:' + console_id) #{game.console}
+                 a(href='/console/' + console_id) #{game.console}
         br
         td Publisher:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                 a(href='/company_:' + publisher_id) #{game.publisher}
+                 a(href='/company/' + publisher_id) #{game.publisher}
         br
         td Developers:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   #{game.developers}
         br

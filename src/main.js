@@ -62,7 +62,7 @@ app.get("/", async (req, res) => {
   try {
     const client = await pool.connect();
     const result = await client.query(
-      "SELECT users.user_name, games.game_id, games.name, ratings.user_rating, ratings.user_review " +
+      "SELECT users.user_name, users.user_id, games.game_id, games.name, ratings.user_rating, ratings.user_review " +
         "FROM users " +
         "JOIN ratings " +
         "ON users.user_id = ratings.user_id " +
@@ -76,6 +76,7 @@ app.get("/", async (req, res) => {
     let data = result.rows;
     for (let i = 0; i < data.length; i++) {
       var reviews = {
+        user_id: data[i].user_id,
         user_name: data[i].user_name,
         game_id: data[i].game_id,
         name: data[i].name,
@@ -533,6 +534,7 @@ app.get("/game/:game_id", async (req, res) => {
       user_name: user_name,
       loggedIn: loggedIn,
       user_id: user_id,
+      reviewed: reviewed,
     });
     client.release();
   } catch (err) {
@@ -585,6 +587,17 @@ app.post("/gen", async (req, res) => {
     var genreParam;
     var consoleParam;
     var generationParam;
+    var publisherParam;
+
+    if(req.body.Publisher == "ANY") {
+      publisherParam = "ANY(SELECT releases.publisher_id FROM releases)";
+    } else {
+      // consoleParam = req.body.Console.toString();
+        publisherParam = "ANY(SELECT releases.publisher_id FROM releases, companies WHERE releases.publisher_id = companies.company_id AND companies.name = " +
+        "'" +
+        req.body.Publisher +
+        "')";
+    }
 
     if (!req.body.MinYear) {
       yearParam1 = "'1900-01-01'::date";
@@ -646,6 +659,9 @@ app.post("/gen", async (req, res) => {
       "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
       "WHERE (releases.console_id = " +
       consoleParam +
+      " " +
+      "AND releases.publisher_id = " +
+      publisherParam +
       " " +
       "AND genres.genre_id = " +
       genreParam +

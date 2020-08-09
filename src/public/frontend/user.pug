@@ -56,11 +56,11 @@ head
                         td 
                             img.img-fluid(src='../images/game-' + userEntry.game_id + '.jpg' width='50px' alt='images/game-' + userEntry.game_id + '.jpg')   
                         td  &nbsp;                            
-                            a(href='/game_:' + userEntry.game_id) #{userEntry.game_name},
+                            a(href='/game/' + userEntry.game_id) #{userEntry.game_name},
                         td   first released on 
-                             a(href='/console_:' + userEntry.console_id) #{userEntry.console}
+                             a(href='/console/' + userEntry.console_id) #{userEntry.console}
                         td   by 
-                             a(href='/publisher_:' + userEntry.publisher_id) #{userEntry.publisher},
+                             a(href='/publisher/' + userEntry.publisher_id) #{userEntry.publisher},
                         td   #{userEntry.region}
                         br
                         if userEntry.user_review != NULL
@@ -76,11 +76,11 @@ head
                         td 
                             img.img-fluid(src='../images/game-' + userEntry.game_id + '.jpg' width='50px' alt='images/game-' + userEntry.game_id + '.jpg')   
                         td  &nbsp;
-                            a(href='/game_:' + userEntry.game_id) #{userEntry.game_name},
+                            a(href='/game/' + userEntry.game_id) #{userEntry.game_name},
                         td   first released on 
-                             a(href='/console_:' + userEntry.console_id) #{userEntry.console}
+                             a(href='/console/' + userEntry.console_id) #{userEntry.console}
                         td   by 
-                             a(href='/publisher_:' + userEntry.publisher_id) #{userEntry.publisher},
+                             a(href='/publisher/' + userEntry.publisher_id) #{userEntry.publisher},
                         td   #{userEntry.region}
                         br
                         if userEntry.user_review != NULL
@@ -116,11 +116,11 @@ head
                             img.img-fluid(src='../images/game-' + userEntry.game_id + '.jpg' width='50px' alt='images/game-' + userEntry.game_id + '.jpg')  
                         td   [#{userEntry.user_rating}/10]  
                         td
-                            a(href='/game_:' + userEntry.game_id) #{userEntry.game_name},
+                            a(href='/game/' + userEntry.game_id) #{userEntry.game_name},
                         td   first released on 
-                             a(href='/console_:' + userEntry.console_id) #{userEntry.console},
+                             a(href='/console/' + userEntry.console_id) #{userEntry.console},
                         td  by 
-                             a(href='/publisher_:' + userEntry.publisher_id) #{userEntry.publisher},
+                             a(href='/publisher/' + userEntry.publisher_id) #{userEntry.publisher},
                         td   #{userEntry.region}
                         br
                         if userEntry.user_review != NULL
