@@ -324,60 +324,114 @@ app.get("/user/:user_name", async (req, res) => {
     }
   }
 });
-app.post("/postReview/:user_id/:game_id", async (req, res) =>{
+app.post("/postReview/:user_id/:game_id", async (req, res) => {
   res.status(200);
-  console.log(req.body.collection + ' ' + req.body.rating + ' ' + req.body.comments);
+  console.log(
+    req.body.collection + " " + req.body.rating + " " + req.body.comments
+  );
   console.log(req.params.game_id);
   try {
     const client = await pool.connect();
-    const id = await client.query("SELECT release_id FROM releases WHERE releases.game_id = " + req.params.game_id +
-                                  " AND releases.first_release = 'yes';");
+    const id = await client.query(
+      "SELECT release_id FROM releases WHERE releases.game_id = " +
+        req.params.game_id +
+        " AND releases.first_release = 'yes';"
+    );
     console.log(id.rows[0].release_id);
-    await client.query("INSERT INTO ratings(user_id, release_id, user_rating, user_review, catalog) " +
-    "VALUES (" + req.params.user_id + ", " + id.rows[0].release_id + ", '" + req.body.rating + "', '" + req.body.comments + "', '" + req.body.collection + "');"
+    await client.query(
+      "INSERT INTO ratings(user_id, release_id, user_rating, user_review, catalog) " +
+        "VALUES (" +
+        req.params.user_id +
+        ", " +
+        id.rows[0].release_id +
+        ", '" +
+        req.body.rating +
+        "', '" +
+        req.body.comments +
+        "', '" +
+        req.body.collection +
+        "');"
     );
   } catch (err) {
     console.error(err);
     res.send("Error " + err);
-  }  
+  }
   //console.log(req.params.user_id + " post " + req.params.game_id + " " + id.rows[0].release_id);
   res.redirect("/game/" + req.params.game_id);
 });
-app.post("/editReview/:user_id/:game_id", async (req, res) =>{
+app.post("/editReview/:user_id/:game_id", async (req, res) => {
   res.status(200);
-  console.log(req.body.rating + ' ' + req.body.collection + ' ' + req.body.comments);
+  console.log(
+    req.body.rating + " " + req.body.collection + " " + req.body.comments
+  );
   try {
     const client = await pool.connect();
-    const id = await client.query("SELECT release_id FROM releases WHERE releases.game_id = " + req.params.game_id +
-                                  " AND releases.first_release = 'yes';");
-    const result = await client.query("UPDATE ratings SET user_rating = '" + req.body.rating + "', user_review = '" + req.body.comments +
-                                      "', catalog = '" + req.body.collection + "' WHERE user_id = " + req.params.user_id +
-                                      "AND release_id = " + id.rows[0].release_id + ";");
+    const id = await client.query(
+      "SELECT release_id FROM releases WHERE releases.game_id = " +
+        req.params.game_id +
+        " AND releases.first_release = 'yes';"
+    );
+    const result = await client.query(
+      "UPDATE ratings SET user_rating = '" +
+        req.body.rating +
+        "', user_review = '" +
+        req.body.comments +
+        "', catalog = '" +
+        req.body.collection +
+        "' WHERE user_id = " +
+        req.params.user_id +
+        "AND release_id = " +
+        id.rows[0].release_id +
+        ";"
+    );
   } catch (err) {
     console.error(err);
     res.send("Error " + err);
-  }  
+  }
   //console.log(req.params.user_id + " edit " + req.params.game_id + " " + id.rows[0].release_id);
   //console.log(req.body.rating + ' ' + req.body.collection + ' ' + req.body.comments);
   res.redirect("/game/" + req.params.game_id);
 });
 
-app.get("/createNewUser", (req, res) => {
+app.get("/createNewUser", async (req, res) => {
   res.status(200);
-  res.render("form");
+  var consoles = [];
+  var countries = [];
+
+  try {
+    const client = await pool.connect();
+    const query2 = await client.query("SELECT name FROM Consoles;"); //query consoles
+
+    for (let i = 0; i < query2.rows.length; i++) {
+      consoles.push(query2.rows[i].name);
+    }
+
+    for (let i = 0; i < dataLength; i++) {
+      countries.push(clone[i].name);
+    }
+
+    res.render("form", {
+      consoles: consoles,
+      countries: countries,
+    });
+
+    client.release();
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
 });
 
 app.post("/newUserAdded", async (req, res) => {
   res.status(200);
-  
+
   // see if such a user already exists, if no error,
   // redirect to user page, else alert that the user
   // already exists
 
-  var searchQuery = "SELECT * FROM users WHERE email = '" +
-                    req.body.email + "' "
-                    "OR user_name = '" +
-                    req.body.name + "';";
+  var searchQuery =
+    "SELECT * FROM users WHERE email = '" + req.body.email + "' ";
+  "OR user_name = '" + req.body.name + "';";
 
   try {
     const client = await pool.connect();
@@ -387,32 +441,40 @@ app.post("/newUserAdded", async (req, res) => {
       alert("User already exists");
       res.render("form");
     } else {
-    var Num = await client.query("SELECT user_id FROM users;");
-    idNum = Num.rows.length;
-    idNum++;
-    console.log(idNum);
-    console.log(req.body.name);
-    console.log(req.body.password);
-    console.log(req.body.email);
+      var Num = await client.query("SELECT user_id FROM users;");
+      idNum = Num.rows.length;
+      idNum++;
+      console.log(idNum);
+      console.log(req.body.name);
+      console.log(req.body.password);
+      console.log(req.body.email);
 
-    var query = 'INSERT INTO users VALUES (' +
-              "'" + idNum.toString() + "'," +
-              "'" + req.body.name + "'," +
-              "'" + req.body.password + "'," +
-              "'" + req.body.email + "'," +
-              "'2999-01-01'," +
-              "'Portland'," +
-              "'United States'," +
-              '1);';
+      var query =
+        "INSERT INTO users VALUES (" +
+        "'" +
+        idNum.toString() +
+        "'," +
+        "'" +
+        req.body.name +
+        "'," +
+        "'" +
+        req.body.password +
+        "'," +
+        "'" +
+        req.body.email +
+        "'," +
+        "'2999-01-01'," +
+        "'Portland'," +
+        "'United States'," +
+        "1);";
 
-    var result = await client.query(query);
-    user_name = req.body.name;
-    user_id = idNum;
-    client.end();
-    res.render("login");
+      var result = await client.query(query);
+      user_name = req.body.name;
+      user_id = idNum;
+      client.end();
+      res.render("login");
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.error(err);
     res.send("Error" + err);
   }
@@ -549,23 +611,25 @@ app.get("/game/:game_id", async (req, res) => {
     }
     const result2 = await client.query(
       "SELECT users.user_name AS user_name, users.user_id AS user_id, ratings.user_rating AS user_rating, ratings.catalog AS catalog, " +
-      "ratings.user_review AS user_review "+
-      "FROM users JOIN ratings ON users.user_id = ratings.user_id " +
-      "INNER JOIN releases ON releases.release_id = ratings.release_id " +
-      "WHERE releases.game_id = " + id + ';' 
+        "ratings.user_review AS user_review " +
+        "FROM users JOIN ratings ON users.user_id = ratings.user_id " +
+        "INNER JOIN releases ON releases.release_id = ratings.release_id " +
+        "WHERE releases.game_id = " +
+        id +
+        ";"
     );
     var userReviews = [];
     var game;
     var reviewed = false;
     for (var i = 0; i < result2.rows.length; i++) {
-      if(loggedIn == true){
-        if(result2.rows[i].user_id == user_id){
+      if (loggedIn == true) {
+        if (result2.rows[i].user_id == user_id) {
           reviewed = true;
           var userReview = {
             user_rating: result2.rows[i].user_rating,
             user_catalog: result2.rows[i].catalog,
             user_review: result2.rows[i].user_review,
-          }
+          };
         }
       }
       var review = {
@@ -573,7 +637,7 @@ app.get("/game/:game_id", async (req, res) => {
         user_name: result2.rows[i].user_name,
         user_rating: result2.rows[i].user_rating,
         user_review: result2.rows[i].user_review,
-      }
+      };
       userReviews.push(review);
     }
     res.render("game", {
@@ -639,11 +703,12 @@ app.post("/gen", async (req, res) => {
     var generationParam;
     var publisherParam;
 
-    if(req.body.Publisher == "ANY") {
+    if (req.body.Publisher == "ANY") {
       publisherParam = "ANY(SELECT releases.publisher_id FROM releases)";
     } else {
       // consoleParam = req.body.Console.toString();
-        publisherParam = "ANY(SELECT releases.publisher_id FROM releases, companies WHERE releases.publisher_id = companies.company_id AND companies.name = " +
+      publisherParam =
+        "ANY(SELECT releases.publisher_id FROM releases, companies WHERE releases.publisher_id = companies.company_id AND companies.name = " +
         "'" +
         req.body.Publisher +
         "')";
@@ -727,7 +792,7 @@ app.post("/gen", async (req, res) => {
       " " +
       "AND releases.first_release = 'yes') " +
       "GROUP BY games.game_id, games.name, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region " +
-      "ORDER BY average DESC;"
+      "ORDER BY average DESC;";
 
     // touch postgres DB server
     const client = await pool.connect();
@@ -855,7 +920,7 @@ app.get("/add", async (req, res) => {
 
     res.render("add", {
       loggedIn: loggedIn,
-      "user_name": user_name,
+      user_name: user_name,
       user_id: user_id,
       series: series,
       genres: genres,
