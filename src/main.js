@@ -589,7 +589,8 @@ app.post("/gen", async (req, res) => {
       yearParam2 +
       " " +
       "AND releases.first_release = 'yes') " +
-      "GROUP BY games.game_id, games.name, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region;";
+      "GROUP BY games.game_id, games.name, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region " +
+      "ORDER BY average DESC;"
 
     // touch postgres DB server
     const client = await pool.connect();
