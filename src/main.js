@@ -18,6 +18,7 @@ const PORT = process.env.PORT || 5000;
 const { Pool } = require("pg");
 const { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } = require("constants");
 const { title } = require("process");
+const { render } = require("pug");
 const pool = new Pool({
   connectionString:
     "postgres://sajfopicqfjqpa:0207c07d082bbe7f11ebc9fe5e8dafb13796b05c0ea7a336d47ba14ecd57bef4@ec2-52-207-124-89.compute-1.amazonaws.com:5432/dc1qe778cvpm8r",
@@ -321,15 +322,48 @@ app.get("/user/:user_name", async (req, res) => {
   }
 });
 
-app.post("/newUserAdded", (req, res) => {
+app.get("/createNewUser", (req, res) => {
   res.status(200);
-  client.connect();
-  client.query(
-    "INSERT INTO users(user_name, password, email) VALUES (req.body.name, req.body.password, req.body.email);"
-  );
-  if (err) throw err;
-  client.end();
-  res.sendFile(path.join(__dirname + "/public/newUserAdded.html"));
+  res.render("form");
+});
+
+app.post("/newUserAdded", async (req, res) => {
+  res.status(200);
+  
+  // see if such a user already exists, if no error,
+  // redirect to user page, else alert that the user
+  // already exists
+  var query = 'INSERT INTO users(user_name, password, email) VALUES (' +
+              req.body.name + ',' +
+              req.body.password + ',' +
+              req.body.email + ');';
+
+  var searchQuery = "SELECT * FROM users WHERE email = '" +
+                    req.body.email + "' "
+                    "OR user_name = '" +
+                    req.body.name + "';";
+
+  try {
+    const client = await pool.connect();
+    var valid = await client.query(searchQuery);
+    if (valid.rows.length > 0) {
+      client.end();
+      window.alert("User already exists");
+      res.render("form");
+    } else {
+    // var result = await client.query(query);
+    // loggedIn = true;
+    // user_name = req.body.name;
+    // user_id = client.query('SELECT user_id FROM users WHERE email = ' + req.body.email + ';').rows.user_id;
+    client.end();
+    // res.render("user");
+    res.render("/");
+    }
+  }
+  catch (err) {
+    console.error(err);
+    res.send("Error" + err);
+  }
 });
 
 app.post("/search", async (req, res) => {
