@@ -455,10 +455,43 @@ app.get("/game/:game_id", async (req, res) => {
       }
     }
     console.log(secondaryReleases);
+    const result2 = await client.query(
+      "SELECT users.user_name AS user_name, users.user_id AS user_id, ratings.user_rating AS user_rating, ratings.catalog AS catalog, " +
+      "ratings.user_review AS user_review "+
+      "FROM users JOIN ratings ON users.user_id = ratings.user_id " +
+      "INNER JOIN releases ON releases.release_id = ratings.release_id " +
+      "WHERE releases.game_id = " + id + ';' 
+    );
+    var userReviews = [];
+    var game;
+    var reviewed = false;
+    for (var i = 0; i < result.rows.length; i++) {
+      if(loggedIn == true){
+        if(result2.rows[i].user_id == user_id){
+          reviewed = true;
+          var userReview = {
+            user_rating: result2.rows[i].user_rating,
+            user_catalog: result2.rows[i].catalog,
+            user_review: result2.rows[i].user_review,
+          }
+        }
+      }
+      var review = {
+        user_id: result2.rows[i].user_id,
+        user_name: result2.rows[i].user_name,
+        user_rating: result2.rows[i].user_rating,
+        user_review: result2.rows[i].user_review,
+      }
+      userReviews.push(review);
+    }
     res.render("game", {
       game: game,
       secondaryReleases: secondaryReleases,
-      "user_name": user_name,
+      userReview: userReview,
+      userReviews: userReviews,
+      user_name: user_name,
+      loggedIn: loggedIn,
+      user_id: user_id,
     });
     client.release();
   } catch (err) {
@@ -649,6 +682,7 @@ app.get("/add", async (req, res) => {
     }
 
     res.render("add", {
+      loggedIn: loggedIn,
       "user_name": user_name,
       series: series,
       genres: genres,
