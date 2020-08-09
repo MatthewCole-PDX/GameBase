@@ -370,10 +370,6 @@ app.post("/newUserAdded", async (req, res) => {
   // see if such a user already exists, if no error,
   // redirect to user page, else alert that the user
   // already exists
-  var query = 'INSERT INTO users(user_name, password, email) VALUES (' +
-              req.body.name + ',' +
-              req.body.password + ',' +
-              req.body.email + ');';
 
   var searchQuery = "SELECT * FROM users WHERE email = '" +
                     req.body.email + "' "
@@ -385,16 +381,33 @@ app.post("/newUserAdded", async (req, res) => {
     var valid = await client.query(searchQuery);
     if (valid.rows.length > 0) {
       client.end();
-      window.alert("User already exists");
+      alert("User already exists");
       res.render("form");
     } else {
-    // var result = await client.query(query);
-    // loggedIn = true;
-    // user_name = req.body.name;
-    // user_id = client.query('SELECT user_id FROM users WHERE email = ' + req.body.email + ';').rows.user_id;
+    var Num = await client.query("SELECT user_id FROM users;");
+    idNum = Num.rows.length;
+    idNum++;
+    console.log(idNum);
+    console.log(req.body.name);
+    console.log(req.body.password);
+    console.log(req.body.email);
+
+    var query = 'INSERT INTO users VALUES (' +
+              "'" + idNum.toString() + "'," +
+              "'" + req.body.name + "'," +
+              "'" + req.body.password + "'," +
+              "'" + req.body.email + "'," +
+              "'2999-01-01'," +
+              "'Portland'," +
+              "'United States'," +
+              '1);';
+
+    var result = await client.query(query);
+    loggedIn = true;
+    user_name = req.body.name;
+    user_id = idNum;
     client.end();
-    // res.render("user");
-    res.render("/");
+    res.render("login");
     }
   }
   catch (err) {
