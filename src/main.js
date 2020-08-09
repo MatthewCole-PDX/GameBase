@@ -551,6 +551,17 @@ app.post("/gen", async (req, res) => {
     var genreParam;
     var consoleParam;
     var generationParam;
+    var publisherParam;
+
+    if(req.body.Publisher == "ANY") {
+      publisherParam = "ANY(SELECT releases.publisher_id FROM releases)";
+    } else {
+      // consoleParam = req.body.Console.toString();
+        publisherParam = "ANY(SELECT releases.publisher_id FROM releases, companies WHERE releases.publisher_id = companies.company_id AND companies.name = " +
+        "'" +
+        req.body.Publisher +
+        "')";
+    }
 
     if (!req.body.MinYear) {
       yearParam1 = "'1900-01-01'::date";
@@ -612,6 +623,9 @@ app.post("/gen", async (req, res) => {
       "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
       "WHERE (releases.console_id = " +
       consoleParam +
+      " " +
+      "AND releases.publisher_id = " +
+      publisherParam +
       " " +
       "AND genres.genre_id = " +
       genreParam +
