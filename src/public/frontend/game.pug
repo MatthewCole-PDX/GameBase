@@ -54,7 +54,7 @@ head
           .container.p-3.my-3.bg-info
             .container.p-3.my-3.bg-light
               h5 Your rating: #{userReview.user_rating}/10 &nbsp;&nbsp;&nbsp;Catalog: #{userReview.user_catalog}
-              if(userReview.user_Review)
+              if(userReview.user_review)
                 p #{userReview.user_review}
               a#reviewForm.btn.btn-info(data-toggle='collapse' href='#review' role='button' aria-expanded='false' aria-controls='review') Edit  
         else

@@ -328,11 +328,8 @@ app.post("/postReview/:user_id/:game_id", async (req, res) =>{
                                   " AND releases.first_release = 'yes';");
     console.log(id.rows[0].release_id);
     await client.query("INSERT INTO ratings(user_id, release_id, user_rating, user_review, catalog) " +
-    "VALUES (" + req.params.user_id + ", " + id.rows[0].release_id + ", '" + req.body.rating + "', '" + req.body.comments + "', " + req.body.collection + ");", (err, res) => {
-      console.log(err, res);
-    });
-    const test = await client.query("SELECT ratings.release_id FROM ratings, releases WHERE ratings.user_id = " + req.params.user_id + " AND ratings.release_id = " + id.rows[0].release_id +";");
-    console.log(test.rows[0].release_id);
+    "VALUES (" + req.params.user_id + ", " + id.rows[0].release_id + ", '" + req.body.rating + "', '" + req.body.comments + "', '" + req.body.collection + "');"
+    );
   } catch (err) {
     console.error(err);
     res.send("Error " + err);
@@ -347,15 +344,15 @@ app.post("/editReview/:user_id/:game_id", async (req, res) =>{
     const client = await pool.connect();
     const id = await client.query("SELECT release_id FROM releases WHERE releases.game_id = " + req.params.game_id +
                                   " AND releases.first_release = 'yes';");
-    const result = await client.query("UPDATE ratings SET ratings(user_rating = " + req.body.rating + ", user_review = " + req.body.comments +
-                                      ", catalog = " + req.body.collection + " WHERE user_id = " + req.params.user_id +
-                                      " game_id = " + id.rows[0].release_id + ";");
+    const result = await client.query("UPDATE ratings SET user_rating = '" + req.body.rating + "', user_review = '" + req.body.comments +
+                                      "', catalog = '" + req.body.collection + "' WHERE user_id = " + req.params.user_id +
+                                      "AND release_id = " + id.rows[0].release_id + ";");
   } catch (err) {
     console.error(err);
     res.send("Error " + err);
   }  
-  console.log(req.params.user_id + " edit " + req.params.game_id + " " + id.rows[0].release_id);
-  console.log(req.body.rating + ' ' + req.body.collection + ' ' + req.body.comments);
+  //console.log(req.params.user_id + " edit " + req.params.game_id + " " + id.rows[0].release_id);
+  //console.log(req.body.rating + ' ' + req.body.collection + ' ' + req.body.comments);
   res.redirect("/game/" + req.params.game_id);
 });
 
