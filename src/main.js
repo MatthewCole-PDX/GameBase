@@ -358,7 +358,32 @@ app.post("/editReview/:user_id/:game_id", async (req, res) =>{
 
 app.get("/createNewUser", (req, res) => {
   res.status(200);
-  res.render("form");
+  var consoles = [];
+  var countries = [];
+
+  try {
+    const client = await pool.connect();
+    const query3 = await client.query("SELECT name FROM Console;"); //query genres
+
+    for (let i = 0; i < query3.rows.length; i++) {
+      genres.push(query3.rows[i].name);
+    }
+
+    for (let i = 0; i < dataLength; i++) {
+      countries.push(clone[i].name);
+    }
+
+    res.render("form", {
+      consoles: consoles,
+      countries: countries,
+    });
+
+    client.release();
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
+  //res.render("form");
 });
 
 app.post("/newUserAdded", async (req, res) => {
