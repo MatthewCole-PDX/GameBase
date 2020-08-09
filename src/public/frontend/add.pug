@@ -227,7 +227,7 @@ head
                                 button.close(type='button' data-dismiss='modal' aria-label='Close')
                                     span(aria-hidden='true') &times;
                             .modal-body
-                                for d in designers
+                                for d in companies
                                     .form-check.form-check-inline
                                         input#inlineCheckbox1.form-check-input(type='checkbox' value=desin)
                                         label.form-check-label(for='inlineCheckbox1') #{d}
@@ -238,7 +238,7 @@ head
                 label(for='exampleFormControlSelect2') Designer
                 .w-100
                 button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#designer')
-                    | select publisher
+                    | select designer
                 #designer.modal.fade(tabindex='-1' role='dialog' aria-labelledby='designerTitle' aria-hidden='true')
                     .modal-dialog.modal-dialog-centered(role='document')
                         .modal-content
