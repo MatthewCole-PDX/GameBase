@@ -37,7 +37,7 @@ app.use(
 
 var loggedIn = false;
 var user_name = undefined;
-var user_id = undefined
+var user_id = undefined;
 
 // load all of the files
 app.use(express.static(path.join(__dirname + "/public")));
@@ -87,7 +87,7 @@ app.get("/", async (req, res) => {
       title: "index",
       reviewData: searchResults,
       loggedIn: loggedIn,
-      "user_name": user_name,
+      user_name: user_name,
     });
     //console.log(searchResults[0].user_name);
     client.release();
@@ -112,16 +112,14 @@ app.get("/chart", async (req, res) => {
     // GROUP BY name
     // ORDER BY avg;
     // 'top2' is the same but with game_id instead of name
-    const select2 = await client.query(
-      "SELECT name FROM consoles;"
-    );
+    const select2 = await client.query("SELECT name FROM consoles;");
     console.log(select2);
-    
+
     var consoles = [];
     for (var i = 0; i < select2.rows.length; i++) {
       var console1 = {
         name: select2.rows[i].name,
-      }
+      };
       consoles.push(console1);
     }
     console.log(consoles);
@@ -133,44 +131,42 @@ app.get("/chart", async (req, res) => {
     for (var i = 0; i < select1.rows.length; i++) {
       var publisher = {
         name: select1.rows[i].name,
-      }
+      };
       publishers.push(publisher);
     }
     console.log(publishers);
-    
-    const select3 = await client.query(
-      "SELECT name FROM genres;"
-    );
+
+    const select3 = await client.query("SELECT name FROM genres;");
     var genres = [];
     for (var i = 0; i < select3.rows.length; i++) {
       var genre = {
         name: select3.rows[i].name,
-      }
+      };
       genres.push(genre);
     }
     console.log(genres);
     const result = await client.query(
       //"SELECT * " + "FROM top " + "NATURAL JOIN top2 " + "ORDER BY avg;"
       "SELECT games.game_id, " +
-      "games.name, consoles.console_id, consoles.name AS Console, companies.name AS Publisher, companies.company_id AS publisher_id, " +
-      "TO_CHAR(releases.release_date,'MM/DD/YYYY') AS release_date, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres, rating.average AS average FROM " +
-      "(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average " +
-      "FROM ratings GROUP BY release_id) AS rating " +
-      "JOIN releases ON releases.release_id = rating.release_id " +
-      "INNER JOIN games ON releases.game_id = games.game_id " +
-      "INNER JOIN consoles ON releases.console_id = consoles.console_id " +
-      "INNER JOIN companies ON releases.publisher_id = companies.company_id " +
-      "INNER JOIN genre_rel ON games.game_id = genre_rel.game_id " +
-      "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
-      "WHERE releases.first_release = 'yes' " +
-      "GROUP BY games.game_id, games.name, rating, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region " +
-      "ORDER BY average DESC;"
+        "games.name, consoles.console_id, consoles.name AS Console, companies.name AS Publisher, companies.company_id AS publisher_id, " +
+        "TO_CHAR(releases.release_date,'MM/DD/YYYY') AS release_date, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres, rating.average AS average FROM " +
+        "(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average " +
+        "FROM ratings GROUP BY release_id) AS rating " +
+        "JOIN releases ON releases.release_id = rating.release_id " +
+        "INNER JOIN games ON releases.game_id = games.game_id " +
+        "INNER JOIN consoles ON releases.console_id = consoles.console_id " +
+        "INNER JOIN companies ON releases.publisher_id = companies.company_id " +
+        "INNER JOIN genre_rel ON games.game_id = genre_rel.game_id " +
+        "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
+        "WHERE releases.first_release = 'yes' " +
+        "GROUP BY games.game_id, games.name, rating, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region " +
+        "ORDER BY average DESC;"
     );
     const results = { results: result ? result.rows : null };
     console.log(results);
     //let data = result.rows;
     //for (let i = data.length - 1; i >= 0; i--) {
-    for(var i = 0; i < result.rows.length; i++){
+    for (var i = 0; i < result.rows.length; i++) {
       var rating = {
         game_id: result.rows[i].game_id,
         name: result.rows[i].name,
@@ -182,16 +178,17 @@ app.get("/chart", async (req, res) => {
         publisher: result.rows[i].publisher,
         region: result.rows[i].region,
         rating: result.rows[i].average,
-        genres: result.rows[i].genres
+        genres: result.rows[i].genres,
       };
       searchResults.push(rating);
     }
     res.render("chart", {
       reviewData: searchResults,
-      "publishers": publishers,
-      "consoles": consoles,
-      "genres": genres,
-      "user_name": user_name,    
+      loggedIn: loggedIn,
+      publishers: publishers,
+      consoles: consoles,
+      genres: genres,
+      user_name: user_name,
     });
     client.release();
   } catch (err) {
@@ -217,7 +214,7 @@ app.get("/login", (req, res) => {
 app.post("/checkCredentials", async (req, res) => {
   res.status(200);
   console.log(req.body.name, req.body.password);
-  if(!user_id){
+  if (!user_id) {
     try {
       const client = await pool.connect();
       var result = await client.query(
@@ -232,11 +229,11 @@ app.post("/checkCredentials", async (req, res) => {
         user_id = result.rows[0].user_id;
         user_name = req.body.name;
         loggedIn = true;
-        console.log('Logged In! user-' + user_id);
+        console.log("Logged In! user-" + user_id);
         res.redirect("user/" + user_name);
-      }
-      else{
-        res.render("login", {"Login_Failed": " Incorrect User/Password, Please Try Again"
+      } else {
+        res.render("login", {
+          Login_Failed: " Incorrect User/Password, Please Try Again",
         });
         client.release();
       }
@@ -244,23 +241,26 @@ app.post("/checkCredentials", async (req, res) => {
       console.error(err);
       res.send("Error " + err);
     }
-  }
-  else{
-    res.redirect("user/" + user_name); 
+  } else {
+    res.redirect("user/" + user_name);
   }
 });
 
-app.get("/user/:user_name", async(req, res) => {
-  res.status(200);  
-  console.log('hello world');
-  console.log(req.params.user_name)
+app.get("/user/:user_name", async (req, res) => {
+  res.status(200);
+  console.log("hello world");
+  console.log(req.params.user_name);
   console.log(user_id);
-  if(req.params.user_name){
-    try{
+  if (req.params.user_name) {
+    try {
       const client = await pool.connect();
-      const result1 = await client.query("SELECT user_name, user_id, email, " +
-                                        "TO_CHAR(birth_date,'MM/DD/YYYY') AS birth_date, users.city AS city, users.country AS country, console_id, name " +
-                                        "FROM users JOIN consoles ON consoles.console_id = users.favorite_console WHERE LOWER(users.user_name) = LOWER('" + req.params.user_name + "');");
+      const result1 = await client.query(
+        "SELECT user_name, user_id, email, " +
+          "TO_CHAR(birth_date,'MM/DD/YYYY') AS birth_date, users.city AS city, users.country AS country, console_id, name " +
+          "FROM users JOIN consoles ON consoles.console_id = users.favorite_console WHERE LOWER(users.user_name) = LOWER('" +
+          req.params.user_name +
+          "');"
+      );
 
       var userInfo = {
         user_id: result1.rows[0].user_id,
@@ -270,44 +270,48 @@ app.get("/user/:user_name", async(req, res) => {
         birth_date: result1.rows[0].birth_date,
         city: result1.rows[0].city,
         country: result1.rows[0].country,
-    };
-      const result2 = await client.query("SELECT DISTINCT games.game_id AS game_id, games.name AS name, consoles.console_id AS console_id" +
-      ", consoles.name AS Console, ratings.user_rating AS user_rating, ratings.user_review AS user_review, ratings.catalog AS catalog" +
-      ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release, companies.company_id AS company_id, companies.name AS publisher, releases.region AS Region" +
-      ", string_agg(DISTINCT genres.name, ', ') AS Genres" +
-      " FROM games " +
-      "JOIN releases ON games.game_id = releases.game_id " +
-      "INNER JOIN consoles ON releases.console_id = consoles.console_id " +
-      "INNER JOIN companies ON releases.publisher_id = companies.company_id " +
-      "INNER JOIN genre_rel ON games.game_id = genre_rel.game_id " +
-      "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
-      "INNER JOIN ratings ON ratings.release_id = releases.release_id" + 
-      " WHERE releases.first_release = 'yes' AND ratings.user_id = '" + userInfo.user_id + "'" +
-      " GROUP BY games.game_id, games.name, consoles.console_id, Console, releases.release_date, ratings.catalog, ratings.user_rating, ratings.user_review, companies.company_id, companies.name, releases.release_date, releases.region" +
-      ";");
+      };
+      const result2 = await client.query(
+        "SELECT DISTINCT games.game_id AS game_id, games.name AS name, consoles.console_id AS console_id" +
+          ", consoles.name AS Console, ratings.user_rating AS user_rating, ratings.user_review AS user_review, ratings.catalog AS catalog" +
+          ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release, companies.company_id AS company_id, companies.name AS publisher, releases.region AS Region" +
+          ", string_agg(DISTINCT genres.name, ', ') AS Genres" +
+          " FROM games " +
+          "JOIN releases ON games.game_id = releases.game_id " +
+          "INNER JOIN consoles ON releases.console_id = consoles.console_id " +
+          "INNER JOIN companies ON releases.publisher_id = companies.company_id " +
+          "INNER JOIN genre_rel ON games.game_id = genre_rel.game_id " +
+          "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
+          "INNER JOIN ratings ON ratings.release_id = releases.release_id" +
+          " WHERE releases.first_release = 'yes' AND ratings.user_id = '" +
+          userInfo.user_id +
+          "'" +
+          " GROUP BY games.game_id, games.name, consoles.console_id, Console, releases.release_date, ratings.catalog, ratings.user_rating, ratings.user_review, companies.company_id, companies.name, releases.release_date, releases.region" +
+          ";"
+      );
       var userLibrary = [];
       for (var i = 0; i < result2.rows.length; i++) {
-          var userEntry = {
-            game_id: result2.rows[i].game_id,
-            game_name: result2.rows[i].name,
-            user_rating: result2.rows[i].user_rating,
-            user_review: result2.rows[i].user_review,
-            catalog: result2.rows[i].catalog,
-            console_id: result2.rows[i].console_id,
-            console: result2.rows[i].console,
-            release_date: result2.rows[i].release_date,
-            publisher_id: result2.rows[i].publisher_id,
-            publisher: result2.rows[i].publisher,
-            region: result2.rows[i].region,
-            genres: result2.rows[i].genres
-          };
-          userLibrary.push(userEntry);
+        var userEntry = {
+          game_id: result2.rows[i].game_id,
+          game_name: result2.rows[i].name,
+          user_rating: result2.rows[i].user_rating,
+          user_review: result2.rows[i].user_review,
+          catalog: result2.rows[i].catalog,
+          console_id: result2.rows[i].console_id,
+          console: result2.rows[i].console,
+          release_date: result2.rows[i].release_date,
+          publisher_id: result2.rows[i].publisher_id,
+          publisher: result2.rows[i].publisher,
+          region: result2.rows[i].region,
+          genres: result2.rows[i].genres,
+        };
+        userLibrary.push(userEntry);
       }
       res.render("user", {
-        "userLibrary": userLibrary,
-        "userInfo": userInfo,
-        "loggedIn": loggedIn,
-        "user_name": user_name,
+        userLibrary: userLibrary,
+        userInfo: userInfo,
+        loggedIn: loggedIn,
+        user_name: user_name,
       });
     } catch (err) {
       console.error(err);
@@ -369,7 +373,7 @@ app.post("/search", async (req, res) => {
       }
       res.render("search", {
         games: searchResults,
-        "user_name": user_name,
+        user_name: user_name,
       });
       client.release();
     } catch (err) {
@@ -458,7 +462,7 @@ app.get("/game/:game_id", async (req, res) => {
     res.render("game", {
       game: game,
       secondaryReleases: secondaryReleases,
-      "user_name": user_name,
+      user_name: user_name,
     });
     client.release();
   } catch (err) {
@@ -600,7 +604,7 @@ app.post("/gen", async (req, res) => {
     console.log(result.rows);
 
     res.render("gen", {
-      "user_name": user_name,
+      user_name: user_name,
     });
     client.release();
   } catch (err) {
@@ -650,7 +654,7 @@ app.get("/add", async (req, res) => {
     }
 
     res.render("add", {
-      "user_name": user_name,
+      user_name: user_name,
       series: series,
       genres: genres,
       consoles: consoles,
