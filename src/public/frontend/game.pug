@@ -53,14 +53,16 @@ head
           .container.p-3.my-3.bg-info
             .container.p-3.my-3.bg-light
               h5 Your rating: #{userReview.user_rating}/10 &nbsp;&nbsp;&nbsp;Catalog: #{userReview.user_catalog}
-              br
-              td #{userReview.user_review}
-              - rate = "Edit"  
-        a#reviewForm.btn.btn-info(data-toggle='collapse' href='#review' role='button' aria-expanded='false' aria-controls='review') #{rate}
-          .row
-            .col
-             #review.collapse.multi-collapse
-                form#ratingForm
+              if(userReview.user_Review)
+                p #{userReview.user_review}
+              a#reviewForm.btn.btn-info(data-toggle='collapse' href='#review' role='button' aria-expanded='false' aria-controls='review') Edit  
+        else
+          a#reviewForm.btn.btn-info(data-toggle='collapse' href='#review' role='button' aria-expanded='false' aria-controls='review') Rate/Catalog
+        .col
+          #review.collapse.multi-collapse
+            .container.p-3.my-3.bg-info
+              form#ratingForm
+                .container.p-3.my-3.bg-light
                   .form-group
                     label(for='exampleFormControlSelect1') 
                     select#exampleFormControlSelect1.form-control
@@ -68,6 +70,7 @@ head
                       option(value="collection") On wishlist
                       option(value="collection") Used to own
                       option(value="collection") (not cataloged)
+                .container.p-3.my-3.bg-light      
                   .form-group
                     label(for='exampleFormControlSelect1') Rating
                     select#exampleFormControlSelect1.form-control
@@ -81,6 +84,7 @@ head
                       option(value ='rating') 8
                       option(value ='rating') 9
                       option(value ='rating') 10
+                .container.p-3.my-3.bg-light      
                   .form-group
                     label(for='comments') Review
                     textarea#comments.form-control(rows='7' placeholder= userReview.user_review)
@@ -88,9 +92,22 @@ head
                     | submit
                   button#resetForm.btn.btn-info(type='reset')
                     | clear
+                  button#resetForm.btn.btn-info(type='cancel')
+                    | cancel
       else  
         a#reviewForm.btn.btn-info(href='/login' role='button' aria-expanded='false' aria-controls='review' type='submit') Log In to Rate/Catalog
-      
+      .container.p-3.my-3.bg-info
+        for review in userReviews
+          tr.odd(role='row')
+            if review.user_rating != NULL
+              .container.p-3.my-3.bg-light
+                tr
+                  img.img-fluid(src='../images/user-' + review.user_id + '.jpg' width='50px' alt= 'images/user-' + review.user_id)   
+                tr    
+                  a(href = '/user/' + review.user_name) #{review.user_name}
+                tr  #{review.user_rating + "/10"}
+                p #{review.user_review}
+
   .col-sm.rightContainer
     .container.p-3.my-3.bg-info
     .container.p-3.my-3.bg-light
