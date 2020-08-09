@@ -46,11 +46,11 @@ head
   .col-sm.leftContainer
     .container.p-3.my-3.bg-info
     .container#inside.p-3.my-3.bg-light 
-          form#addinggameForm
+          form#addinggameForm(action='/something' method='POST')
             h2#formTitle.mt-2.mb-4 Add Game
             .form-group
                 label Title
-                input#name.form-control(type='text' required='')
+                input#name.form-control(type='text' required='' name='title')
             .form-group
                 label(for='exampleFormControlSelect2') Series
                 .w-100
@@ -175,6 +175,10 @@ head
                                     option(value="region") Antarctica
                                 label history
                                 input#history.form-control(type='text' required='')
+                                label(for='exampleFormControlSelect1') Generation
+                                select#exampleFormControlSelect1.form-control 
+                                    for g in generations
+                                        option(value='generations') #{g}
                                 button.btn#man.btn-info(type='button' data-toggle='modal' data-target='#manuf')
                                     | manufacture
                                 #manuf.modal.fade(tabindex='-1' role='dialog' aria-labelledby='manufacForm' aria-hidden='true')
@@ -200,31 +204,63 @@ head
                                                 label history
                                                 input#history.form-control(type='text' required='')
                                             .modal-footer
-                                                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                                                button.btn.btn-secondary(type='button' data-dismiss='modal') Close`
                                                 button.btn.btn-info(type='button') Save changes
                             .modal-footer
                                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                                 button.btn.btn-info(type='button') Save changes
             .form-group
-                label(for='exampleFormControlSelect2') Publisher
+                label(for='exampleFormControlSelect1') Publisher
+                select#exampleFormControlSelect1.form-control 
+                    for p in companies  
+                        option(value='publisher') #{p}
+            .form-group
+                label(for='exampleFormControlSelect2') Developer
                 .w-100
-                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#publisher')
-                    | select publisher
-                #publisher.modal.fade(tabindex='-1' role='dialog' aria-labelledby='publisherTitle' aria-hidden='true')
+                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#developer')
+                    | select developer
+                #developer.modal.fade(tabindex='-1' role='dialog' aria-labelledby='developerTitle' aria-hidden='true')
                     .modal-dialog.modal-dialog-centered(role='document')
                         .modal-content
                             .modal-header
-                                h5#publisherTitle.modal-title select publisher
+                                h5#developerTitle.modal-title select developer
                                 button.close(type='button' data-dismiss='modal' aria-label='Close')
                                     span(aria-hidden='true') &times;
                             .modal-body
-                                for p in companies
+                                for d in designers
                                     .form-check.form-check-inline
-                                        input#inlineCheckbox1.form-check-input(type='checkbox' value=compa)
-                                        label.form-check-label(for='inlineCheckbox1') #{p}
+                                        input#inlineCheckbox1.form-check-input(type='checkbox' value=desin)
+                                        label.form-check-label(for='inlineCheckbox1') #{d}
                             .modal-footer
                                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                                 button.btn.btn-info(type='button') Save changes
+            .form-group
+                label(for='exampleFormControlSelect2') Designer
+                .w-100
+                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#designer')
+                    | select publisher
+                #designer.modal.fade(tabindex='-1' role='dialog' aria-labelledby='designerTitle' aria-hidden='true')
+                    .modal-dialog.modal-dialog-centered(role='document')
+                        .modal-content
+                            .modal-header
+                                h5#designerTitle.modal-title select designer
+                                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                    span(aria-hidden='true') &times;
+                            .modal-body
+                                for d in designers
+                                    .form-check.form-check-inline
+                                        input#inlineCheckbox1.form-check-input(type='checkbox' value=desin)
+                                        label.form-check-label(for='inlineCheckbox1') #{d}
+                            .modal-footer
+                                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                                button.btn.btn-info(type='button') Save changes
+            .form-group
+                label Description
+                input#description.form-control(type='text' required='' name='descrition')
+            button#submit.btn.btn-info.my-2.my-sm-0(type='submit')
+                | Submit
+            button#clear.btn.btn-secondary.my-2.my-sm-0(type='clear')
+                | Clear
             
 
             

@@ -18,11 +18,21 @@ body {
 
 #formTitle {
   text-align: center;
-  color: slateblue;
+  color: lightseagreen;
 }
 
 #addSeries,
 #addconsole {
   margin-top: 20px;
   margin-left: 20px;
+}
+
+#submit,
+#clear {
+  margin-top: 40px;
+  margin-left: 20px;
+}
+
+#man {
+  margin-top: 20px;
 }
