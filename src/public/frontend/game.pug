@@ -48,8 +48,9 @@ head
       img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='400px' alt='images/game-' + game.game_id + '.jpg')
       .w-100
       if(loggedIn)
-        - rate = "Rate/Catalog"
+        - review = "post"
         if(reviewed == true)
+          -review = "edit"
           .container.p-3.my-3.bg-info
             .container.p-3.my-3.bg-light
               h5 Your rating: #{userReview.user_rating}/10 &nbsp;&nbsp;&nbsp;Catalog: #{userReview.user_catalog}
@@ -61,33 +62,33 @@ head
         .col
           #review.collapse.multi-collapse
             .container.p-3.my-3.bg-info
-              form#ratingForm
+              form#ratingForm(action='/' + review + 'Review/' + user_id + '/' + game.game_id method='post')
                 .container.p-3.my-3.bg-light
                   .form-group
                     label(for='exampleFormControlSelect1') 
-                    select#exampleFormControlSelect1.form-control
-                      option(value="collection") In collection
-                      option(value="collection") On wishlist
-                      option(value="collection") Used to own
-                      option(value="collection") (not cataloged)
+                    select#exampleFormControlSelect1.form-control(name='collection')
+                      option(value="In collection") In collection
+                      option(value="On wishlist") On wishlist
+                      option(value="Used to own") Used to own
+                      option(value="not cataloged") (not cataloged)
                 .container.p-3.my-3.bg-light      
                   .form-group
                     label(for='exampleFormControlSelect1') Rating
-                    select#exampleFormControlSelect1.form-control
-                      option(value ='rating') 1
-                      option(value ='rating') 2
-                      option(value ='rating') 3
-                      option(value ='rating') 4
-                      option(value ='rating') 5
-                      option(value ='rating') 6
-                      option(value ='rating') 7
-                      option(value ='rating') 8
-                      option(value ='rating') 9
-                      option(value ='rating') 10
+                    select#exampleFormControlSelect1.form-control(name='rating')
+                      option(value ='1') 1
+                      option(value ='2') 2
+                      option(value ='3') 3
+                      option(value ='4') 4
+                      option(value ='5') 5
+                      option(value ='6') 6
+                      option(value ='7') 7
+                      option(value ='8') 8
+                      option(value ='9') 9
+                      option(value ='10') 10
                 .container.p-3.my-3.bg-light      
                   .form-group
                     label(for='comments') Review
-                    textarea#comments.form-control(rows='7' placeholder= userReview.user_review)
+                    textarea#comments.form-control(rows='7' name='comments')
                   button#formButton.btn.btn-info(type='submit')
                     | submit
                   button#resetForm.btn.btn-info(type='reset')

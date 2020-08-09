@@ -216,7 +216,6 @@ app.get("/login", (req, res) => {
 });
 app.post("/checkCredentials", async (req, res) => {
   res.status(200);
-  console.log(req.body.name, req.body.password);
   if (!user_id) {
     try {
       const client = await pool.connect();
@@ -251,9 +250,6 @@ app.post("/checkCredentials", async (req, res) => {
 
 app.get("/user/:user_name", async (req, res) => {
   res.status(200);
-  console.log("hello world");
-  console.log(req.params.user_name);
-  console.log(user_id);
   if (req.params.user_name) {
     try {
       const client = await pool.connect();
@@ -321,6 +317,46 @@ app.get("/user/:user_name", async (req, res) => {
       res.send("Error " + err);
     }
   }
+});
+app.post("/postReview/:user_id/:game_id", async (req, res) =>{
+  res.status(200);
+  console.log(req.body.collection + ' ' + req.body.rating + ' ' + req.body.comments);
+  console.log(req.params.game_id);
+  try {
+    const client = await pool.connect();
+    const id = await client.query("SELECT release_id FROM releases WHERE releases.game_id = " + req.params.game_id +
+                                  " AND releases.first_release = 'yes';");
+    console.log(id.rows[0].release_id);
+    await client.query("INSERT INTO ratings(user_id, release_id, user_rating, user_review, catalog) " +
+    "VALUES (" + req.params.user_id + ", " + id.rows[0].release_id + ", '" + req.body.rating + "', '" + req.body.comments + "', " + req.body.collection + ");", (err, res) => {
+      console.log(err, res);
+    });
+    const test = await client.query("SELECT ratings.release_id FROM ratings, releases WHERE ratings.user_id = " + req.params.user_id + " AND ratings.release_id = " + id.rows[0].release_id +";");
+    console.log(test.rows[0].release_id);
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }  
+  //console.log(req.params.user_id + " post " + req.params.game_id + " " + id.rows[0].release_id);
+  res.redirect("/game/" + req.params.game_id);
+});
+app.post("/editReview/:user_id/:game_id", async (req, res) =>{
+  res.status(200);
+  console.log(req.body.rating + ' ' + req.body.collection + ' ' + req.body.comments);
+  try {
+    const client = await pool.connect();
+    const id = await client.query("SELECT release_id FROM releases WHERE releases.game_id = " + req.params.game_id +
+                                  " AND releases.first_release = 'yes';");
+    const result = await client.query("UPDATE ratings SET ratings(user_rating = " + req.body.rating + ", user_review = " + req.body.comments +
+                                      ", catalog = " + req.body.collection + " WHERE user_id = " + req.params.user_id +
+                                      " game_id = " + id.rows[0].release_id + ";");
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }  
+  console.log(req.params.user_id + " edit " + req.params.game_id + " " + id.rows[0].release_id);
+  console.log(req.body.rating + ' ' + req.body.collection + ' ' + req.body.comments);
+  res.redirect("/game/" + req.params.game_id);
 });
 
 app.get("/createNewUser", (req, res) => {
@@ -496,7 +532,6 @@ app.get("/game/:game_id", async (req, res) => {
         secondaryReleases.push(secondaryRelease);
       }
     }
-    console.log(secondaryReleases);
     const result2 = await client.query(
       "SELECT users.user_name AS user_name, users.user_id AS user_id, ratings.user_rating AS user_rating, ratings.catalog AS catalog, " +
       "ratings.user_review AS user_review "+
@@ -507,7 +542,7 @@ app.get("/game/:game_id", async (req, res) => {
     var userReviews = [];
     var game;
     var reviewed = false;
-    for (var i = 0; i < result.rows.length; i++) {
+    for (var i = 0; i < result2.rows.length; i++) {
       if(loggedIn == true){
         if(result2.rows[i].user_id == user_id){
           reviewed = true;
