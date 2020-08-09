@@ -92,4 +92,40 @@ form(action='/gen' method='POST')
                     option= ++n
 
 
+  .col-lg.leftContainer
+  
+    section.left-grid-container
+      - var n = 0;
+      ol
+        for game in reviewData
+          tr.odd(role='row')
+            if(++n % 2 == 0)
+              .row.bg-light
+                .col-4
+                  img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
+                  li#game 
+                    a(href='/game/' + game.game_id ) #{game.name}
+                  h5
+                    td #{game.genres} Avg: #{game.rating}/10
+                  h6
+                    td
+                      a(href='/console/' + game.colsole_id ) #{game.console}
+                    td  by 
+                        a(href='/console/' + game.publisher_id ) #{game.publisher},
+                    td  on #{game.release_date} 
+            else
+              .row  
+                .col-4
+                  img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
+                  li#game 
+                    a(href='/game/' + game.game_id ) #{game.name}
+                  h5
+                    td #{game.genres} Avg: #{game.rating}/10
+                  h6
+                    td
+                      a(href='/console/' + game.colsole_id ) #{game.console}
+                    td  by 
+                        a(href='/console/' + game.publisher_id ) #{game.publisher},
+                    td  on #{game.release_date}
+              
 // <script src="chartDB.js"></script>
