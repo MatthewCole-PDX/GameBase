@@ -24,6 +24,8 @@ head
           a.nav-link(href='/').text-secondary
             | home 
             span.sr-only (current)
+         li.nav-item
+          a#chart.nav-link(href='/chart').text-secondary chart
         li.nav-item
           if loggedIn === false
             a#logIn.nav-link(href='/logIn').text-secondary log in/sign up
