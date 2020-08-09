@@ -216,6 +216,33 @@ head
                 select#exampleFormControlSelect1.form-control 
                     for p in companies  
                         option(value='publisher') #{p}
+                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#addPub')
+                    | add publisher
+                #addPub.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addPubTitle' aria-hidden='true')
+                    .modal-dialog.modal-dialog-centered(role='document')
+                        .modal-content
+                            .modal-header
+                                h5#addPubTitle.modal-title add publisher
+                                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                    span(aria-hidden='true') &times;
+                            .modal-body
+                                label name
+                                input#name.form-control(type='text' required='')
+                                label birth date
+                                input#birth.form-control(type='text' required='')
+                                label death date
+                                input#death.form-control(type='text' required='')
+                                label city
+                                input#city.form-control(type='text' required='')
+                                label Country
+                                select#exampleFormControlSelect1.form-control
+                                    for country in countries
+                                        option(value="country") #{country}
+                                label biography
+                                input#bio.form-control(type='text' required='')
+                            .modal-footer
+                                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                                button.btn.btn-info(type='button') Save changes
             .form-group
                 label(for='exampleFormControlSelect2') Developer
                 .w-100
@@ -236,6 +263,39 @@ head
                             .modal-footer
                                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                                 button.btn.btn-info(type='button') Save changes
+
+                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#addDev')
+                    | add developer
+                #addDev.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addDevTitle' aria-hidden='true')
+                    .modal-dialog.modal-dialog-centered(role='document')
+                        .modal-content
+                            .modal-header
+                                h5#addDevTitle.modal-title add developer
+                                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                    span(aria-hidden='true') &times;
+                            .modal-body
+                                label name
+                                input#name.form-control(type='text' required='')
+                                label birth date
+                                input#birth.form-control(type='text' required='')
+                                label death date
+                                input#death.form-control(type='text' required='')
+                                label city
+                                input#city.form-control(type='text' required='')
+                                label Country
+                                select#exampleFormControlSelect1.form-control
+                                    for country in countries
+                                        option(value="country") #{country}
+                                label biography
+                                input#bio.form-control(type='text' required='')
+                            .modal-footer
+                                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                                button.btn.btn-info(type='button') Save changes
+                .form-check
+                input#sameAsPub.form-check-input(type='checkbox' value='')
+                label#sameAsPub2.form-check-label(for='sameAsPub')
+                    | same as publisher ?
+
             .form-group
                 label(for='exampleFormControlSelect2') Designer
                 .w-100
@@ -253,6 +313,34 @@ head
                                     .form-check.form-check-inline
                                         input#inlineCheckbox1.form-check-input(type='checkbox' value=desin)
                                         label.form-check-label(for='inlineCheckbox1') #{d}
+                            .modal-footer
+                                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                                button.btn.btn-info(type='button') Save changes
+
+                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#addDes')
+                    | add designer
+                #addDes.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addDesTitle' aria-hidden='true')
+                    .modal-dialog.modal-dialog-centered(role='document')
+                        .modal-content
+                            .modal-header
+                                h5#addDesTitle.modal-title add designer
+                                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                    span(aria-hidden='true') &times;
+                            .modal-body
+                                label name
+                                input#name.form-control(type='text' required='')
+                                label birth date
+                                input#birth.form-control(type='text' required='')
+                                label death date
+                                input#death.form-control(type='text' required='')
+                                label city
+                                input#city.form-control(type='text' required='')
+                                label Country
+                                select#exampleFormControlSelect1.form-control
+                                    for country in countries
+                                        option(value="country") #{country}
+                                label biography
+                                input#bio.form-control(type='text' required='')
                             .modal-footer
                                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                                 button.btn.btn-info(type='button') Save changes
