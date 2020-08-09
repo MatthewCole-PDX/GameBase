@@ -524,7 +524,7 @@ app.post("/gen", async (req, res) => {
       yearParam2 = "'" + req.body.MaxYear + "-01-01" + "'::date";
     }
 
-    if (req.body.Genre == "Any") {
+    if (req.body.Genre == "ANY") {
       genreParam = "ANY(SELECT genres.genre_id FROM genres)";
     } else {
       genreParam =
@@ -534,7 +534,7 @@ app.post("/gen", async (req, res) => {
         "')";
     }
 
-    if (req.body.Console == "Any") {
+    if (req.body.Console == "ANY") {
       consoleParam = "ANY(SELECT releases.console_id FROM releases)";
     } else {
       // consoleParam = req.body.Console.toString();
@@ -560,7 +560,7 @@ app.post("/gen", async (req, res) => {
     console.log(consoleParam);
 
     var query =
-      "SELECT row_number() OVER ( ORDER BY rating.average DESC) AS rank, games.game_id, " +
+      "SELECT games.game_id, " +
       "games.name, consoles.console_id, consoles.name AS Console, companies.name AS Publisher, companies.company_id AS publisher_id, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres, rating.average FROM " +
       "(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average " +
       "FROM ratings GROUP BY release_id) AS rating " +
@@ -586,9 +586,7 @@ app.post("/gen", async (req, res) => {
       yearParam2 +
       " " +
       "AND releases.first_release = 'yes') " +
-      "GROUP BY games.game_id, games.name, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region " +
-      // "ORDER BY rating;";
-      ";";
+      "GROUP BY games.game_id, games.name, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region;";
 
     // touch postgres DB server
     const client = await pool.connect();
@@ -596,11 +594,73 @@ app.post("/gen", async (req, res) => {
     // generate query
     // use temp query for now
     const result = await client.query(query);
-    const results = { results: result ? result.rows : null };
+    // const results = { results: result ? result.rows : null };
     console.log(result.rows);
 
+    // console, publisher, genre data
+    const select2 = await client.query(
+      "SELECT name FROM consoles;"
+    );
+    // console.log(select2);
+    
+    var consoles = [];
+    for (var i = 0; i < select2.rows.length; i++) {
+      var console1 = {
+        name: select2.rows[i].name,
+      }
+      consoles.push(console1);
+    }
+    // console.log(consoles);
+
+    const select1 = await client.query(
+      "SELECT DISTINCT name FROM companies, releases WHERE companies.company_id = releases.publisher_id;"
+    );
+    var publishers = [];
+    for (var i = 0; i < select1.rows.length; i++) {
+      var publisher = {
+        name: select1.rows[i].name,
+      }
+      publishers.push(publisher);
+    }
+    // console.log(publishers);
+    
+    const select3 = await client.query(
+      "SELECT name FROM genres;"
+    );
+    var genres = [];
+    for (var i = 0; i < select3.rows.length; i++) {
+      var genre = {
+        name: select3.rows[i].name,
+      }
+      genres.push(genre);
+    }
+    // console.log(genres);
+
+    var searchResults = [];
+    //let data = result.rows;
+    //for (let i = data.length - 1; i >= 0; i--) {
+    for(var i = 0; i < result.rows.length; i++){
+      var rating = {
+        game_id: result.rows[i].game_id,
+        name: result.rows[i].name,
+        //user_rating: data[i].avg,
+        console_id: result.rows[i].console_id,
+        console: result.rows[i].console,
+        release_date: result.rows[i].release_date,
+        publisher_id: result.rows[i].publisher_id,
+        publisher: result.rows[i].publisher,
+        region: result.rows[i].region,
+        rating: result.rows[i].average,
+        genres: result.rows[i].genres
+      };
+      searchResults.push(rating);
+    }
     res.render("gen", {
-      "user_name": user_name,
+      reviewData: searchResults,
+      "publishers": publishers,
+      "consoles": consoles,
+      "genres": genres,
+      "user_name": user_name,    
     });
     client.release();
   } catch (err) {
