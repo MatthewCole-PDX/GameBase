@@ -15,9 +15,8 @@ head
   title RateYourGame2020
 .navContainer
   nav.navbar.navbar-expand-lg.navbar-light.bg-light
-    a#title.navbar-brand(href='#') Best of 2020
     button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarTogglerDemo02' aria-controls='navbarTogglerDemo02' aria-expanded='false' aria-label='Toggle navigation')
-      span.navbar-toggler-icon
+       span.navbar-toggler-icon
     #navbarTogglerDemo02.collapse.navbar-collapse
       ul.navbar-nav.mr-auto.mt-2.mt-lg-0
         li.nav-item.active
@@ -38,24 +37,24 @@ head
         label(for='category') in:&nbsp;
         select.browser-default.custom-select(name='category')
           option(value='games') Games
-          option(value='consoles') Consoles
-          option(value='companies') Companies
-          option(value='personnel') Personnel
-          option(value='users') Users
         button.btn.btn-success.my-2.my-sm-0(type='submit')
           | Search
+
 .row
   .col-sm.leftContainer
     .container.p-3.my-3.bg-info
-    .container#inside.p-3.my-3.bg-light 
-          form#addinggameForm(action='/something' method='POST')
+        .container#inside.p-3.my-3.bg-light 
+          form#addinggameForm(action='/addDescr' method='POST')
+            h10#formTitle.mt-2.mb-4 2 of 3
             h2#formTitle.mt-2.mb-4 Add Game
-            .form-group
-                label Title
-                input#name.form-control(type='text' required='' name='title')
+            //-carried over from first form
+            input(type='hidden' name='release_date' value=release_date)
+            input(type='hidden' name='region' value=region)
+            input(type='hidden' name='first_release' value=first_release)
+       
             .form-group
                 label(for='exampleFormControlSelect2') Series
-                .w-100
+                .w-100 
                 button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#series1')
                     | select series
                 #series1.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addSeriesTitle' aria-hidden='true')
@@ -73,9 +72,10 @@ head
                             .modal-footer
                                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                                 button.btn.btn-info(type='button') Save changes
+                
 
                 button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#series')
-                    | add series
+                    | add new series option
                 #series.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addSeriesTitle' aria-hidden='true')
                     .modal-dialog.modal-dialog-centered(role='document')
                         .modal-content
@@ -91,67 +91,15 @@ head
                             .modal-footer
                                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                                 button.btn.btn-info(type='button') Save changes
-            .form-group
-                label(for='exampleFormControlSelect2') Genre
-                .w-100
-                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#genre')
-                    | select genre
-                #genre.modal.fade(tabindex='-1' role='dialog' aria-labelledby='genreTitle' aria-hidden='true')
-                    .modal-dialog.modal-dialog-centered(role='document')
-                        .modal-content
-                            .modal-header
-                                h5#genreTitle.modal-title select genre
-                                button.close(type='button' data-dismiss='modal' aria-label='Close')
-                                    span(aria-hidden='true') &times;
-                            .modal-body
-                                for g in genres
-                                    .form-check.form-check-inline
-                                        input#inlineCheckbox1.form-check-input(type='checkbox' value=genre)
-                                        label.form-check-label(for='inlineCheckbox1') #{g}
-                            .modal-footer
-                                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-                                button.btn.btn-info(type='button') Save changes
-
-            .form-group
-                label Release Date
-                input.form-control(type='text' required='')
-            .form-check
-                input#firstRelease.form-check-input(type='checkbox' value='')
-                label.form-check-label(for='firstRelease')
-                    | first release ?
-            .form-group
-                label Region
-                select#exampleFormControlSelect1.form-control
-                    option(value="region") Asia
-                    option(value="region") Europe
-                    option(value="region") North America
-                    option(value="region") Africa
-                    option(value="region") Oceania
-                    option(value="region") South America
-                    option(value="region") Antarctica
+                tr  #{added_series} 
             .form-group
                 label(for='exampleFormControlSelect2') Console
                 .w-100
-                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#console')
-                    | select console
-                #console.modal.fade(tabindex='-1' role='dialog' aria-labelledby='consoleTitle' aria-hidden='true')
-                    .modal-dialog.modal-dialog-centered(role='document')
-                        .modal-content
-                            .modal-header
-                                h5#consoleTitle.modal-title select console
-                                button.close(type='button' data-dismiss='modal' aria-label='Close')
-                                    span(aria-hidden='true') &times;
-                            .modal-body
-                                for c in consoles
-                                    .form-check.form-check-inline
-                                        input#inlineCheckbox1.form-check-input(type='checkbox' value=consoles)
-                                        label.form-check-label(for='inlineCheckbox1') #{c}
-                            .modal-footer
-                                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-                                button.btn.btn-info(type='button') Save changes
-
+                select#exampleFormControlSelect1.form-control 
+                    for c in consoles  
+                        option(value=c) #{c}      
                 button.btn#addconsole.btn-info(type='button' data-toggle='modal' data-target='#addConsole')
-                    | add console
+                    | add new console
                 #addConsole.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addConsoleTitle' aria-hidden='true')
                     .modal-dialog.modal-dialog-centered(role='document')
                         .modal-content
@@ -215,9 +163,9 @@ head
                 label(for='exampleFormControlSelect1') Publisher
                 select#exampleFormControlSelect1.form-control 
                     for p in companies  
-                        option(value='publisher') #{p}
+                        option(value=p) #{p}      
                 button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#addPub')
-                    | add publisher
+                    | add new publisher
                 #addPub.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addPubTitle' aria-hidden='true')
                     .modal-dialog.modal-dialog-centered(role='document')
                         .modal-content
@@ -263,9 +211,8 @@ head
                             .modal-footer
                                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                                 button.btn.btn-info(type='button') Save changes
-
                 button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#addDev')
-                    | add developer
+                    | add new developer
                 #addDev.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addDevTitle' aria-hidden='true')
                     .modal-dialog.modal-dialog-centered(role='document')
                         .modal-content
@@ -291,10 +238,12 @@ head
                             .modal-footer
                                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                                 button.btn.btn-info(type='button') Save changes
+                tr  #{added_developers} 
                 .form-check
                 input#sameAsPub.form-check-input(type='checkbox' value='')
                 label#sameAsPub2.form-check-label(for='sameAsPub')
                     | same as publisher ?
+
 
             .form-group
                 label(for='exampleFormControlSelect2') Designer
@@ -345,14 +294,28 @@ head
                                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                                 button.btn.btn-info(type='button') Save changes
             .form-group
-                label Description
-                input#description.form-control(type='text' required='' name='descrition')
-            button#submit.btn.btn-info.my-2.my-sm-0(type='submit')
-                | Submit
-            button#clear.btn.btn-secondary.my-2.my-sm-0(type='clear')
-                | Clear
-            
-
-            
-
-            
+                label(for='exampleFormControlSelect2') Genre
+                .w-100
+                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#genre')
+                    | select genre
+                #genre.modal.fade(tabindex='-1' role='dialog' aria-labelledby='genreTitle' aria-hidden='true')
+                    .modal-dialog.modal-dialog-centered(role='document')
+                        .modal-content
+                            .modal-header
+                                h5#genreTitle.modal-title select genre
+                                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                    span(aria-hidden='true') &times;
+                            .modal-body
+                                - n = 0
+                                for g in genres
+                                    .form-check.form-check-inline
+                                        input#inlineCheckbox1.form-check-input(type='checkbox' name='genre[' + n++ +']')
+                                        label.form-check-label(for='inlineCheckbox1') #{g}
+                            .modal-footer
+                                button.btn.btn-info(type='button') Save changes
+                tr  #{added_genres} 
+            .text-center
+                button#submit.btn.btn-info.my-2.my-sm-0(type='submit')
+                    | Next
+                button#clear.btn.btn-secondary.my-2.my-sm-0(type='clear')
+                    | Clear            
