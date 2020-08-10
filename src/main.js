@@ -424,16 +424,19 @@ app.post("/newUserAdded", async (req, res) => {
   // already exists
 
   var searchQuery =
-    "SELECT * FROM users WHERE email = '" + req.body.email + "' ";
-  "OR user_name = '" + req.body.name + "';";
+    "SELECT * FROM users WHERE (email = '" + req.body.email + "') " +
+  "OR (user_name = '" + req.body.name + "');";
 
+  console.log(searchQuery);
   try {
     const client = await pool.connect();
     var valid = await client.query(searchQuery);
-    if (valid.rows.length > 0) {
+    console.log(valid.rows.length);
+    if (valid.rows.length != 0) {
       client.end();
-      alert("User already exists");
-      res.render("form");
+      // alert("User already exists");
+      // res.render("form");
+      res.send("Error: User already exists");
     } else {
       var Num = await client.query("SELECT user_id FROM users;");
       idNum = Num.rows.length;

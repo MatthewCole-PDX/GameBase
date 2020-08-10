@@ -40,28 +40,28 @@ form#form.container.bg-light.border.rounded.w-50.mx-auto.mt-5.p-3(action='/newUs
   h2#contact.mt-2.mb-4 Create Your Account
   .form-group.row
     label(for='name') Name 
-    input#name.form-control(type='text' required='' name='name' )
+    input#name.form-control(type='name' required='' name='name' )
   .form-group.row
     label(for='password') Password 
     input#password.form-control(type='password' required='' name='password' )
   .form-group.row
     label(for='email') Email 
     input#email.form-control(type='email' required='' name='email')
-  .form-group.row
-    label(for='birth') Birth date
-    input#name.form-control(type='text' required='' name='birth' )
-  .form-group.row
-    label(for='city') City
-    input#name.form-control(type='text' required='' name='city' )
-  .form-group.row
-    label(for='country') Country
-    select#exampleFormControlSelect1.form-control 
-                    for p in countries
-                        option(value='country') #{p}
-  .form-group.row
-    label(for='console') Favorite Console
-    select#exampleFormControlSelect1.form-control 
-                    for c in consoles
-                        option(value='console') #{c}
+  //- .form-group.row
+  //-   label(for='birth') Birth date
+  //-   input#name.form-control(type='text' required='' name='birth' )
+  //- .form-group.row
+  //-   label(for='city') City
+  //-   input#name.form-control(type='text' required='' name='city' )
+  //- .form-group.row
+  //-   label(for='country') Country
+  //-   select#exampleFormControlSelect1.form-control 
+  //-                   for p in countries
+  //-                       option(value='country') #{p}
+  //- .form-group.row
+  //-   label(for='console') Favorite Console
+  //-   select#exampleFormControlSelect1.form-control 
+  //-                   for c in consoles
+  //-                       option(value='console') #{c}
   button#formButton.btn.btn-info(type='submit')
     | Create Account &gt;&gt;
