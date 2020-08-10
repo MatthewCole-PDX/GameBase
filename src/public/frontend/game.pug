@@ -25,7 +25,7 @@ head
           a#chart.nav-link(href='/chart').text-secondary chart
         li.nav-item
           if loggedIn === false
-            a#logIn.nav-link(href='/logIn').text-secondary log in/sign up
+            a#logIn.nav-link(href='/logIn/0').text-secondary log in/sign up
           else
             a.nav-link.text-secondary #{user_name}
             li.nav-item
@@ -96,7 +96,7 @@ head
                   button#resetForm.btn.btn-info(type='cancel')
                     | cancel
       else  
-        a#reviewForm.btn.btn-info(href='/login' role='button' aria-expanded='false' aria-controls='review' type='submit') Log In to Rate/Catalog
+        a#reviewForm.btn.btn-info(href='/login/' + game.game_id role='button' aria-expanded='false' aria-controls='review' type='submit') Log In to Rate/Catalog
       .container.p-3.my-3.bg-info
         for review in userReviews
           tr.odd(role='row')

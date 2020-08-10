@@ -208,13 +208,14 @@ app.get("/logOut", (req, res) => {
   res.redirect("/");
 });
 
-app.get("/login", (req, res) => {
+app.get("/login/:game_id", (req, res) => {
   res.status(200);
   // res.sendFile(path.join(__dirname + "/public/logIn.html"));
-  res.render("login", { Login_Failed: undefined });
+  res.render("login", { Login_Failed: undefined,
+                        game_id: req.params.game_id}); // for redirecting back to game page
   //not visible if logged in
 });
-app.post("/checkCredentials", async (req, res) => {
+app.post("/checkCredentials/:game_id", async (req, res) => {
   res.status(200);
   if (!user_id) {
     try {
@@ -231,8 +232,12 @@ app.post("/checkCredentials", async (req, res) => {
         user_id = result.rows[0].user_id;
         user_name = req.body.name;
         loggedIn = true;
-        console.log("Logged In! user-" + user_id);
-        res.redirect("user/" + user_name);
+        console.log("Logged In! " + user_id + " " + user_name + " " + req.params.game_id);
+        if(req.params.game_id > 0){
+          res.redirect("/game/" + req.params.game_id );
+        }else{
+          res.redirect("/user/" + user_name);
+        }
       } else {
         res.render("login", {
           Login_Failed: " Incorrect User/Password, Please Try Again",
@@ -244,9 +249,10 @@ app.post("/checkCredentials", async (req, res) => {
       res.send("Error " + err);
     }
   } else {
-    res.redirect("user/" + user_name);
+    res.redirect("/user/" + user_name);
   }
 });
+
 
 app.get("/user/:user_name", async (req, res) => {
   res.status(200);
