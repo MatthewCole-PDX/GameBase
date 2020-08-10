@@ -377,16 +377,9 @@ app.post("/newUserAdded", async (req, res) => {
   // redirect to user page, else alert that the user
   // already exists
 
-<<<<<<< HEAD
-  var searchQuery = "SELECT * FROM users WHERE email = '" +
-                    req.body.email + "' "
-                    "OR user_name = '" +
-                    req.body.name + "';";
-=======
   var searchQuery =
     "SELECT * FROM users WHERE (email = '" + req.body.email + "') " +
   "OR (user_name = '" + req.body.name + "');";
->>>>>>> 60349afef4a16530ff05d376ac5277b1f7dafd52
 
   console.log(searchQuery);
   try {
