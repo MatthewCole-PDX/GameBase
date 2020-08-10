@@ -95,7 +95,7 @@ VALUES
 (17, 'Super Mario Bros',NULL),
 (18, 'Robotron X',NULL);
 
-INSERT INTO releases(release_id, game_id, publisher_id, console_id, region, release_date, first_release)
+INSERT INTO releases(release_id, game_id, publisher_id, console_id, region, release_date, first_release, image)
 VALUES
 (1,1,2,33, 'North America','1972-11-29', 'yes',NULL),
 (2,1,2,2,'North America', '1976-01-01','no',NULL),
@@ -172,7 +172,7 @@ VALUES
 (73,17,1,33,NULL,'1986-01-01','no',NULL),
 (74,18,13,20,'North America','1996-11-30','yes',NULL),
 (75,18,13,20,'Europe','1997-03-01','no',NULL),
-(76,18,13,35,NULL,'1997-01-01','no')
+(76,18,13,35,NULL,'1997-01-01','no', NULL)
 ;
 
 
@@ -311,7 +311,7 @@ VALUES
 (18,10)
 ;
 
-INSERT INTO users(user_id, user_name, password, email, birth_date, city, country, favorite_console)
+INSERT INTO users(user_id, user_name, password, email, birth_date, city, country, favorite_console, image)
 VALUES
 (1, 'Matt', 'password', 'macole@pdx.edu', '1982-08-21', 'Portland, Oregon', 'United States', 11,NULL),
 (2, 'Devon', 'password', 'devon@mail.com', '1983-07-09', 'Portland, Oregon', 'United States', 4,NULL),
