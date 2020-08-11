@@ -37,28 +37,27 @@ head
           | Search
 // Create the form that will submit a database query (and make a chart)
 form(action='/gen' method='POST')
-  .row
+  .row#top
     .col-sm.leftContainer
-      .container#left.p-3.my-3
-        .container.p-3.my-3.bg-light
+        .item1.p-3.my-3#left
             .form-group
-              label(for='list1') Console:
+              label#color(for='list1') Console:
               select#list1.browser-default.custom-select(name='Console')
                 option ANY
                   for console in consoles
                     tr.odd(role='row')
                       option #{console.name}
-        .container.p-3.my-3.bg-light    
+        .item2.p-3.my-3#left
           .form-group
-            label(for='list2') Publisher:
+            label#color(for='list2') Publisher:
             select#list2.browser-default.custom-select(name='Publisher')
               option ANY
                 for publisher in publishers
                   tr.odd(role='row')
                     option #{publisher.name}
-        .container.p-3.my-3.bg-light
+        .item3.p-3.my-3#left
           .form-group
-            label(for='list3') Genre:
+            label#color(for='list3') Genre:
             select#list2.browser-default.custom-select(name='Genre')
               option ANY
                 for genre in genres
@@ -67,18 +66,17 @@ form(action='/gen' method='POST')
         
 
     .col-sm.rightContainer
-      .containeri#right.p-3.my-3
-        .container.p-3.my-3.bg-light    
+        .item1.p-3.my-3#right
           .form-group
-            label(for='input1') Minimum year: 
+            label#color(for='input1') Minimum year: 
             input#1input1.browser-default.custom-select(type="text" name="MinYear")
-        .container.p-3.my-3.bg-light  
+        .item2.p-3.my-3#right
           .form-group
-            label(for='input2') Maximum year: 
+            label#color(for='input2') Maximum year: 
             input#1input2.browser-default.custom-select(type="text" name="MaxYear")
-        .container.p-3.my-3.bg-light  
+        .item3.p-3.my-3#right
           .form-group
-            label(for="list4") Generation:
+            label#color(for="list4") Generation:
             select#1list4.browser-default.custom-select(name="Generation")
               option Any
                 - var n = 0;
@@ -97,7 +95,7 @@ form(action='/gen' method='POST')
         ol
           for game in reviewData
             tr.odd(role='row')
-              .col-4
+              .col
                 if(newData)
                     for game2 in newData
                       //-tr #{game2.rating} #{game2.charted} #{game.rating}
