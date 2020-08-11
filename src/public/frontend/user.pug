@@ -41,8 +41,9 @@ head
     .container#userLeftBar.p-3.my-3
     .container.p-3.my-3.bg-light
         if(userInfo.user_id > 10)
-            img.img-fluid(src=userInfo.image width='400px' alt=userInfo.image)  
-        img.img-fluid(src='../images/user-' + userInfo.user_id + '.jpg' width='400px' alt='images/user-' + userInfo.user_id + '.jpg')  
+          img.img-fluid(src=userInfo.image width='400px' alt=userInfo.image)
+        else  
+          img.img-fluid(src='../images/user-' + userInfo.user_id + '.jpg' width='400px' alt='images/user-' + userInfo.user_id + '.jpg')  
     .container#userLeftMain.p-3.my-3
       td Collection: 
         br
@@ -52,7 +53,7 @@ head
                     .container.p-3.my-3.bg-light 
                         if(userEntry.game_id > 18)
                           td
-                              img.img-fluid(src="'" + userEntry.image + "'" width='50px' alt= "'" + userEntry.image + "'")
+                              img.img-fluid(src=userEntry.image width='50px' alt=userEntry.image)
                           td  &nbsp;
                               a(href='/game/' + userEntry.game_id) #{userEntry.game_name},
                           td   first released on #{userEntry.release_date}
@@ -79,7 +80,7 @@ head
                     .container.p-3.my-3.bg-light 
                         if(userEntry.game_id > 18)
                           td
-                              img.img-fluid(src="'" + userEntry.image + "'" width='50px' alt= "'" + userEntry.image + "'")
+                              img.img-fluid(src=userEntry.image width='50px' alt=userEntry.image)
                           td  &nbsp;
                               a(href='/game/' + userEntry.game_id) #{userEntry.game_name},
                           td   first released on #{userEntry.release_date}
@@ -125,7 +126,7 @@ head
                     .container.p-3.my-3.bg-light 
                         if(userEntry.game_id > 18)
                           td
-                              img.img-fluid(src="'" + userEntry.image + "'" width='50px' alt= "'" + userEntry.image + "'")   
+                              img.img-fluid(src=userEntry.image width='50px' alt=userEntry.image)   
                           td   [#{userEntry.user_rating}/10]  
                           td  
                               a(href='/game/' + userEntry.game_id) #{userEntry.game_name},

@@ -35,8 +35,7 @@ head
       p#logInTitle
         |   If you are already registered, then please log in.
     else
-      p#loginTitle
-        tr #{Login_Failed}
+      p#loginTitle.text-center.text-danger #{Login_Failed}
     #formContainer.formContainer
       form.form-horizontal(action='/checkCredentials/' + game_id method='POST'  role='form')
         .form-group.row
