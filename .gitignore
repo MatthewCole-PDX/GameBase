@@ -1,3 +1,6 @@
 node_modules/
 express-api-template/
 junkmain.js/
+frontend/add2Series.pug
+frontend/addDescr.pug
+frontend/addImage.pug

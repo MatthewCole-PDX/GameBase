@@ -62,7 +62,8 @@ app.get("/", async (req, res) => {
   try {
     const client = await pool.connect();
     const result = await client.query(
-      "SELECT users.user_name, users.user_id, games.game_id, games.name, ratings.user_rating, ratings.user_review " +
+      "SELECT users.user_name, users.user_id, games.game_id, games.name, users.image AS user_image," +
+        "releases.image AS game_image, ratings.user_rating, ratings.user_review " +
         "FROM users " +
         "JOIN ratings " +
         "ON users.user_id = ratings.user_id " +
@@ -80,14 +81,39 @@ app.get("/", async (req, res) => {
         user_name: data[i].user_name,
         game_id: data[i].game_id,
         name: data[i].name,
+        user_image: data[i].user_image,
+        game_image: data[i].game_image,
         user_rating: data[i].user_rating,
         user_review: data[i].user_review,
       };
       searchResults.push(reviews);
     }
+    const result2= await client.query(
+      "SELECT games.game_id AS game_id, games.name AS name, releases.image AS image, " +
+      "TO_CHAR(releases.release_date,'MM/DD/YYYY') AS release_date, releases.region AS region " +
+      "FROM games JOIN releases ON games.game_id = releases.game_id " +
+      "WHERE release_date > now() AND releases.first_release = 'yes';"
+    )
+    var newGames = [];
+    if(result2.rows.length != 0){
+      for(let i = 0; i < result2.rows.length; i++){
+        var game = {
+          game_id: result2.rows[i].game_id,
+          name: result2.rows[i].name,
+          image: result2.rows[i].image,
+          release_date: result2.rows[i].release_date,
+          region: result2.rows[i].region
+        };
+        newGames.push(game);
+      }
+    }
+    else{
+      newGames = null;
+    }
     res.render("index", {
       title: "index",
       reviewData: searchResults,
+      newGames: newGames,
       loggedIn: loggedIn,
       user_name: user_name,
     });
@@ -115,7 +141,6 @@ app.get("/chart", async (req, res) => {
     // ORDER BY avg;
     // 'top2' is the same but with game_id instead of name
     const select2 = await client.query("SELECT name FROM consoles;");
-    console.log(select2);
 
     var consoles = [];
     for (var i = 0; i < select2.rows.length; i++) {
@@ -124,7 +149,6 @@ app.get("/chart", async (req, res) => {
       };
       consoles.push(console1);
     }
-    console.log(consoles);
 
     const select1 = await client.query(
       "SELECT DISTINCT name FROM companies, releases WHERE companies.company_id = releases.publisher_id;"
@@ -151,7 +175,7 @@ app.get("/chart", async (req, res) => {
       //"SELECT * " + "FROM top " + "NATURAL JOIN top2 " + "ORDER BY avg;"
       "SELECT games.game_id, " +
         "games.name, consoles.console_id, consoles.name AS Console, companies.name AS Publisher, companies.company_id AS publisher_id, " +
-        "TO_CHAR(releases.release_date,'MM/DD/YYYY') AS release_date, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres, rating.average AS average FROM " +
+        "TO_CHAR(releases.release_date,'MM/DD/YYYY') AS release_date, releases.image AS image, releases.region AS Region, string_agg(DISTINCT genres.name, ', ') AS Genres, rating.average AS average FROM " +
         "(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average " +
         "FROM ratings GROUP BY release_id) AS rating " +
         "JOIN releases ON releases.release_id = rating.release_id " +
@@ -161,7 +185,7 @@ app.get("/chart", async (req, res) => {
         "INNER JOIN genre_rel ON games.game_id = genre_rel.game_id " +
         "INNER JOIN genres ON genre_rel.genre_id = genres.genre_id " +
         "WHERE releases.first_release = 'yes' " +
-        "GROUP BY games.game_id, games.name, rating, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region " +
+        "GROUP BY games.game_id, games.name, rating, rating.average, releases.image, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region " +
         "ORDER BY average DESC;"
     );
     const results = { results: result ? result.rows : null };
@@ -174,6 +198,7 @@ app.get("/chart", async (req, res) => {
         name: result.rows[i].name,
         //user_rating: data[i].avg,
         console_id: result.rows[i].console_id,
+        image: result.rows[i].image,
         console: result.rows[i].console,
         release_date: result.rows[i].release_date,
         publisher_id: result.rows[i].publisher_id,
@@ -184,8 +209,39 @@ app.get("/chart", async (req, res) => {
       };
       searchResults.push(rating);
     }
+    const result2 = await client.query(
+      //"SELECT * " + "FROM top " + "NATURAL JOIN top2 " + "ORDER BY avg;"
+      "SELECT games.game_id, " +
+        "games.name, " +
+        "TO_CHAR(releases.release_date,'MM/DD/YYYY') AS release_date, releases.image AS image, releases.region AS Region, rating.average AS average FROM " +
+        "(SELECT release_id, round( avg(user_rating)::numeric, 2) AS average " +
+        "FROM ratings GROUP BY release_id) AS rating " +
+        "JOIN releases ON releases.release_id = rating.release_id " +
+        "INNER JOIN games ON releases.game_id = games.game_id " +
+        "WHERE releases.first_release = 'yes' AND games.game_id > 18 " +
+        "ORDER BY average DESC;"
+    );
+    var newResults = [];
+    if(result2.rows.length > 0){
+      for (var i = 0; i < result2.rows.length; i++) {
+        var newrating = {
+          game_id: result2.rows[i].game_id,
+          name: result2.rows[i].name,
+          //user_rating: data[i].avg,
+          image: result2.rows[i].image,
+          release_date: result2.rows[i].release_date,
+          region: result2.rows[i].region,
+          rating: result2.rows[i].average,
+          charted: false,
+        };
+        newResults.push(newrating);
+      }
+    }else{
+      newResults = null;
+    }
     res.render("chart", {
       reviewData: searchResults,
+      newData: newResults,
       publishers: publishers,
       consoles: consoles,
       genres: genres,
@@ -261,7 +317,7 @@ app.get("/user/:user_name", async (req, res) => {
     try {
       const client = await pool.connect();
       const result1 = await client.query(
-        "SELECT user_name, user_id, email, " +
+        "SELECT user_name, user_id, email, users.image AS image, " +
           "TO_CHAR(birth_date,'MM/DD/YYYY') AS birth_date, users.city AS city, users.country AS country, console_id, name " +
           "FROM users JOIN consoles ON consoles.console_id = users.favorite_console WHERE LOWER(users.user_name) = LOWER('" +
           req.params.user_name +
@@ -271,6 +327,7 @@ app.get("/user/:user_name", async (req, res) => {
       var userInfo = {
         user_id: result1.rows[0].user_id,
         user_name: result1.rows[0].user_name,
+        image: result1.rows[0].image,
         console_id: result1.rows[0].console_id,
         console: result1.rows[0].name,
         birth_date: result1.rows[0].birth_date,
@@ -281,7 +338,7 @@ app.get("/user/:user_name", async (req, res) => {
         "SELECT DISTINCT games.game_id AS game_id, games.name AS name, consoles.console_id AS console_id" +
           ", consoles.name AS Console, ratings.user_rating AS user_rating, ratings.user_review AS user_review, ratings.catalog AS catalog" +
           ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release, companies.company_id AS company_id, companies.name AS publisher, releases.region AS Region" +
-          ", string_agg(DISTINCT genres.name, ', ') AS Genres" +
+          ", string_agg(DISTINCT genres.name, ', ') AS Genres, releases.image AS image" +
           " FROM games " +
           "JOIN releases ON games.game_id = releases.game_id " +
           "INNER JOIN consoles ON releases.console_id = consoles.console_id " +
@@ -292,7 +349,7 @@ app.get("/user/:user_name", async (req, res) => {
           " WHERE releases.first_release = 'yes' AND ratings.user_id = '" +
           userInfo.user_id +
           "'" +
-          " GROUP BY games.game_id, games.name, consoles.console_id, Console, releases.release_date, ratings.catalog, ratings.user_rating, ratings.user_review, companies.company_id, companies.name, releases.release_date, releases.region" +
+          " GROUP BY games.game_id, games.name, releases.image, consoles.console_id, Console, releases.release_date, ratings.catalog, ratings.user_rating, ratings.user_review, companies.company_id, companies.name, releases.release_date, releases.region" +
           ";"
       );
       var userLibrary = [];
@@ -300,6 +357,7 @@ app.get("/user/:user_name", async (req, res) => {
         var userEntry = {
           game_id: result2.rows[i].game_id,
           game_name: result2.rows[i].name,
+          image: result2.rows[i].image,
           user_rating: result2.rows[i].user_rating,
           user_review: result2.rows[i].user_review,
           catalog: result2.rows[i].catalog,
@@ -310,6 +368,32 @@ app.get("/user/:user_name", async (req, res) => {
           publisher: result2.rows[i].publisher,
           region: result2.rows[i].region,
           genres: result2.rows[i].genres,
+        };
+        userLibrary.push(userEntry);
+      }
+      const result3 = await client.query(
+        "SELECT DISTINCT games.game_id AS game_id, games.name AS name, ratings.user_rating AS user_rating" +
+          ", ratings.user_review AS user_review, ratings.catalog AS catalog" +
+          ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release, releases.region AS Region" +
+          ", releases.image AS image" +
+          " FROM games " +
+          "JOIN releases ON games.game_id = releases.game_id " +
+          "INNER JOIN ratings ON ratings.release_id = releases.release_id" +
+          " WHERE releases.first_release = 'yes' AND games.game_id > 18 AND ratings.user_id = '" +
+          userInfo.user_id +
+          "'" +
+          ";"
+      );
+      for (var i = 0; i < result2.rows.length; i++) {
+        var userEntry = {
+          game_id: result2.rows[i].game_id,
+          game_name: result2.rows[i].name,
+          image: result2.rows[i].image,
+          user_rating: result2.rows[i].user_rating,
+          user_review: result2.rows[i].user_review,
+          catalog: result2.rows[i].catalog,
+          release_date: result2.rows[i].release_date,
+          region: result2.rows[i].region,
         };
         userLibrary.push(userEntry);
       }
@@ -430,11 +514,12 @@ app.post("/search", async (req, res) => {
     try {
       const client = await pool.connect();
       const result = await client.query(
-        //"SELECT * FROM games;"
         "SELECT DISTINCT games.game_id AS game_id, games.name AS name" +
           ", consoles.name AS Console" +
-          ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release, companies.name AS Publisher, releases.region AS Region" +
-          ", string_agg(DISTINCT genres.name, ', ') AS Genres" +
+          ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release" +
+          ", companies.name AS Publisher, releases.region AS Region" +
+          ", releases.image AS image" +
+          ", string_agg(DISTINCT genres.name, ', ') AS Genres" + 
           " FROM games " +
           "JOIN releases ON games.game_id = releases.game_id " +
           "INNER JOIN consoles ON releases.console_id = consoles.console_id " +
@@ -445,23 +530,52 @@ app.post("/search", async (req, res) => {
           req.body.searchFor +
           "%')" +
           " AND releases.first_release = 'yes'" +
-          " GROUP BY games.game_id, games.name, Console, releases.release_date, Publisher, releases.region" +
+          " GROUP BY games.game_id, games.name, releases.image, Console, releases.release_date, Publisher, releases.region" +
           ";"
       );
-      //var results = { results: result ? result.rows : null };
-      //console.log(results);
-      //res.render("search");
-      for (var i = 0; i < result.rows.length; i++) {
-        var game = {
-          game_id: result.rows[i].game_id,
-          name: result.rows[i].name,
-          console: result.rows[i].console,
-          "first release": result.rows[i].first_release,
-          publisher: result.rows[i].publisher,
-          region: result.rows[i].region,
-          genres: result.rows[i].genres,
-        };
-        searchResults.push(game);
+      if(result.rows.length != 0){
+        for (var i = 0; i < result.rows.length; i++) {
+          var game = {
+            game_id: result.rows[i].game_id,
+            name: result.rows[i].name,
+            image: result.rows[i].image,
+            console: result.rows[i].console,
+            first_release: result.rows[i].first_release,
+            publisher: result.rows[i].publisher,
+            region: result.rows[i].region,
+            genres: result.rows[i].genres,
+          };
+          searchResults.push(game);
+        }
+      }
+      const result2 = await client.query(
+        "SELECT DISTINCT games.game_id AS game_id, games.name AS name" +
+          ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release" +
+          ", releases.region AS Region" +
+          ", releases.image AS image" +
+          " FROM games " +
+          "JOIN releases ON games.game_id = releases.game_id " +
+          "WHERE LOWER(games.name) LIKE LOWER('%" +
+          req.body.searchFor +
+          "%')" +
+          " AND releases.first_release = 'yes' AND games.game_id > 18" +
+          ";"
+      );
+      console.log(result2.rows)
+      if(result2.rows.length != 0){
+        for (var i = 0; i < result2.rows.length; i++) {
+          var newgame = {
+            game_id: result2.rows[i].game_id,
+            name: result2.rows[i].name,
+            image: result2.rows[i].image,
+            first_release: result2.rows[i].first_release,
+            region: result2.rows[i].region,
+          };
+          searchResults.push(newgame);
+        }
+      }
+      if(!searchResults){
+        searchResults = null;
       }
       res.render("search", {
         games: searchResults,
@@ -487,7 +601,7 @@ app.get("/game/:game_id", async (req, res) => {
       //"SELECT * FROM games;"
       "SELECT games.game_id AS game_id, games.name AS name, consoles.console_id AS Console_id, " +
         "consoles.name AS Console, TO_CHAR(releases.release_date,'MM/DD/YYYY') AS Release_date, " +
-        "companies.company_id AS Publisher_id, companies.name AS Publisher, " +
+        "companies.company_id AS Publisher_id, companies.name AS Publisher, releases.image AS image, " +
         "(SELECT DISTINCT string_agg(companies.name, ', ') AS Developers FROM companies " +
         "JOIN developer_rel ON developer_rel.developer_id = companies.company_id " +
         "WHERE developer_rel.game_id = '" +
@@ -513,10 +627,22 @@ app.get("/game/:game_id", async (req, res) => {
         id +
         "' " +
         "GROUP BY releases.release_id, games.game_id, games.name, consoles.Console_id, " +
-        "Console, releases.release_date, companies.company_id, " +
+        "Console, releases.release_date, companies.company_id, releases.image, " +
         "companies.name, releases.region, releases.first_release " +
         "ORDER BY releases.release_date;"
     );
+    var newg = await client.query(
+      "SELECT games.name, games.game_id, TO_CHAR(releases.release_date,'MM/DD/YYYY') AS Release_date, releases.region, releases.image AS image " +
+      "FROM games, releases WHERE games.game_id = releases.game_id AND games.game_id = " + req.params.game_id +
+      " AND releases.first_release = 'yes';"
+    );
+    var newgame = {
+        game_id: newg.rows[0].game_id,
+          name: newg.rows[0].name,
+          region: newg.rows[0].region,
+          release_date: newg.rows[0].release_date,
+          image: newg.rows[0].image
+    };
     //var results = { results: result ? result.rows : null };
     var secondaryReleases = [];
     var game;
@@ -525,6 +651,7 @@ app.get("/game/:game_id", async (req, res) => {
         game = {
           game_id: result.rows[i].game_id,
           name: result.rows[i].name,
+          image: result.rows[i].image,
           console_id: result.rows[i].console_id,
           console: result.rows[i].console,
           release_date: result.rows[i].release_date,
@@ -554,7 +681,7 @@ app.get("/game/:game_id", async (req, res) => {
     }
     const result2 = await client.query(
       "SELECT users.user_name AS user_name, users.user_id AS user_id, ratings.user_rating AS user_rating, ratings.catalog AS catalog, " +
-      "ratings.user_review AS user_review "+
+      "ratings.user_review AS user_review, users.image AS image "+
       "FROM users JOIN ratings ON users.user_id = ratings.user_id " +
       "INNER JOIN releases ON releases.release_id = ratings.release_id " +
       "WHERE releases.game_id = " + id + ';' 
@@ -575,6 +702,7 @@ app.get("/game/:game_id", async (req, res) => {
       }
       var review = {
         user_id: result2.rows[i].user_id,
+        image: result2.rows[i].image,
         user_name: result2.rows[i].user_name,
         user_rating: result2.rows[i].user_rating,
         user_review: result2.rows[i].user_review,
@@ -582,6 +710,7 @@ app.get("/game/:game_id", async (req, res) => {
       userReviews.push(review);
     }
     res.render("game", {
+      newgame: newgame,
       game: game,
       secondaryReleases: secondaryReleases,
       userReview: userReview,
@@ -597,7 +726,7 @@ app.get("/game/:game_id", async (req, res) => {
     res.send("Error " + err);
   }
 });
-
+/*
 app.get("/console/:console_id", async (req, res) => {
   res.status(200);
   var id = req.params.game_id;
@@ -628,7 +757,7 @@ app.get("/console/:console_id", async (req, res) => {
     res.send("Error " + err);
   }
 });
-
+*/
 // create a chart given a query from the chart page
 app.post("/gen", async (req, res) => {
   try {
@@ -643,7 +772,7 @@ app.post("/gen", async (req, res) => {
     var consoleParam;
     var generationParam;
     var publisherParam;
-
+  
     if(req.body.Publisher == "ANY") {
       publisherParam = "ANY(SELECT releases.publisher_id FROM releases)";
     } else {
@@ -841,17 +970,23 @@ app.get("/addGame", async (req, res) => {
     res.send("Error " + err);
   }
 });
-app.post("/addRels", async (req, res) => {
-  /*
-  if(!loggedIn){
-    res.render("addGame", {alreadyExists: "You must be logged in to do that.",
+app.post("/add2Series", async (req, res) => {
+  
+  /*if(!loggedIn){
+    res.render("add1Game", {alreadyExists: "You must be logged in to do that.",
                             loggedIn: loggedIn,
                             user_name: user_name,
                             user_id: user_id});
   }*/
   const client = await pool.connect();
-  var mayExist = 'no';
   var idNum;
+  var first_release;
+  if (req.body.firstRelease != undefined) {
+    first_release = "yes";
+  }else{
+    first_release = "no";
+  }
+  console.log(first_release);
   try{
     var result = await client.query(
       "SELECT game_id FROM games WHERE LOWER(name) = LOWER('" + req.body.title + "');");
@@ -866,26 +1001,24 @@ app.post("/addRels", async (req, res) => {
                      
       result = await client.query(
           "SELECT game_id, name FROM games WHERE LOWER(name) = LOWER('" + req.body.title + "');");   
-      var first_release;
       console.log(result.rows[0].name);
-      if (req.body.firstRelease != undefined) {
-        first_release = "yes";
-      }else{
-        first_release = "no";
-      }
+      
     }else{
-      mayExist = 'yes';
-      /*
       if (req.body.firstRelease != undefined) {
-        res.render("addGame", {
+        var test = await client.query("SELECT release_id FROM releases WHERE game_id = " + result.rows[0].game_id + 
+                                      " AND first_release = 'yes';");
+        if(test.rows.length > 0){
+          res.render("add1Game", {
           alreadyExists: "Release Already Exists. If this is secondary release of the same game, uncheck 'first release'"});
-      }*/
+        }
+      }
     }
     var Num = await client.query("SELECT release_id FROM releases;");
       idNum = Num.rows.length;
       idNum++;
-    await client.query("INSERT INTO releases(release_id, game_id) " +
-                      "VALUES (" + idNum + ", " + result.rows[0].game_id + ");"
+    await client.query("INSERT INTO releases(release_id, game_id, region, release_date, first_release, image) " +
+                      "VALUES (" + idNum + ", " + result.rows[0].game_id + ", '" + req.body.region + "', '" +
+                      req.body.release_date + "', '" + first_release + "', '" + req.body.image_link + "');"
                         );
     result = await client.query(
                         "SELECT release_id, game_id FROM releases WHERE releases.release_id = " + idNum + ";");
@@ -897,6 +1030,40 @@ app.post("/addRels", async (req, res) => {
     res.send("Error " + err);
   }
   //populate next form
+  var series = [];
+
+  try {
+    const client = await pool.connect();
+    const query1 = await client.query("SELECT name FROM series;"); //query series
+
+    for (let i = 0; i < query1.rows.length; i++) {
+      series.push(query1.rows[i].name);
+    }
+    client.release();
+  } catch (err) {
+    console.error(err);
+    res.send("Error " + err);
+  }
+  /*if(first_release == 'yes'){
+    res.render("addImage", {
+      release_id: idNum,
+      loggedIn: loggedIn, 
+      user_name: user_name,
+      user_id: user_id,
+    });
+  }else{*/
+    res.redirect("/");
+  //}
+/*
+  res.render("add2Series", {
+    release_id: idNum,
+    loggedIn: loggedIn, 
+    user_name: user_name,
+    user_id: user_id,
+    series: series,
+  });*/
+});
+app.get("/addRels", async (req, res) => {
   var series = [];
   var consoles = [];
   var genres = [];
@@ -936,20 +1103,16 @@ app.post("/addRels", async (req, res) => {
     for (let i = 0; i < dataLength; i++) {
       countries.push(clone[i].name);
     }
-
-    client.release();
   } catch (err) {
     console.error(err);
     res.send("Error " + err);
   }
-  res.redirect("/");
-/*
-  res.render("addRels", {
-    mayExist: mayExist,
-    release_date: req.params.release_date,
-    region: req.params.region,
-    first_release: first_release,
-    release_id: idNum,
+   console.log("HelloWorld");
+   res.render("addRels", {
+    release_date: null,
+    region: null,
+    first_release: null,
+    release_id: null,
     loggedIn: loggedIn, 
     user_name: user_name,
     user_id: user_id,
@@ -960,9 +1123,9 @@ app.post("/addRels", async (req, res) => {
     countries: countries,
     designers: designers,
     generations: generations,
-  });*/
-});
-
+    added_series: null,
+  });
+});/*
 app.post("/addDescr", async (req, res) => {
   console.log('hello world');
   res.render("addDescr", { 
@@ -972,7 +1135,7 @@ app.post("/addDescr", async (req, res) => {
 });
 app.post("/added", async (req, res) => { res.redirect("/")}); 
 
-
+*/
 app.listen(PORT, () => {
   console.log(
     "Server running at https://rateyourgames.heroku.com/ using port" + PORT

@@ -43,17 +43,35 @@ head
 
 
 .col-sm.leftContainer
-for game in games
-    tr.odd(role='row')
-        .container.p-3.my-3.bg-light
-            img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
-            h4
-                td 
-                    a(href='/game/' + game.game_id ) #{game.name}
-            td #{game.genres}
-            br
-            td First Released on #{game.console}, 
-            td  #{game.first_release} by
-            td  #{game.publisher} in
-            td  #{game.region}
-            br 
+  if(games)
+    for game in games
+      tr.odd(role='row')
+          .container.p-3.my-3.bg-light
+              if(game.game_id > 18)
+                img.img-fluid(src=game.image width='200px' alt=game.image)
+                h4
+                    td 
+                        a(href='/game/' + game.game_id ) #{game.name}
+                td First Released:   
+                td  #{game.first_release} in
+                td  #{game.region}
+                br 
+              else
+                img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
+                h4
+                    td 
+                        a(href='/game/' + game.game_id ) #{game.name}
+                td  #{game.genres}
+                br
+                td First Released By
+                td  #{game.publisher} for 
+                td  #{game.console} on
+                td  #{game.first_release} in
+                td  #{game.region}
+                br
+  else
+    h4 No Matches
+
+            //-on #{game.console},
+            //-by
+            //-td  #{game.publisher}

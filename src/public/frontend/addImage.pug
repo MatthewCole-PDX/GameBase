@@ -42,44 +42,8 @@ head
 .row
   .col-sm.leftContainer
     .container.p-3.my-3.bg-info
-    .container#inside.p-3.my-3.bg-light 
-          form#addinggameForm(action='/add2Series'  method='POST')
-            //-h10#formTitle.mt-2.mb-4 1 of 3
-            h2#formTitle.mt-2.mb-4 Add Game
-            .text-danger
-              if(alreadyExists)
-                h10 #{alreadyExists}
-            .form-group
-                label Title
-                input#name.form-control(type='text' required='' name='title')
-            .form-group
-                label Release Date (mm/dd/yyyy)
-                input.form-control(type='date' required='' name='release_date')
-            .form-check
-                input#firstRelease.form-check-input(type='checkbox' value='' name= 'firstRelease')
-                label.form-check-label(for='firstRelease')
-                    | first release ?
-            .form-group
-                label Region
-                select.browser-default.custom-select(option selected="World Wide" name="region")
-                    option(value="Asia") Asia
-                    option(value="Europe") Europe
-                    option(value="North America") North America
-                    option(value="Africa") Africa
-                    option(value="Oceana") Oceania
-                    option(value="South America") South America
-                    option(selected="selected" value="World Wide") World Wide
-            .form-group
-                label Image Link
-                input#description.form-control(type='text' name='image_link')
-            
-            .text-center
-                button#submit.btn.btn-info.my-2.my-sm-0(type='submit')
-                    | Next
-                button#clear.btn.btn-secondary.my-2.my-sm-0(type='clear')
-                    | Clear
-            
-
-            
-
-            
+    .container#inside.p-3.my-3.bg-light
+        form#addinggameForm(action='/action_page.php')
+              label(for='img') Select image:
+              input#img(type='file' name='img' accept='image/*')
+              input(type='submit')

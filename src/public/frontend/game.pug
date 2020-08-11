@@ -40,7 +40,10 @@ head
   .col-sm.leftContainer
     .container.p-3.my-3.bg-info
     .container.p-3.my-3.bg-light 
-      img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='400px' alt='images/game-' + game.game_id + '.jpg')
+      if(newgame.game_id > 18)
+            img.img-fluid(src="'" + newgame.image + "'" width='200px' alt="'" + newgame.image + "'")
+      else
+            img.img-fluid(src='../images/game-' + newgame.game_id + '.jpg' width='400px' alt='images/game-' + newgame.game_id + '.jpg')
       .w-100
       if(loggedIn)
         - review = "post"
@@ -91,14 +94,18 @@ head
                   button#resetForm.btn.btn-info(type='cancel')
                     | cancel
       else  
-        a#reviewForm.btn.btn-info(href='/login/' + game.game_id role='button' aria-expanded='false' aria-controls='review' type='submit') Log In to Rate/Catalog
+        a#reviewForm.btn.btn-info(href='/login/' + newgame.game_id role='button' aria-expanded='false' aria-controls='review' type='submit') Log In to Rate/Catalog
       .container.p-3.my-3.bg-info
         for review in userReviews
           tr.odd(role='row')
             if review.user_rating != NULL
               .container.p-3.my-3.bg-light
-                tr
-                  img.img-fluid(src='../images/user-' + review.user_id + '.jpg' width='50px' alt= 'images/user-' + review.user_id)   
+                if(review.user_id > 10)
+                  tr
+                    img.img-fluid(src= "'" + review.image +"'" width='50px' alt= "'" + review.image + "'")
+                else
+                  tr
+                    img.img-fluid(src='../images/user-' + review.user_id + '.jpg' width='50px' alt= 'images/user-' + review.user_id)   
                 tr    
                   a(href = '/user/' + review.user_name) #{review.user_name}
                 tr  #{review.user_rating + "/10"}
@@ -107,21 +114,24 @@ head
   .col-sm.rightContainer
     .container.p-3.my-3.bg-info
     .container.p-3.my-3.bg-light
-        h3 #{game.name}
+        h3 #{newgame.name}
         br
-        td Release Date:&nbsp;  #{game.release_date}
+        td Release Date:&nbsp;  #{newgame.release_date}
         br
-        td Console:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{game.console}
+        td Region:&nbsp;  #{newgame.region}
         br
-        td Publisher:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{game.publisher}
-        br
-        td Developers:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   #{game.developers}
-        br
-        td Designers:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     #{game.designers}
-        br
-        td Genres:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        #{game.genres}
-        br
-        br
+        if(game)
+          td Console:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{game.console}
+          br
+          td Publisher:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{game.publisher}
+          br
+          td Developers:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   #{game.developers}
+          br
+          td Designers:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     #{game.designers}
+          br
+          td Genres:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        #{game.genres}
+          br
+          br
 
     .container.p-3.my-3.bg-light 
         td Secondary Releases:
@@ -133,9 +143,7 @@ head
                     td No Date Info, 
                 else
                     td #{secondaryRelease.release_date}, 
-                td  
-                    a(href='/console_:' + secondaryRelease.console_id) #{secondaryRelease.console},
-                td  by 
-                    a(href='/publisher_:' + secondaryRelease.publisher_id) #{secondaryRelease.publisher},
+                td  #{secondaryRelease.console},
+                td  by #{secondaryRelease.publisher},
                 td  #{secondaryRelease.region}
                 br  

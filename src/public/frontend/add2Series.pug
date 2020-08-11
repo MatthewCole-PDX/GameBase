@@ -1,0 +1,92 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  script(src='https://code.jquery.com/jquery-3.5.1.slim.min.js' integrity='sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj' crossorigin='anonymous')
+  script(src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous')
+  script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js' integrity='sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI' crossorigin='anonymous')
+  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css' integrity='sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk' crossorigin='anonymous')
+  script(src='https://unpkg.com/axios/dist/axios.min.js')
+  script(src='jquery.min.js')
+  script(src='jquery.multiple.select.js')
+  link(href='multiple-select.css' rel='stylesheet' type='text/css')
+  link(rel='stylesheet' href='css/add.css')
+  link(rel='stylesheet', href='/css/bootstrap.min.css')
+  title RateYourGame2020
+.navContainer
+  nav.navbar.navbar-expand-lg.navbar-light.bg-light
+    button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarTogglerDemo02' aria-controls='navbarTogglerDemo02' aria-expanded='false' aria-label='Toggle navigation')
+       span.navbar-toggler-icon
+    #navbarTogglerDemo02.collapse.navbar-collapse
+      ul.navbar-nav.mr-auto.mt-2.mt-lg-0
+        li.nav-item.active
+          a.nav-link(href='/').text-secondary
+            | home 
+            span.sr-only (current)
+        li.nav-item
+          a#chart.nav-link(href='/chart').text-secondary chart
+        li.nav-item
+          if loggedIn === false
+            a#logIn.nav-link(href='/logIn/0').text-secondary log in/sign up
+          else
+            a.nav-link.text-secondary #{user_name}
+            li.nav-item
+              a#logIn.nav-link(href='/logOut').text-secondary log out
+      form.form-inline.my-2.my-lg-0(action='/search' method='POST')
+        input.form-control.mr-sm-2(type='search' placeholder='Search' name='searchFor' required='')
+        label(for='category') in:&nbsp;
+        select.browser-default.custom-select(name='category')
+          option(value='games') Games
+        button.btn.btn-success.my-2.my-sm-0(type='submit')
+          | Search
+
+.row
+  .col-sm.leftContainer
+    .container.p-3.my-3.bg-info
+        .container#inside.p-3.my-3.bg-light 
+          form#addinggameForm(action='/addDescr' method='POST')
+            h10#formTitle.mt-2.mb-4 2 of 3
+            h2#formTitle.mt-2.mb-4 Add Game            
+            .form-group
+                form(action='/addSeries' method='POST')
+                    label(for='exampleFormControlSelect2') Series
+                    .w-100 
+                    button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#series1')
+                        | select series
+                    #series1.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addSeriesTitle' aria-hidden='true')
+                        .modal-dialog.modal-dialog-centered(role='document')
+                            .modal-content
+                                .modal-header
+                                    h5#addSeriesTitle.modal-title select series
+                                    button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                        span(aria-hidden='true') &times;
+                                .modal-body
+                                    for s in series
+                                        .form-check.form-check-inline
+                                            input#inlineCheckbox1.form-check-input(type='checkbox' value=s)
+                                            label.form-check-label(for='inlineCheckbox1') #{s}
+                                    .form-check.form-check-inline
+                                        input#inlineCheckbox1.form-check-input(type='checkbox' value=addSeries)
+                                        label.form-check-label(for='inlineCheckbox1') Add New Series
+                                .modal-footer
+                                    button.btn.btn-info(type='button' data-dismiss='modal') Save changes
+                
+
+                button.btn#addSeries.btn-info(type='button' data-toggle='modal' data-target='#series')
+                    | add new series option
+                #series.modal.fade(tabindex='-1' role='dialog' aria-labelledby='addSeriesTitle' aria-hidden='true')
+                    .modal-dialog.modal-dialog-centered(role='document')
+                        .modal-content
+                            .modal-header
+                                h5#addSeriesTitle.modal-title add series
+                                button.close(type='button' data-dismiss='modal' aria-label='Close')
+                                    span(aria-hidden='true') &times;
+                            .modal-body
+                                label name
+                                input#name.form-control(type='text' required='')
+                                label history
+                                input#history.form-control(type='text' required='')
+                            .modal-footer
+                                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                                button.btn.btn-info(type='submit') Save changes
+                tr  #{added_series} 
