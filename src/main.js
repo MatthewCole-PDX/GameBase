@@ -906,14 +906,32 @@ app.post("/gen", async (req, res) => {
       "GROUP BY games.game_id, games.name, rating.average, Console, consoles.console_id, releases.release_date, companies.company_id, Publisher, releases.region " +
       "ORDER BY average DESC;"
 
-    // touch postgres DB server
+    var query2 =
+      "SELECT games.game_id, " +
+      "games.name, releases.region AS Region, rating.average, releases.image AS image, " + 
+      "TO_CHAR(releases.release_date,'MM/DD/YYYY') AS release_date " + 
+      "FROM (SELECT release_id, round( avg(user_rating)::numeric, 2) AS average " +
+      "FROM ratings GROUP BY release_id) AS rating " +
+      "JOIN releases ON releases.release_id = rating.release_id " +
+      "INNER JOIN games ON releases.game_id = games.game_id " +
+      "WHERE (release_date >= " +
+      yearParam1 +
+      " " +
+      "AND release_date < " +
+      yearParam2 +
+      " " +
+      "AND releases.first_release = 'yes' AND games.game_id > 18) " +
+      "ORDER BY average DESC;"
+      // touch postgres DB server
     const client = await pool.connect();
-
+        
     // generate query
     // use temp query for now
     const result = await client.query(query);
+    const result2 = await client.query(query2);
     // const results = { results: result ? result.rows : null };
     console.log(result.rows);
+    console.log(result2.rows);
 
     // console, publisher, genre data
     const select2 = await client.query("SELECT name FROM consoles;");
@@ -951,26 +969,48 @@ app.post("/gen", async (req, res) => {
     // console.log(genres);
 
     var searchResults = [];
+    var searchResults2 = [];
     //let data = result.rows;
     //for (let i = data.length - 1; i >= 0; i--) {
-    for (var i = 0; i < result.rows.length; i++) {
-      var rating = {
-        game_id: result.rows[i].game_id,
-        name: result.rows[i].name,
-        //user_rating: data[i].avg,
-        console_id: result.rows[i].console_id,
-        console: result.rows[i].console,
-        release_date: result.rows[i].release_date,
-        publisher_id: result.rows[i].publisher_id,
-        publisher: result.rows[i].publisher,
-        region: result.rows[i].region,
-        rating: result.rows[i].average,
-        genres: result.rows[i].genres,
-      };
-      searchResults.push(rating);
+    if(result.rows.length > 0){
+      for (var i = 0; i < result.rows.length; i++) {
+        var rating = {
+          game_id: result.rows[i].game_id,
+          name: result.rows[i].name,
+          //user_rating: data[i].avg,
+          console_id: result.rows[i].console_id,
+          console: result.rows[i].console,
+          release_date: result.rows[i].release_date,
+          publisher_id: result.rows[i].publisher_id,
+          publisher: result.rows[i].publisher,
+          region: result.rows[i].region,
+          rating: result.rows[i].average,
+          genres: result.rows[i].genres,
+        };
+        searchResults.push(rating);
+      }
+    }else{
+      searchResults = null;
+    }
+    if(result2.rows.length > 0){
+      for (var i = 0; i < result2.rows.length; i++) {
+        var rating2 = {
+          game_id: result2.rows[i].game_id,
+          name: result2.rows[i].name,
+          release_date: result2.rows[i].release_date,
+          region: result2.rows[i].region,
+          rating: result2.rows[i].average,
+          image: result2.rows[i].image,
+          charted: false,
+        };
+        searchResults2.push(rating2);
+      }
+    }else{
+      searchResults2 = null;
     }
     res.render("gen", {
       reviewData: searchResults,
+      reviewData2: searchResults2,
       publishers: publishers,
       consoles: consoles,
       genres: genres,

@@ -94,17 +94,16 @@ form(action='/gen' method='POST')
     section.left-grid-container
       - var n = 0;
       ol
-        for game in reviewData
-          tr.odd(role='row')
-            .row.bg-light
-              .col-4
-                if(newData)
-                    for game2 in newData
-                      //-tr #{game2.rating} #{game2.charted} #{game.rating}
+        if(reviewData)
+          for game in reviewData
+            tr.odd(role='row')
+              .row.bg-light
+                .col-4
+                  if(reviewData2)
+                    for game2 in reviewData2
                       - var math = game2.rating - game.rating
-                      //-td #{math}
                       if 0 < math && game2.charted == false
-                        img.img-fluid(src=game2.image width='200px' alt=game.image)
+                        img.img-fluid(src=game2.image width='200px' alt=game2.image)
                         li#game 
                           a(href='/game/' + game2.game_id ) #{game2.name}
                         h5
@@ -113,25 +112,36 @@ form(action='/gen' method='POST')
                           td #{game2.region}
                           td  on #{game2.release_date}
                         - game2.charted = true
-                      img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
-                      li#game 
-                        a(href='/game/' + game.game_id ) #{game.name}
-                      h5
-                        td #{game.genres} Avg: #{game.rating}/10
-                      h6
-                        td  #{game.console}
-                        td , releasted by #{game.publisher},
-                        td  #{game.region}
-                        td  on #{game.release_date}
-                else
-                  img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
-                  li#game 
-                    a(href='/game/' + game.game_id ) #{game.name}
-                  h5
-                    td #{game.genres} Avg: #{game.rating}/10
-                  h6
-                    td  #{game.console}
-                    td , releasted by #{game.publisher},
-                    td  #{game.region}
-                    td  on #{game.release_date}
+                    img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
+                    li#game 
+                      a(href='/game/' + game.game_id ) #{game.name}
+                    h5
+                      td #{game.genres} Avg: #{game.rating}/10
+                    h6
+                      td  #{game.console}
+                      td , releasted by #{game.publisher},
+                      td  #{game.region}
+                      td  on #{game.release_date}
+                  else
+                    img.img-fluid(src='../images/game-' + game.game_id + '.jpg' width='200px' alt='images/game-' + game.game_id + '.jpg')
+                    li#game 
+                      a(href='/game/' + game.game_id ) #{game.name}
+                    h5
+                      td #{game.genres} Avg: #{game.rating}/10
+                    h6
+                      td  #{game.console}
+                      td , releasted by #{game.publisher},
+                      td  #{game.region}
+                      td  on #{game.release_date}
+        else
+          if(reviewData2)
+            for game2 in reviewData2
+              img.img-fluid(src=game2.image width='200px' alt=game2.image)
+              li#game 
+              a(href='/game/' + game2.game_id ) #{game2.name}
+              h5
+                td Avg: #{game2.rating}/10
+              h6
+                td #{game2.region}
+                td  on #{game2.release_date}
               
