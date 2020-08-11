@@ -15,18 +15,28 @@ body {
 #left {
   background-color: mediumpurple;
   border-radius: 10px;
-  margin-left: 30px;
+  margin-left: 10px;
   margin-right: 10px;
 }
 
 #right {
   background-color: mediumpurple;
   border-radius: 10px;
-  margin-right: 30px;
+  margin-right: 10px;
   margin-left: 10px;
 }
 
 #button {
-  color: mediumpurple;
-  background-color: aliceblue;
+  color: white;
+  background-color: mediumpurple;
+  margin-left: 10px;
+}
+
+#color {
+  color: white;
+}
+
+#top {
+  border-bottom: 30px solid;
+  border-color: white;
 }

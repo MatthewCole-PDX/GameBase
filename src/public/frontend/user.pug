@@ -45,7 +45,7 @@ head
         else  
           img.img-fluid(src='../images/user-' + userInfo.user_id + '.jpg' width='400px' alt='images/user-' + userInfo.user_id + '.jpg')  
     .container#userLeftMain.p-3.my-3
-      td Collection: 
+      p#userText Collection: 
         br
       for userEntry in userLibrary
             tr.odd(role='row')
@@ -72,7 +72,7 @@ head
                         if userEntry.user_review != NULL
                           td #{userEntry.user_review}
     .container#userWish.p-3.my-3
-      td Wishlist:
+      p#userText Wishlist:
         br
       for userEntry in userLibrary
             tr.odd(role='row')
@@ -117,7 +117,7 @@ head
         br
         
     .container#userLeftMain.p-3.my-3
-        td My Ratings:
+        p#userText My Ratings:
         br
 
         for userEntry in userLibrary
