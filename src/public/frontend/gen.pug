@@ -96,7 +96,7 @@ form(action='/gen' method='POST')
           for game in reviewData
             tr.odd(role='row')
               .row.bg-light
-                .col-4
+                .col
                   if(reviewData2)
                     for game2 in reviewData2
                       - var math = game2.rating - game.rating
