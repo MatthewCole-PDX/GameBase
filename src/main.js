@@ -236,6 +236,7 @@ app.get("/chart", async (req, res) => {
         };
         newResults.push(newrating);
       }
+      console.log(newResults);
     }else{
       newResults = null;
     }
