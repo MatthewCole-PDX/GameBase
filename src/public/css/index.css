@@ -150,9 +150,9 @@ body {
 #userRightBar,
 #reviewForm,
 #formButton,
-#resetForm,
-#addGameButton {
+#resetForm {
   background-color: mediumpurple;
+  color: white;
 }
 
 #userLeftMain,
@@ -164,5 +164,10 @@ body {
 
 #userText {
   color: white;
-  background-color: white;
+}
+
+#addGameButton {
+  color: white;
+  background-color: mediumpurple;
+  border-radius: 6px;
 }
