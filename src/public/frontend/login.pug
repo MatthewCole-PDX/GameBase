@@ -45,7 +45,7 @@ head
         .form-group.row
           label(for='password') password
           input#password.form-control(type='password' name='password' required='') 
-        button#button.btn.btn-secondary(type='submit')
+        button#button.btn(type='submit')
           | Log In &gt;&gt;
   .col-sm.rightContainer
     .signUpContainer
@@ -60,7 +60,7 @@ head
         br
         |           create and publish lists of your favorite things
         br
-      button#signupButton.btn.btn-secondary(type='submit' onclick="window.location.href='/createNewUser';")
+      button#signupButton.btn(type='submit' onclick="window.location.href='/createNewUser';")
         | Sign up now!
 
         //-.form-check

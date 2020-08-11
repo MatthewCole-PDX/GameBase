@@ -38,13 +38,13 @@ head
           | Search
 .row
   .col-sm.leftContainer
-    .container.p-3.my-3.bg-info
+    .container#userLeftBar.p-3.my-3
     .container.p-3.my-3.bg-light
         if(userInfo.user_id > 10)
             img.img-fluid(src=userInfo.image width='400px' alt=userInfo.image)  
         img.img-fluid(src='../images/user-' + userInfo.user_id + '.jpg' width='400px' alt='images/user-' + userInfo.user_id + '.jpg')  
-    .container.p-3.my-3.bg-info
-      td Collection:
+    .container#userLeftMain.p-3.my-3
+      td Collection: 
         br
       for userEntry in userLibrary
             tr.odd(role='row')
@@ -70,7 +70,7 @@ head
                           br
                         if userEntry.user_review != NULL
                           td #{userEntry.user_review}
-    .container.p-3.my-3.bg-info
+    .container#userWish.p-3.my-3
       td Wishlist:
         br
       for userEntry in userLibrary
@@ -102,7 +102,7 @@ head
   
   
   .col-sm.rightContainer
-    .container.p-3.my-3.bg-info
+    .container#userRightBar.p-3.my-3
     .container.p-3.my-3.bg-light
         h3 #{userInfo.user_name}
         br
@@ -115,7 +115,7 @@ head
         td Favorite Console:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #{userInfo.console}
         br
         
-    .container.p-3.my-3.bg-info 
+    .container#userLeftMain.p-3.my-3
         td My Ratings:
         br
 

@@ -38,7 +38,7 @@ head
           | Search
 .row
   .col-sm.leftContainer
-    .container.p-3.my-3.bg-info
+    .container#userLeftBar.p-3.my-3
     .container.p-3.my-3.bg-light 
       if(newgame.game_id > 18)
             img.img-fluid(src=newgame.image width='200px' alt=newgame.image)
@@ -49,17 +49,17 @@ head
         - review = "post"
         if(reviewed == true)
           -review = "edit"
-          .container.p-3.my-3.bg-info
+          .container.p-3.my-3
             .container.p-3.my-3.bg-light
               h5 Your rating: #{userReview.user_rating}/10 &nbsp;&nbsp;&nbsp;Catalog: #{userReview.user_catalog}
               if(userReview.user_review)
                 p #{userReview.user_review}
-              a#reviewForm.btn.btn-info(data-toggle='collapse' href='#review' role='button' aria-expanded='false' aria-controls='review') Edit  
+              a#reviewForm.btn(data-toggle='collapse' href='#review' role='button' aria-expanded='false' aria-controls='review') Edit  
         else
-          a#reviewForm.btn.btn-info(data-toggle='collapse' href='#review' role='button' aria-expanded='false' aria-controls='review') Rate/Catalog
+          a#reviewForm.btn(data-toggle='collapse' href='#review' role='button' aria-expanded='false' aria-controls='review') Rate/Catalog
         .col
           #review.collapse.multi-collapse
-            .container.p-3.my-3.bg-info
+            .container#ratingForm.p-3.my-3
               form#ratingForm(action='/' + review + 'Review/' + user_id + '/' + newgame.game_id method='post')
                 .container.p-3.my-3.bg-light
                   .form-group
@@ -87,15 +87,15 @@ head
                   .form-group
                     label(for='comments') Review
                     textarea#comments.form-control(rows='7' name='comments')
-                  button#formButton.btn.btn-info(type='submit')
+                  button#formButton.btn(type='submit')
                     | submit
-                  button#resetForm.btn.btn-info(type='reset')
+                  button#resetForm.btn(type='reset')
                     | clear
-                  button#resetForm.btn.btn-info(type='cancel')
+                  button#resetForm.btn(type='cancel')
                     | cancel
       else  
         a#reviewForm.btn.btn-info(href='/login/' + newgame.game_id role='button' aria-expanded='false' aria-controls='review' type='submit') Log In to Rate/Catalog
-      .container.p-3.my-3.bg-info
+      .container#userLeftMain.p-3.my-3
         for review in userReviews
           tr.odd(role='row')
             if review.user_rating != NULL
@@ -112,7 +112,7 @@ head
                 p #{review.user_review}
 
   .col-sm.rightContainer
-    .container.p-3.my-3.bg-info
+    .container#userRightBar.p-3.my-3
     .container.p-3.my-3.bg-light
         h3 #{newgame.name}
         br
