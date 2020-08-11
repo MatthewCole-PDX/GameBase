@@ -11,3 +11,22 @@ body {
 #title {
   color: purple;
 }
+
+#left {
+  background-color: mediumpurple;
+  border-radius: 10px;
+  margin-left: 30px;
+  margin-right: 10px;
+}
+
+#right {
+  background-color: mediumpurple;
+  border-radius: 10px;
+  margin-right: 30px;
+  margin-left: 10px;
+}
+
+#button {
+  color: mediumpurple;
+  background-color: aliceblue;
+}

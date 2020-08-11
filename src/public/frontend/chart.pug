@@ -39,7 +39,7 @@ head
 form(action='/gen' method='POST')
   .row
     .col-sm.leftContainer
-      .container.p-3.my-3.bg-info
+      .container#left.p-3.my-3
         .container.p-3.my-3.bg-light
             .form-group
               label(for='list1') Console:
@@ -67,7 +67,7 @@ form(action='/gen' method='POST')
         
 
     .col-sm.rightContainer
-      .container.p-3.my-3.bg-info
+      .containeri#right.p-3.my-3
         .container.p-3.my-3.bg-light    
           .form-group
             label(for='input1') Minimum year: 
@@ -85,7 +85,7 @@ form(action='/gen' method='POST')
                 ul
                   while n < 9
                     option= ++n
-        button.btn.btn-success.my-2.my-sm-0(type='submit') Create chart
+        button#button.btn.my-2.my-sm-0(type='submit') Create chart
         
 
   .col-lg.leftContainer
