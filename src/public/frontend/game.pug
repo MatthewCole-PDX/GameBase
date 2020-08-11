@@ -41,7 +41,7 @@ head
     .container.p-3.my-3.bg-info
     .container.p-3.my-3.bg-light 
       if(newgame.game_id > 18)
-            img.img-fluid(src="'" + newgame.image + "'" width='200px' alt="'" + newgame.image + "'")
+            img.img-fluid(src=newgame.image width='200px' alt=newgame.image)
       else
             img.img-fluid(src='../images/game-' + newgame.game_id + '.jpg' width='400px' alt='images/game-' + newgame.game_id + '.jpg')
       .w-100
@@ -60,11 +60,11 @@ head
         .col
           #review.collapse.multi-collapse
             .container.p-3.my-3.bg-info
-              form#ratingForm(action='/' + review + 'Review/' + user_id + '/' + game.game_id method='post')
+              form#ratingForm(action='/' + review + 'Review/' + user_id + '/' + newgame.game_id method='post')
                 .container.p-3.my-3.bg-light
                   .form-group
                     label(for='exampleFormControlSelect1') 
-                    select#exampleFormControlSelect1.form-control(name='collection')
+                    select#exampleFormControlSelect1.browser-default.custom-select(name='collection')
                       option(value="In collection") In collection
                       option(value="On wishlist") On wishlist
                       option(value="Used to own") Used to own
@@ -72,7 +72,7 @@ head
                 .container.p-3.my-3.bg-light      
                   .form-group
                     label(for='exampleFormControlSelect1') Rating
-                    select#exampleFormControlSelect1.form-control(name='rating')
+                    select#exampleFormControlSelect1.browser-default.custom-select(name='rating')
                       option(value ='1') 1
                       option(value ='2') 2
                       option(value ='3') 3
@@ -102,7 +102,7 @@ head
               .container.p-3.my-3.bg-light
                 if(review.user_id > 10)
                   tr
-                    img.img-fluid(src= "'" + review.image +"'" width='50px' alt= "'" + review.image + "'")
+                    img.img-fluid(src= review.image width='50px' alt= review.image)
                 else
                   tr
                     img.img-fluid(src='../images/user-' + review.user_id + '.jpg' width='50px' alt= 'images/user-' + review.user_id)   

@@ -595,6 +595,7 @@ app.get("/game/:game_id", async (req, res) => {
   res.status(200);
   //res.send(req.params.game_id);
   var id = req.params.game_id;
+  console.log("Hello?");
   try {
     const client = await pool.connect();
     const result = await client.query(
@@ -679,6 +680,7 @@ app.get("/game/:game_id", async (req, res) => {
         secondaryReleases.push(secondaryRelease);
       }
     }
+    console.log("hello world");
     const result2 = await client.query(
       "SELECT users.user_name AS user_name, users.user_id AS user_id, ratings.user_rating AS user_rating, ratings.catalog AS catalog, " +
       "ratings.user_review AS user_review, users.image AS image "+
@@ -686,6 +688,7 @@ app.get("/game/:game_id", async (req, res) => {
       "INNER JOIN releases ON releases.release_id = ratings.release_id " +
       "WHERE releases.game_id = " + id + ';' 
     );
+    console.log("hello again");
     var userReviews = [];
     var game;
     var reviewed = false;
