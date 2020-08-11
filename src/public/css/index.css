@@ -143,3 +143,26 @@ body {
   text-align: center;
   margin-top: 20px;
 }
+
+/*user page*/
+
+#userLeftBar,
+#userRightBar,
+#reviewForm,
+#formButton,
+#resetForm,
+#addGameButton {
+  background-color: mediumpurple;
+}
+
+#userLeftMain,
+#userWish,
+#ratingForm {
+  background-color: mediumpurple;
+  border-radius: 10px;
+}
+
+#userText {
+  color: white;
+  background-color: white;
+}
