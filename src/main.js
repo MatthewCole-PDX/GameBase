@@ -275,7 +275,6 @@ app.get("/login/:game_id", (req, res) => {
 });
 app.post("/checkCredentials/:game_id", async (req, res) => {
   res.status(200);
-  if (!user_id) {
     try {
       const client = await pool.connect();
       var result = await client.query(
@@ -306,9 +305,6 @@ app.post("/checkCredentials/:game_id", async (req, res) => {
       console.error(err);
       res.send("Error " + err);
     }
-  } else {
-    res.redirect("/user/" + user_name);
-  }
 });
 
 
@@ -426,7 +422,7 @@ app.post("/postReview/:user_id/:game_id", async (req, res) =>{
                                   " AND releases.first_release = 'yes';");
     console.log(id.rows[0].release_id);
     await client.query("INSERT INTO ratings(user_id, release_id, user_rating, user_review, catalog) " +
-    "VALUES (" + req.params.user_id + ", " + id.rows[0].release_id + ", '" + req.body.rating + "', '" + comments + "', " + req.body.collection + "');"
+    "VALUES (" + req.params.user_id + ", " + id.rows[0].release_id + ", '" + req.body.rating + "', '" + comments + "', '" + req.body.collection + "');"
     );
     client.release();
   } catch (err) {
