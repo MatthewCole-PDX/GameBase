@@ -24,7 +24,7 @@ head
           if loggedIn === false
             a#logIn.nav-link(href='/logIn/0').text-secondary log in/sign up
           else
-            a.nav-link.text-secondary #{user_name}
+            a.nav-link.text-secondary(href='/user/' + user_name) #{user_name}
             li.nav-item
               a#logIn.nav-link(href='/logOut').text-secondary log out
       form.form-inline.my-2.my-lg-0(action='/search' method='POST')

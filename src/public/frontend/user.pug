@@ -26,7 +26,7 @@ head
           if loggedIn === false
             a#logIn.nav-link(href='/logIn/0').text-secondary log in/sign up
           else
-            a.nav-link.text-secondary #{user_name}
+            a.nav-link.text-secondary(href='/user/' + user_name) #{user_name}
             li.nav-item
               a#logIn.nav-link(href='/logOut').text-secondary log out
       form.form-inline.my-2.my-lg-0(action='/search' method='POST')
@@ -131,7 +131,6 @@ head
                           td  
                               a(href='/game/' + userEntry.game_id) #{userEntry.game_name},
                           td   first released on #{userEntry.release_date},
-                          td  by #{userEntry.publisher},
                           td   #{userEntry.region}
                           br
                         else
@@ -142,7 +141,7 @@ head
                               a(href='/game/' + userEntry.game_id) #{userEntry.game_name},
                           td   first released on #{userEntry.console},
                           td  #{userEntry.release_date}
-                          td  by #{userEntry.publisher} in 
+                          td  by #{userEntry.publisher}, 
                           td   #{userEntry.region}
                           br
                         if userEntry.user_review != NULL

@@ -372,10 +372,11 @@ app.get("/user/:user_name", async (req, res) => {
         };
         userLibrary.push(userEntry);
       }
+      
       const result3 = await client.query(
         "SELECT DISTINCT games.game_id AS game_id, games.name AS name, ratings.user_rating AS user_rating" +
           ", ratings.user_review AS user_review, ratings.catalog AS catalog" +
-          ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS First_Release, releases.region AS Region" +
+          ", TO_CHAR(releases.release_date,'MM/DD/YYYY') AS release_date, releases.region AS Region" +
           ", releases.image AS image" +
           " FROM games " +
           "JOIN releases ON games.game_id = releases.game_id " +
@@ -385,16 +386,16 @@ app.get("/user/:user_name", async (req, res) => {
           "'" +
           ";"
       );
-      for (var i = 0; i < result2.rows.length; i++) {
+      for (var i = 0; i < result3.rows.length; i++) {
         var userEntry = {
-          game_id: result2.rows[i].game_id,
-          game_name: result2.rows[i].name,
-          image: result2.rows[i].image,
-          user_rating: result2.rows[i].user_rating,
-          user_review: result2.rows[i].user_review,
-          catalog: result2.rows[i].catalog,
-          release_date: result2.rows[i].release_date,
-          region: result2.rows[i].region,
+          game_id: result3.rows[i].game_id,
+          game_name: result3.rows[i].name,
+          image: result3.rows[i].image,
+          user_rating: result3.rows[i].user_rating,
+          user_review: result3.rows[i].user_review,
+          catalog: result3.rows[i].catalog,
+          release_date: result3.rows[i].release_date,
+          region: result3.rows[i].region,
         };
         userLibrary.push(userEntry);
       }
@@ -414,14 +415,16 @@ app.post("/postReview/:user_id/:game_id", async (req, res) =>{
   res.status(200);
   console.log(req.body.collection + ' ' + req.body.rating + ' ' + req.body.comments);
   console.log(req.params.game_id);
-  var comments = '"' + req.body.comments + '"';
+  var comments = req.body.comments;
+  comments = comments.replace(/\'/g, "\''");
+  console.log(comments);
   try {
     const client = await pool.connect();
     const id = await client.query("SELECT release_id FROM releases WHERE releases.game_id = " + req.params.game_id +
                                   " AND releases.first_release = 'yes';");
     console.log(id.rows[0].release_id);
     await client.query("INSERT INTO ratings(user_id, release_id, user_rating, user_review, catalog) " +
-    "VALUES (" + req.params.user_id + ", " + id.rows[0].release_id + ", '" + req.body.rating + "', '" + comments + "', '" + req.body.collection + "');"
+    "VALUES (" + req.params.user_id + ", " + id.rows[0].release_id + ", '" + req.body.rating + "', '" + comments + "', " + req.body.collection + "');"
     );
     client.release();
   } catch (err) {
@@ -434,13 +437,14 @@ app.post("/postReview/:user_id/:game_id", async (req, res) =>{
 app.post("/editReview/:user_id/:game_id", async (req, res) =>{
   res.status(200);
   console.log(req.body.rating + ' ' + req.body.collection + ' ' + req.body.comments);
-  var comments = '"' + req.body.comments + '"';
+  var comments = req.body.comments;
+  comments = comments.replace(/\'/g, "\''");
   try {
     const client = await pool.connect();
     const id = await client.query("SELECT release_id FROM releases WHERE releases.game_id = " + req.params.game_id +
                                   " AND releases.first_release = 'yes';");
-    const result = await client.query("UPDATE ratings SET user_rating = '" + req.body.rating + "', user_review = '" + comments +
-                                      "', catalog = '" + req.body.collection + "' WHERE user_id = " + req.params.user_id +
+    const result = await client.query("UPDATE ratings SET user_rating = '" + req.body.rating + "', user_review = '" + comments + "', " +
+                                      "catalog = '" + req.body.collection + "' WHERE user_id = " + req.params.user_id +
                                       "AND release_id = " + id.rows[0].release_id + ";");
     client.release();
   } catch (err) {
@@ -656,6 +660,11 @@ app.get("/game/:game_id", async (req, res) => {
         "WHERE releases.game_id = '" +
         id +
         "'), " +
+        "(SELECT DISTINCT string_agg(series.name, ', ') AS series FROM series " +
+        "JOIN series_rel ON series.series_id = series_rel.series_id " +
+        "WHERE series_rel.game_id = '" +
+        id +
+        "'), " +
         "(SELECT DISTINCT string_agg(genres.name, ', ') AS Genres FROM genres " +
         "JOIN genre_rel ON genres.genre_id = genre_rel.genre_id " +
         "WHERE genre_rel.game_id = '" +
@@ -703,6 +712,7 @@ app.get("/game/:game_id", async (req, res) => {
           developers: result.rows[i].developers,
           designers: result.rows[i].designers,
           region: result.rows[i].region,
+          series: result.rows[i].series,
           genres: result.rows[i].genres,
         };
       } else {
@@ -717,6 +727,7 @@ app.get("/game/:game_id", async (req, res) => {
           developers: result.rows[i].developers,
           designers: result.rows[i].designers,
           region: result.rows[i].region,
+          series: result.rows[i].series,
           genres: result.rows[i].genres,
         };
         secondaryReleases.push(secondaryRelease);

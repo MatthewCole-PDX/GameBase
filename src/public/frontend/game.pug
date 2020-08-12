@@ -26,7 +26,7 @@ head
           if loggedIn === false
             a#logIn.nav-link(href='/logIn/0').text-secondary log in/sign up
           else
-            a.nav-link.text-secondary #{user_name}
+            a.nav-link.text-secondary(href='/user/' + user_name) #{user_name}
             li.nav-item
               a#logIn.nav-link(href='/logOut').text-secondary log out
       form.form-inline.my-2.my-lg-0(action='/search' method='POST')
@@ -65,10 +65,10 @@ head
                   .form-group
                     label(for='exampleFormControlSelect1') 
                     select#exampleFormControlSelect1.browser-default.custom-select(name='collection')
-                      option(value="In collection") In collection
-                      option(value="On wishlist") On wishlist
-                      option(value="Used to own") Used to own
-                      option(value="not cataloged") (not cataloged)
+                      option(value="In Collection") In Collection
+                      option(value="On Wishlist") On Wishlist
+                      option(value="Used to Own") Used to Own
+                      option(value="Not Cataloged") (Not Cataloged)
                 .container.p-3.my-3.bg-light      
                   .form-group
                     label(for='exampleFormControlSelect1') Rating
@@ -118,16 +118,18 @@ head
         br
         td Release Date:&nbsp;  #{newgame.release_date}
         br
-        td Region:&nbsp;  #{newgame.region}
+        td Region:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  #{newgame.region}
         br
         if(game)
+          td Series:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        #{game.series}
+          br
           td Console:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{game.console}
           br
-          td Publisher:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{game.publisher}
+          td Publisher:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#{game.publisher}
           br
-          td Developers:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   #{game.developers}
+          td Developers:&nbsp;&nbsp;&nbsp;&nbsp;   #{game.developers}
           br
-          td Designers:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     #{game.designers}
+          td Designers:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;     #{game.designers}
           br
           td Genres:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        #{game.genres}
           br
