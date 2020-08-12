@@ -1055,12 +1055,12 @@ app.get("/addGame", async (req, res) => {
 });
 app.post("/add2Series", async (req, res) => {
   
-  /*if(!loggedIn){
-    res.render("add1Game", {alreadyExists: "You must be logged in to do that.",
+  if(!loggedIn){
+    res.render("addGame", {alreadyExists: "You must be logged in to do that.",
                             loggedIn: loggedIn,
                             user_name: user_name,
                             user_id: user_id});
-  }*/
+  }
   const client = await pool.connect();
   var idNum;
   var first_release;
@@ -1099,9 +1099,15 @@ app.post("/add2Series", async (req, res) => {
     var Num = await client.query("SELECT release_id FROM releases;");
       idNum = Num.rows.length;
       idNum++;
+    var link;
+    if(!req.body.image_link){
+      link = null;
+    }else{
+      link = req.body.image_link;
+    }
     await client.query("INSERT INTO releases(release_id, game_id, region, release_date, first_release, image) " +
                       "VALUES (" + idNum + ", " + result.rows[0].game_id + ", '" + req.body.region + "', '" +
-                      req.body.release_date + "', '" + first_release + "', '" + req.body.image_link + "');"
+                      req.body.release_date + "', '" + first_release + "', '" + link + "');"
                         );
     result = await client.query(
                         "SELECT release_id, game_id FROM releases WHERE releases.release_id = " + idNum + ";");

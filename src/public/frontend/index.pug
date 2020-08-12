@@ -146,77 +146,24 @@ head
     #reviews New Releases
     section.right-grid-container
       if(newGames)
+        - var n = 0
         for newGame in newGames
-          .row.item1
-            .col-4
-              img.img-fluid(src=newGame.image width='200px' alt=newGame.image)
-            .col-8  
-              p
-                td 
-                    a(href='/game/' + newGame.game_id ) #{newGame.name}
-                //td #{game.genres}
-                br
-                td Release Date:   
-                td  #{newGame.release_date}
-                br
-                td   #{newGame.region}
-                br 
-          .row.item2
-            .col-4
-              img.img-fluid(src=newGame.image width='200px' alt=newGame.image)
-            .col-8  
-              p
-                td 
-                    a(href='/game/' + newGame.game_id ) #{newGame.name}
-                //td #{game.genres}
-                br
-                td Release Date:   
-                td  #{newGame.release_date}
-                br
-                td   #{newGame.region}
-                br 
-          .row.item3
-            .col-4
-              img.img-fluid(src=newGame.image width='200px' alt=newGame.image)
-            .col-8  
-              p
-                td 
-                    a(href='/game/' + newGame.game_id ) #{newGame.name}
-                //td #{game.genres}
-                br
-                td Release Date:   
-                td  #{newGame.release_date}
-                br
-                td   #{newGame.region}
-                br 
-          .row.item4
-            .col-4
-              img.img-fluid(src=newGame.image width='200px' alt=newGame.image)
-            .col-8  
-              p
-                td 
-                    a(href='/game/' + newGame.game_id ) #{newGame.name}
-                //td #{game.genres}
-                br
-                td Release Date:   
-                td  #{newGame.release_date}
-                br
-                td   #{newGame.region}
-                br 
-          .row.item5
-            .col-4
-              img.img-fluid(src=newGame.image width='200px' alt=newGame.image)
-            .col-8  
-              p
-                td 
-                    a(href='/game/' + newGame.game_id ) #{newGame.name}
-                //td #{game.genres}
-                br
-                td Release Date:   
-                td  #{newGame.release_date}
-                br
-                td   #{newGame.region}
-                br 
+          if n != 5
+            .row.item1
+              .col-4
+                img.img-fluid(src=newGame.image width='200px' alt=newGame.image)
+              .col-8  
+                p
+                  td 
+                      a(href='/game/' + newGame.game_id ) #{newGame.name}
+                  //td #{game.genres}
+                  br
+                  td Release Date:   
+                  td  #{newGame.release_date}
+                  br
+                  td   #{newGame.region}
+                  br 
+            - n++
       //-  .grid-item.item9  #{sec1}
         .grid-item.item10  #{sec1}
         .grid-item.item11  #{sec1}
