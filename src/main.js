@@ -404,6 +404,7 @@ app.get("/user/:user_name", async (req, res) => {
         userInfo: userInfo,
         loggedIn: loggedIn,
         user_name: user_name,
+        user_id: user_id,
       });
     } catch (err) {
       console.error(err);
@@ -418,6 +419,7 @@ app.post("/postReview/:user_id/:game_id", async (req, res) =>{
   var comments = req.body.comments;
   comments = comments.replace(/\'/g, "\''");
   console.log(comments);
+  
   try {
     const client = await pool.connect();
     const id = await client.query("SELECT release_id FROM releases WHERE releases.game_id = " + req.params.game_id +
@@ -484,7 +486,31 @@ app.get("/createNewUser", async (req, res) => {
 
 app.post("/newUserAdded", async (req, res) => {
   res.status(200);
-  
+  var image;
+  if(req.body.image){ 
+    image = req.body.image;
+    image = image.replace(/\'/g, "\''");
+    image = image.replace(/\"/g, "\"\"");
+  }else{
+    image = null;
+  }
+  var city;
+  if(req.body.city){
+    city = req.body.city;
+    city = city.replace(/\'/g, "\''");
+    city = city.replace(/\"/g, "\"\"");
+  }else{
+    city = null;
+  }
+  var country;
+  if(req.body.country){
+    country = req.body.country;
+    country = country.replace(/\'/g, "\''");
+    country = country.replace(/\"/g, "\"\"");
+  }else{
+    country = null;
+  }
+
   // see if such a user already exists, if no error,
   // redirect to user page, else alert that the user
   // already exists
@@ -534,9 +560,9 @@ app.post("/newUserAdded", async (req, res) => {
                 "'" + req.body.password + "', " +
                 "'" + req.body.email + "', " +
                 "'" + req.body.birth_date + "', " +
-                "'" + req.body.city + "', " +
-                "'" + req.body.country + "', " +
-                "'" + req.body.image + "', " + console_id + ");";
+                "'" + city + "', " +
+                "'" + country + "', " +
+                "'" + image + "', " + console_id + ");";
       var result = await client.query(query);
       var test = await client.query( "SELECT user_name, user_id FROM users WHERE user_id = " + idNum + ";");
       user_name = test.rows[0].user_name;
@@ -1065,7 +1091,17 @@ app.get("/addGame", async (req, res) => {
   }
 });
 app.post("/add2Series", async (req, res) => {
-  
+  var title = req.body.title;
+  title = title.replace(/\'/g, "\''");
+  title = title.replace(/\"/g, "\"\"");
+  var link;
+    if(!req.body.image_link){
+      link = null;
+    }else{ 
+      link = req.body.image_link;
+      link = link.replace(/\'/g, "\''");
+      link = link.replace(/\"/g, "\"\"");
+    }
   if(!loggedIn){
     res.render("addGame", {alreadyExists: "You must be logged in to do that.",
                             loggedIn: loggedIn,
@@ -1083,18 +1119,18 @@ app.post("/add2Series", async (req, res) => {
   console.log(first_release);
   try{
     var result = await client.query(
-      "SELECT game_id FROM games WHERE LOWER(name) = LOWER('" + req.body.title + "');");
+      "SELECT game_id FROM games WHERE LOWER(name) = LOWER('" + title + "');");
     console.log(result.rows.length);
     if(result.rows.length == 0){
       var Num = await client.query("SELECT game_id FROM games;");
       idNum = Num.rows.length;
       idNum++;
       await client.query("INSERT INTO games(game_id, name) " +
-                          "VALUES (" + idNum + ", '" + req.body.title + "');"
+                          "VALUES (" + idNum + ", '" + title + "');"
                         );
                      
       result = await client.query(
-          "SELECT game_id, name FROM games WHERE LOWER(name) = LOWER('" + req.body.title + "');");   
+          "SELECT game_id, name FROM games WHERE LOWER(name) = LOWER('" + title + "');");   
       console.log(result.rows[0].name);
       
     }else{
@@ -1102,7 +1138,7 @@ app.post("/add2Series", async (req, res) => {
         var test = await client.query("SELECT release_id FROM releases WHERE game_id = " + result.rows[0].game_id + 
                                       " AND first_release = 'yes';");
         if(test.rows.length > 0){
-          res.render("add1Game", {
+          res.render("addGame", {
           alreadyExists: "Release Already Exists. If this is secondary release of the same game, uncheck 'first release'"});
         }
       }
